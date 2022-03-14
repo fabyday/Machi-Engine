@@ -14,7 +14,7 @@ protected:
 	
 public :
 	using string = std::string;
-	virtual ~Application();
+	virtual ~Application() {};
 
 	bool run(int argc, char** argv);
 

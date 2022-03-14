@@ -1,7 +1,3 @@
-project(Platform)
-
-
-
 if(WIN32)
 set(p_dir windows)
 elseif(APPLE)

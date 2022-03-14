@@ -25,3 +25,9 @@ bool
 Application::update() {
 	return true;
 }
+
+
+bool
+Application::fixed_update() {
+	return true;
+}
