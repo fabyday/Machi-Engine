@@ -9,7 +9,19 @@
       "installRoot": "${projectDir}\\out\\install\\${name}",
       "cmakeCommandArgs": "",
       "buildCommandArgs": "",
-      "ctestCommandArgs": ""
+      "ctestCommandArgs": "",
+      "variables": [
+        {
+          "name": "Testbed",
+          "value": "True",
+          "type": "BOOL"
+        },
+        {
+          "name": "Editor",
+          "value": "True",
+          "type": "BOOL"
+        }
+      ]
     }
   ]
 }

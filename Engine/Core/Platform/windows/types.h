@@ -22,37 +22,20 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include <config.h>
-#include <appspec.h>
-#include <string>
+#include <Windows.h>
+
+#define MCHAR WCHAR
+
+#define MINT8 INT8
+#define MINT16 INT16
+#define MINT32 INT32
+#define MINT64 INT64
+#define MINT MINT32
 
 
+#define MSTRING  MCHAR*
 
-class MACHI_API Application : UNIVERSAL_APPLICATION {
+#define MFLOAT float
 
 
-public:
-	using string = std::string;
-	virtual ~Application() {};
-
-	bool run(int argc, char** argv);
-
-	static Application* get_instance() {
-		if (app_ == nullptr) {
-			app_ = new Application;
-		}
-		return app_;
-	};
-
-private:
-	static Application* app_;
-	string app_name_;
-	time_t time_;
-
-protected:
-	virtual bool update();
-	virtual bool fixed_update();
-	virtual bool render();
-	
-
-};
+#define MDOUBLE double 

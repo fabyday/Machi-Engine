@@ -1,3 +1,7 @@
+
+
+add_definitions("-DMACHI_BUILD_DLL")
+
 add_subdirectory(Platform)
 add_subdirectory(Application)
 
@@ -6,7 +10,5 @@ target_link_libraries(Core INTERFACE
 						Machi::Application 
 						Machi::Platform
 					)
-
-
 
 add_library(Machi::Core ALIAS Core)
