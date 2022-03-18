@@ -8,12 +8,12 @@ set(p_dir windows)
 set(src "windows/machi_graphics.cpp" "windows/types.h")
 set(graphics_libs d3d12 dxgi dxguid d3dcompiler) #D3d12SDKLayers)
 elseif(APPLE)
-
+    set(p_dir Apple)
+    set(src   "Apple/appspec.cpp" "Apple/machi_graphics.cpp")
 elseif(UNIX AND NOT APPLE) # linux;
 
 endif()
 
-message(${src})
 add_library(Platform SHARED ${src})
 target_link_libraries(Platform ${graphics_libs})
 target_include_directories(Platform PUBLIC ${p_dir})
