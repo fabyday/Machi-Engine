@@ -26,15 +26,24 @@
 #include "config.h"
 #include "../../Application/application.h"
 #include <Windows.h>
-
+#include "os.h"
 
 // main function hijacking.
 Application* machi_main(int argc, char** argv); // User impl.
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
-	
+	OSConfig config;
+	config.hInstance = &hInstance;
+	config.hPrevInstance = &hPrevInstance;
+	config.pCmdLine = pCmdLine;
+	config.nCmdShow = nCmdShow;
+
+
+	OS::set_context(&config);
+
+
 	Application* app = machi_main(__argc, __argv);
-	bool reval = app->run(0, NULL);
+	bool reval = app->run(__argc, __argv);
 	delete app;
 	return reval;
 }

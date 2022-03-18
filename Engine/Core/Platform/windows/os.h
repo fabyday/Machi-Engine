@@ -22,15 +22,39 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-
-#ifdef MACHI_BUILD_DLL // MACHI_EXPORT
-	#define MACHI_API  __declspec(dllexport)
-#else // MACHI_IMPORT
-	#define MACHI_API  __declspec(dllimport)
-#endif 
+#include "config.h"
+#include <stdio.h>
+#include <io.h>
+#include <Windows.h>
 
 
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers.
-#endif
 
+
+#define MACHI_OS_CONTEXT HINSTANCE
+
+typedef  struct OSContext{
+	MACHI_OS_CONTEXT* hInstance;
+	MACHI_OS_CONTEXT* hPrevInstance;
+	MUINT nCmdShow;
+	MPWSTR pCmdLine;
+
+}OSConfig;
+
+class OS {
+private:
+	static OSContext* context_;
+	OS();
+public:
+	
+	static void set_context(OSContext* ctx) {
+		context_ = ctx;
+	}
+
+	static OSContext* get_context(){
+		return context_;
+
+	}
+
+
+
+};

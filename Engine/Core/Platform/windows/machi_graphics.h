@@ -39,26 +39,35 @@
 
 
 
-struct Vertex
-{
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT4 color;
-};
 
-struct Triangle {
+typedef struct Buffer {
+    template <typename T>
+    using ComPtr = Microsoft::WRL::ComPtr<T>;
 
 
-    int order;
+    ComPtr<ID3D12Resource> buffer_;
+    Buffer() {};
 
-};
+} Buffer;
+
+typedef struct BufferView {
+    D3D12_VERTEX_BUFFER_VIEW buffer_view_;
+
+
+    BufferView(Buffer* buf,
+        UINT                      SizeInBytes,
+        UINT                      StrideInBytes) {
+        
+    }
+}BufferView;
 
 
 class MACHI_API MGraphics {
 public:
-    virtual void OnInit() ;
-    virtual void OnUpdate() ;
-    virtual void OnRender() ;
-    virtual void OnDestroy() ;
+    virtual void init() ;
+    virtual void update() ;
+    virtual void render() ;
+    virtual void destroy() ;
 
     template <typename T>
     using ComPtr = Microsoft::WRL::ComPtr<T>;

@@ -337,16 +337,6 @@
 #define MACHI_PA1            0xFD
 #define MACHI_OEM_CLEAR      0xFE
 
-
-
-
-
-
-
-
-
-
-
 // mouse donw and up
 #define MACHI_MOUSEFIRST                   0x0200
 #define MACHI_MOUSEMOVE                    0x0200

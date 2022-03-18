@@ -23,6 +23,7 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #include <Windows.h>
+#include <string>
 
 #define MCHAR WCHAR
 
@@ -31,6 +32,17 @@
 #define MINT32 INT32
 #define MINT64 INT64
 #define MINT MINT32
+
+#define MUINT8 INT8
+#define MUINT16 INT16
+#define MUINT32 INT32
+
+#define MUINT UINT
+
+#define MWCHAR WCHAR
+#define MPWSTR PWSTR
+
+#define MLONG LONG
 
 
 #define MSTRING  MCHAR*
