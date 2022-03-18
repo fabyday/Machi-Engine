@@ -22,37 +22,18 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include <config.h>
-#include <appspec.h>
-#include <string>
+
+#include "config.h"
+#include "../../Application/application.h"
+#include <Windows.h>
 
 
+// main function hijacking.
+Application* machi_main(int argc, char** argv); // User impl.
 
-class MACHI_API Application : public UNIVERSAL_APPLICATION {
-
-
-public:
-	using string = std::string;
-	virtual ~Application() {};
-
-	bool run(int argc, char** argv);
-
-	static Application* get_instance() {
-		if (app_ == nullptr) {
-			app_ = new Application;
-		}
-		return app_;
-	};
-
-private:
-	static Application* app_;
-	string app_name_;
-	time_t time_;
-
-protected:
-	virtual bool update();
-	virtual bool fixed_update();
-	virtual bool render();
-	
-
-};
+int main(int argc, char* argv[]){	
+	Application* app = machi_main(argc, argv);
+	bool reval = app->run(0, NULL);
+	delete app;
+	return reval;
+}

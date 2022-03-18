@@ -22,37 +22,17 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include <config.h>
-#include <appspec.h>
-#include <string>
+
+#ifdef MACHI_BUILD_DLL // MACHI_EXPORT
+	#define MACHI_API __attribute__((visibility("default")) 
+#else // MACHI_IMPORT
+	#define MACHI_API  __declspec(dllimport)
+#endif 
+
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers.
+#endif
 
 
 
-class MACHI_API Application : public UNIVERSAL_APPLICATION {
-
-
-public:
-	using string = std::string;
-	virtual ~Application() {};
-
-	bool run(int argc, char** argv);
-
-	static Application* get_instance() {
-		if (app_ == nullptr) {
-			app_ = new Application;
-		}
-		return app_;
-	};
-
-private:
-	static Application* app_;
-	string app_name_;
-	time_t time_;
-
-protected:
-	virtual bool update();
-	virtual bool fixed_update();
-	virtual bool render();
-	
-
-};
