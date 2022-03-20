@@ -22,10 +22,16 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include "os.h"
+#include "types.h"
+#include "config.h"
+#include <stdio.h>
+#include <io.h>
+#include <Windows.h>
+#include "../../OS/OS.h"
+#include "os_native.h"
 
 
-void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
+static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
 	const HANDLE h_existing = GetStdHandle(p_std_handle);
 	if (h_existing != INVALID_HANDLE_VALUE) { // Redirect only if attached console have a valid handle.
 		const HANDLE h_cpp = reinterpret_cast<HANDLE>(_get_osfhandle(_fileno(p_cpp_stream)));
@@ -37,15 +43,30 @@ void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_str
 	}
 }
 
-void RedirectIOToConsole() {
+static void RedirectIOToConsole() {
 	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
 		RedirectStream("CONIN$", "r", stdin, STD_INPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stdout, STD_OUTPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stderr, STD_ERROR_HANDLE);
-
 		printf("\n"); // Make sure our output is starting from the new line.
 	}
 }
 
 
 
+
+OS::OS() {
+
+}
+
+
+std::string 
+OS::get_current_directory() {
+	return "test";
+}
+
+
+INT32 
+OS::make_process() {
+	return -1;
+}

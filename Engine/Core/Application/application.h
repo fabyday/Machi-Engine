@@ -23,19 +23,32 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #include <config.h>
-#include <appspec.h>
 #include <string>
 
 
 
-class MACHI_API Application : public UNIVERSAL_APPLICATION {
+class MACHI_API Application   {
+
+
+	// platform dependents!
+public : 
+	/// <summary>
+	/// 
+	/// </summary>
+	/// <returns></returns>
+	bool _initialize(); 
+	bool _run_logic();
+	bool run();
 
 
 public:
+	
 	using string = std::string;
+	
+	
+	
 	virtual ~Application() {};
 
-	bool run(int argc, char** argv);
 
 	static Application* get_instance() {
 		if (app_ == nullptr) {

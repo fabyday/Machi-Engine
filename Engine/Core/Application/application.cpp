@@ -24,13 +24,16 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #include "application.h"
 #include <iostream>
+
+Application* Application::app_ = nullptr;
+
 bool
 Application::render() {
 	return true;
 }
 
 bool
-Application::run(int argc, char** argv){
+Application::run(){
 
 
 

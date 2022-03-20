@@ -22,16 +22,19 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-
 #include "config.h"
-#include "../../Application/application.h"
+#include "os_native.h"
+
 #include <Windows.h>
-#include "os.h"
+
+#include <Application/application.h>
+#include <OS/OS.h>
 
 // main function hijacking.
 Application* machi_main(int argc, char** argv); // User impl.
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
+//int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
+int WINAPI main(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 	OSConfig config;
 	config.hInstance = &hInstance;
 	config.hPrevInstance = &hPrevInstance;
@@ -43,7 +46,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 
 	Application* app = machi_main(__argc, __argv);
-	bool reval = app->run(__argc, __argv);
+	bool reval =  app->run();
 	delete app;
 	return reval;
 }
