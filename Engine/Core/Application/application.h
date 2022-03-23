@@ -27,7 +27,7 @@
 
 
 
-class MACHI_API Application   {
+ class MACHI_API Application   {
 
 
 	// platform dependents!
@@ -38,7 +38,8 @@ public :
 	/// <returns></returns>
 	bool _initialize(); 
 	bool _run_logic();
-	bool run();
+	bool _finalize();
+	bool run(int argc, char** argv);
 
 
 public:
@@ -61,6 +62,8 @@ private:
 	static Application* app_;
 	string app_name_;
 	time_t time_;
+	int x_, y_, width_, height_;
+
 
 protected:
 	virtual bool update();

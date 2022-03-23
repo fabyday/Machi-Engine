@@ -22,6 +22,7 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+
 #include <Graphics/GraphicManager.h>
 #include "config.h"
 #include "d3d12.h"
@@ -36,6 +37,9 @@
 #include <d3d12sdklayers.h> // for debugging
 
 #include <DirectXMath.h>
+
+
+
 
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 

@@ -22,6 +22,8 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+
+
 #include <config.h>
 #include <stdio.h>
 #include <io.h>
@@ -36,10 +38,11 @@ class MACHI_API OS {
 private:
 	static OSContext* context_;
 	static OS* instance_;
-
-	OS();
+	
 	int argc;
 	char** argv;
+
+	OS();
 public:
 
 	static void set_context(OSContext* ctx) {
@@ -59,6 +62,7 @@ public:
 	//load_dynamic_library();
 	std::string get_current_directory();
 	INT32 make_process();
+	bool open_console();
 	
 
 	

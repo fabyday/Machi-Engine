@@ -22,13 +22,17 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include "types.h"
+
 #include "config.h"
+#include "types.h"
 #include <stdio.h>
 #include <io.h>
 #include <Windows.h>
-#include "../../OS/OS.h"
 #include "os_native.h"
+#include <OS/OS.h>
+
+#include <filesystem>
+#include <iostream>
 
 
 static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
@@ -44,21 +48,26 @@ static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_
 }
 
 static void RedirectIOToConsole() {
-	if (AttachConsole(ATTACH_PARENT_PROCESS)) {
+		AllocConsole();
+
 		RedirectStream("CONIN$", "r", stdin, STD_INPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stdout, STD_OUTPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stderr, STD_ERROR_HANDLE);
-		printf("\n"); // Make sure our output is starting from the new line.
-	}
+		std::cout << std::endl; // Make sure our output is starting from the new line.
+
 }
 
 
 
 
 OS::OS() {
-
+	open_console();
 }
-
+bool OS::open_console() {
+	
+	RedirectIOToConsole();
+	return true;
+}
 
 std::string 
 OS::get_current_directory() {

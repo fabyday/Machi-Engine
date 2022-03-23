@@ -32,21 +32,7 @@ Application::render() {
 	return true;
 }
 
-bool
-Application::run(){
 
-
-
-	int j = 0;
-	for (int j = 0; j < 10; j++) {
-		update();
-	}
-
-
-
-
-	return true;
-}
 
 bool
 Application::update() {
