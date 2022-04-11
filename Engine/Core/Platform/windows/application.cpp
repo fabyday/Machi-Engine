@@ -116,7 +116,6 @@ Application::_initialize() {
     
     // window initialize.
     const OSContext* context = OS::get_context();
-    app_name_= "test";
     WNDCLASSEX windowClass = { 0 };
     windowClass.cbSize = sizeof(WNDCLASSEX);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;

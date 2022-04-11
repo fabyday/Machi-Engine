@@ -27,6 +27,10 @@
 
 Application* Application::app_ = nullptr;
 
+using std::string;
+
+
+
 bool
 Application::render() {
 	return true;
@@ -43,4 +47,30 @@ Application::update() {
 bool
 Application::fixed_update() {
 	return true;
+}
+
+
+Application*
+Application::set_resolution(int x, int y, int width, int height, bool fullscreen) {
+	this->x_ = x; this->y_ = y; 
+	this->width_ = width; this->height_ = height; 
+	this->fullscreen_ = fullscreen;
+	
+	return this;
+}
+
+
+
+
+Application*
+Application::set_resolution(int width, int height, bool fullscreen) {
+	return set_resolution(0, 0, width, height, fullscreen);
+}
+
+
+
+Application* 
+Application::set_name(string name) {
+	this->app_name_ = name;
+	return this;
 }

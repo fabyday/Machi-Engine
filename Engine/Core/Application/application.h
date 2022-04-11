@@ -36,6 +36,11 @@ public :
 	/// 
 	/// </summary>
 	/// <returns></returns>
+	/// 
+	/// 
+	/// 
+
+
 	bool _initialize(); 
 	bool _run_logic();
 	bool _finalize();
@@ -58,10 +63,15 @@ public:
 		return app_;
 	};
 
+	Application* set_resolution(int width, int height, bool fullscreen);
+	Application* set_resolution(int x, int y, int width, int height, bool fullscreen);
+	Application* set_name(string name);
+
 private:
 	static Application* app_;
 	string app_name_;
 	time_t time_;
+	bool fullscreen_;
 	int x_, y_, width_, height_;
 
 
