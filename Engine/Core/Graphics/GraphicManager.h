@@ -23,32 +23,42 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
+#ifndef __GRAPHIC_MANAGER_H__
+#define __GRAPHIC_MANAGER_H__
 
-#include "components.h"
-class GraphicsContext; // implements it in Platform. opaque type.
-
+#include "primitive.h"
+#include <Platform/types.h>
+#include "../Application/application.h"
 
 
 class GraphicManager {
 // Platform dependents
 private : 
+	static GraphicManager* manager_;
 	GraphicsContext* context_;
+	
+	static const MUINT frame_count_= 2;
+	
+	SyncronizeObejct* syncronize_object_;
 
-	GraphicManager(GraphicsContext* ctx);
+	friend Application;
 
-	virtual void initialize();
-	virtual void update();
+
+	//only called in Application
+	virtual void initialize(Application* app);
 	virtual void render();
 	virtual void destroy();
 
 
 public : 
 	static GraphicManager* get_instance();
-	void draw();
+	
 
+	bool regist_renderer();
 	Buffer* make_buffer();
 	BufferView* make_buffer_view(Buffer& buf);
 	
 
 
 };
+#endif

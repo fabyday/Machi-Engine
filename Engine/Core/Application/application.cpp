@@ -27,7 +27,6 @@
 
 Application* Application::app_ = nullptr;
 
-using std::string;
 
 
 
@@ -51,7 +50,7 @@ Application::fixed_update() {
 
 
 Application*
-Application::set_resolution(int x, int y, int width, int height, bool fullscreen) {
+Application::set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen) {
 	this->x_ = x; this->y_ = y; 
 	this->width_ = width; this->height_ = height; 
 	this->fullscreen_ = fullscreen;
@@ -63,14 +62,14 @@ Application::set_resolution(int x, int y, int width, int height, bool fullscreen
 
 
 Application*
-Application::set_resolution(int width, int height, bool fullscreen) {
+Application::set_resolution(MINT width, MINT height, bool fullscreen) {
 	return set_resolution(0, 0, width, height, fullscreen);
 }
 
 
 
 Application* 
-Application::set_name(string name) {
+Application::set_name(MSTRING name) {
 	this->app_name_ = name;
 	return this;
 }

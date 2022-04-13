@@ -29,6 +29,6 @@ Application* machi_main(int argc, char** argv) {
 
 
 	return Application::get_instance()
-		->set_name("MACHI-AS-WELL")
+		->set_name(L"MACHI-AS-WELL")
 		->set_resolution(1280, 960, false);
 }

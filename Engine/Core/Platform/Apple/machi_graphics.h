@@ -64,7 +64,7 @@ public:
 
 private:
 
-    static const UINT FrameCount = 2;
+    static const INT frame_count_ = 2;
 
     // Pipeline objects.
     MTL::Device* device_;

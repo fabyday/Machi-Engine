@@ -1,7 +1,7 @@
 
 
 if(WIN32)
-set(platform_src   "windows/application.cpp"  "windows/os.cpp")
+set(platform_src   "windows/application.cpp"  "windows/os.cpp" "windows/machi_graphics.cpp")
 set(platform_lib d3d12 dxgi dxguid d3dcompiler) #D3d12SDKLayers)
 set(platform_dependent_directory  ${platform_dependent_directory} "${CMAKE_CURRENT_SOURCE_DIR}/windows" PARENT_SCOPE) # can't use relative paths
 elseif(APPLE)

@@ -22,9 +22,13 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include <config.h>
-#include <string>
+#ifndef  __APPLICATION_H__
+#define __APPLICATION_H__
 
+
+
+#include <config.h>
+#include <Platform/types.h>
 
 
  class MACHI_API Application   {
@@ -49,7 +53,7 @@ public :
 
 public:
 	
-	using string = std::string;
+	
 	
 	
 	
@@ -63,15 +67,22 @@ public:
 		return app_;
 	};
 
-	Application* set_resolution(int width, int height, bool fullscreen);
-	Application* set_resolution(int x, int y, int width, int height, bool fullscreen);
-	Application* set_name(string name);
+	Application* set_resolution(MINT width, MINT height, bool fullscreen);
+	Application* set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen);
+	Application* set_name(MSTRING name);
+
+	int get_width() { return width_; }
+	int get_height() { return height_; }
+
 
 private:
 	static Application* app_;
-	string app_name_;
+	MSTRING app_name_;
 	time_t time_;
 	bool fullscreen_;
+	
+	Application() {};
+//size configuration
 	int x_, y_, width_, height_;
 
 
@@ -82,3 +93,4 @@ protected:
 	
 
 };
+#endif // ! __APPLICATION_H__

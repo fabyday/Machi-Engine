@@ -6,6 +6,7 @@ project(Machi-Engine)
 # language support info
 set(CMAKE_CXX_STANDARD 17)
 
+add_definitions("-DUNICODE -D_UNICODE") 
 
 
 # set cmakes files

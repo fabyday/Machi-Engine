@@ -35,6 +35,11 @@
 #include <iostream>
 
 
+HWND WindowsPlatform::hwnd_ = nullptr;
+
+
+
+
 static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
 	const HANDLE h_existing = GetStdHandle(p_std_handle);
 	if (h_existing != INVALID_HANDLE_VALUE) { // Redirect only if attached console have a valid handle.

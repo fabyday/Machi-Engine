@@ -27,6 +27,13 @@
 #include <Windows.h>
 #include <string>
 
+#if defined(_UNICODE) || defined(UNICODE)
+#define MSTRING std::wstring
+#else 
+#define MSTRING std::string 
+#endif
+
+
 #define MCHAR WCHAR
 
 #define MINT8 INT8
@@ -45,9 +52,6 @@
 #define MPWSTR PWSTR
 
 #define MLONG LONG
-
-
-#define MSTRING  MCHAR*
 
 #define MFLOAT float
 

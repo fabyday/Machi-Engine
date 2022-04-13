@@ -28,7 +28,8 @@ typedef struct Buffer Buffer;
 typedef struct BufferView BufferView;
 
 
-typedef struct GraphicsDesc GraphicsDesc; // 
+typedef struct GraphicsDesc GraphicsContext; // 
 
 
 
+typedef struct SyncronizeDesc SyncronizeObejct;

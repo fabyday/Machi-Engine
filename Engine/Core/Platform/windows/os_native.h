@@ -19,6 +19,8 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <Windows.h>
+#include <Application/application.h>
+
 #include "types.h"
 
 typedef  struct OSContext {
@@ -27,3 +29,16 @@ typedef  struct OSContext {
 	MUINT nCmdShow;
 	MPWSTR pCmdLine;
 }OSConfig;
+
+
+// OS specific function and configure collection.
+class WindowsPlatform {
+public:
+	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static HWND get_HWND() { return hwnd_; }
+
+	friend Application;
+private:
+	static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
+	static HWND hwnd_;
+};

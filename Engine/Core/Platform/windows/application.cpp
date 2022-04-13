@@ -23,13 +23,17 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #include <Application/application.h>
+#include <Graphics/GraphicManager.h>
 #include <OS/OS.h>
 #include "os_native.h"
+#include "common.h"
 #include "types.h"
+
 
 HWND _handle;
 
-LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+
+LRESULT WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     UINT uMsg  = message;
@@ -119,7 +123,7 @@ Application::_initialize() {
     WNDCLASSEX windowClass = { 0 };
     windowClass.cbSize = sizeof(WNDCLASSEX);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    windowClass.lpfnWndProc = WindowProc;
+    windowClass.lpfnWndProc = WindowsPlatform::WindowProc;
     windowClass.hInstance = *(context->hInstance);
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.lpszClassName = app_name_.c_str();
@@ -145,8 +149,19 @@ Application::_initialize() {
         *(context->hInstance),
         this);
 
+    WindowsPlatform::set_HWND(_handle);
+
+    GraphicManager* mng = GraphicManager::get_instance();
+    mng->initialize(this);
 
     ShowWindow(_handle, context->nCmdShow);
+
+    
+    
+    
+
+
+
     return true;
 }
 
