@@ -1,5 +1,5 @@
 # **Machi Engine**
-![example workflow](https://github.com/fabyday/Machi-Engine/actions/workflows/machi-build/badge.svg)
+![build](https://github.com/fabyday/Machi-Engine/actions/workflows/machi-build.yml/badge.svg)
 
 **Machi** is c++ game engine.   
 this is one of my hobby project.  
