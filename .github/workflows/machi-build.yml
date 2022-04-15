@@ -25,9 +25,11 @@ jobs:
         static: [ON, OFF]
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
         with:
           fetch-depth: 10
+          submodule : 'true'
+          token : ${{secrets.PAT_TOKEN}}
 
       - name: Install Ninja
         uses: seanmiddleditch/gha-setup-ninja@master
