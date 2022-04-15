@@ -1,6 +1,5 @@
 # **Machi Engine**
-![build](https://github.com/fabyday/Machi-Engine/actions/workflows/machi-build.yml/badge.svg)
-
+[![Machi-Build](https://github.com/fabyday/Machi-Engine/actions/workflows/machi-build.yml/badge.svg)](https://github.com/fabyday/Machi-Engine/actions/workflows/machi-build.yml)
 **Machi** is c++ game engine.   
 this is one of my hobby project.  
 it is strongly inspired by **Unreal Engine**.
