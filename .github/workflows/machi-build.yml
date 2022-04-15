@@ -10,7 +10,7 @@ on:
       - main
       - dev1
 
-env:
+# env:
   # CTEST_OUTPUT_ON_FAILURE: ON
   # CTEST_PARALLEL_LEVEL: 2
 
