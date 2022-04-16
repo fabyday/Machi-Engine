@@ -5,7 +5,7 @@
 this is one of my hobby project.  
 it is strongly inspired by **Unreal Engine**.
 
-# **Plan**
+# **Plan(TODO)**
 - first plan is making **Window** version Engine. I need to concern compatibility with other OS Apis.  
 - making **Engine Editor** is second objective. 
 
