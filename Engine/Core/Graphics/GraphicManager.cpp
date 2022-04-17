@@ -37,3 +37,9 @@ GraphicManager::get_instance() {
 }
 
 
+
+
+bool GraphicManager::regist_renderer()
+{
+	return false;
+}

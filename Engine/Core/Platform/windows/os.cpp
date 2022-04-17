@@ -35,6 +35,8 @@
 #include <iostream>
 
 
+#include <spdlog/spdlog.h>
+
 HWND WindowsPlatform::hwnd_ = nullptr;
 
 
@@ -74,9 +76,9 @@ bool OS::open_console() {
 	return true;
 }
 
-std::string 
+MSTRING
 OS::get_current_directory() {
-	return "test";
+	return L"test";
 }
 
 

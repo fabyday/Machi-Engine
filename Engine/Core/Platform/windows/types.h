@@ -48,6 +48,8 @@
 
 #define MUINT UINT
 
+
+#define MLPWCHAR WCHAR*
 #define MWCHAR WCHAR
 #define MPWSTR PWSTR
 

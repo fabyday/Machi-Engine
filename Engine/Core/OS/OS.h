@@ -29,6 +29,7 @@
 #include <io.h>
 #include <Windows.h>
 #include <string>
+#include <types.h>
 
 
 //forward declartion
@@ -60,7 +61,7 @@ public:
 		return instance_;
 	}
 	//load_dynamic_library();
-	std::string get_current_directory();
+	MSTRING get_current_directory();
 	INT32 make_process();
 	bool open_console();
 	

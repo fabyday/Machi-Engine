@@ -34,6 +34,7 @@ typedef  struct OSContext {
 // OS specific function and configure collection.
 class WindowsPlatform {
 public:
+	static bool initialize(Application& app);
 	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 	static HWND get_HWND() { return hwnd_; }
 

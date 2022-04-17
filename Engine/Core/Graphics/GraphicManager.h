@@ -26,6 +26,7 @@
 #ifndef __GRAPHIC_MANAGER_H__
 #define __GRAPHIC_MANAGER_H__
 
+
 #include "primitive.h"
 #include <Platform/types.h>
 #include "../Application/application.h"
@@ -35,20 +36,21 @@ class GraphicManager {
 // Platform dependents
 private : 
 	static GraphicManager* manager_;
-	GraphicsContext* context_;
-	
+	GraphicsContext* graphics_context_;
 	static const MUINT frame_count_= 2;
 	
 	SyncronizeObejct* syncronize_object_;
 
 	friend Application;
 
+	int n_frame_;
+
 
 	//only called in Application
 	virtual void initialize(Application* app);
 	virtual void render();
 	virtual void destroy();
-
+	GraphicManager() :n_frame_(1) {};
 
 public : 
 	static GraphicManager* get_instance();

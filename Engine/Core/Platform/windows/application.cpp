@@ -28,12 +28,65 @@
 #include "os_native.h"
 #include "common.h"
 #include "types.h"
+#include <stdexcept>
+#include <spdlog/spdlog.h>
 
 
-HWND _handle;
+bool 
+WindowsPlatform::initialize(Application& app) {
+    // window initialize.
+    const OSContext* context = OS::get_context();
+    const MWCHAR* app_name =  app.get_appname().c_str();
+    spdlog::info(L"app name : {}", app_name);
 
 
-LRESULT WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+
+
+    WNDCLASSEX windowClass = { 0 };
+    windowClass.cbSize = sizeof(WNDCLASSEX);
+    windowClass.style = CS_HREDRAW | CS_VREDRAW;
+    windowClass.lpfnWndProc = WindowsPlatform::WindowProc;
+    windowClass.hInstance = *(context->hInstance);
+    windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
+    windowClass.lpszClassName = app_name;
+
+    RegisterClassEx(&windowClass);
+
+    RECT windowRect = { app.get_x_pos(), app.get_y_pos(), static_cast<MLONG>(app.get_width()), static_cast<MLONG>(app.get_height()) };
+
+
+    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+
+    // Create the window and store a handle to it.
+    HWND _handle = CreateWindow(
+        windowClass.lpszClassName,
+        app_name,
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT,
+        CW_USEDEFAULT,
+        windowRect.right - windowRect.left,
+        windowRect.bottom - windowRect.top,
+        nullptr,        // We have no parent window.
+        nullptr,        // We aren't using menus.
+        *(context->hInstance),
+        &app);
+
+    if (_handle == nullptr) {
+        int x = GetLastError();
+        return false;
+
+    }
+
+    spdlog::info("window handle is successfully initialized.");
+    WindowsPlatform::set_HWND(_handle);
+    ShowWindow(_handle, context->nCmdShow);
+
+    return true;
+}
+
+
+LRESULT 
+WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     UINT uMsg  = message;
@@ -100,7 +153,8 @@ LRESULT WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPAR
     return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
-bool Application::_run_logic() {
+bool 
+Application::_run_logic() {
     // Main sample loop.
     MSG msg = {};
     while (msg.message != WM_QUIT)
@@ -111,57 +165,27 @@ bool Application::_run_logic() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
+
+        GraphicManager::get_instance()->render();
     }
     return true;
 }
 
 bool
 Application::_initialize() {
+    if (!WindowsPlatform::initialize(*this)) // window platform initialize
+        return false;
+
+    // directX Graphics components initialize.
+    try{
+
+        GraphicManager::get_instance()->initialize(this);
+    }
+    catch (std::runtime_error e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
     
-    // window initialize.
-    const OSContext* context = OS::get_context();
-    WNDCLASSEX windowClass = { 0 };
-    windowClass.cbSize = sizeof(WNDCLASSEX);
-    windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    windowClass.lpfnWndProc = WindowsPlatform::WindowProc;
-    windowClass.hInstance = *(context->hInstance);
-    windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
-    windowClass.lpszClassName = app_name_.c_str();
-
-    RegisterClassEx(&windowClass);
-
-    RECT windowRect = { x_,y_ , static_cast<MLONG>(width_), static_cast<MLONG>(height_) };
-    
-
-    AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
-
-    // Create the window and store a handle to it.
-    _handle = CreateWindow(
-        windowClass.lpszClassName,
-        app_name_.c_str(),
-        WS_OVERLAPPEDWINDOW,
-        CW_USEDEFAULT,
-        CW_USEDEFAULT,
-        windowRect.right - windowRect.left,
-        windowRect.bottom - windowRect.top,
-        nullptr,        // We have no parent window.
-        nullptr,        // We aren't using menus.
-        *(context->hInstance),
-        this);
-
-    WindowsPlatform::set_HWND(_handle);
-
-    GraphicManager* mng = GraphicManager::get_instance();
-    mng->initialize(this);
-
-    ShowWindow(_handle, context->nCmdShow);
-
-    
-    
-    
-
-
-
     return true;
 }
 

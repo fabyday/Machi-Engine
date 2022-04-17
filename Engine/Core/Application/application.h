@@ -71,9 +71,13 @@ public:
 	Application* set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen);
 	Application* set_name(MSTRING name);
 
-	int get_width() { return width_; }
-	int get_height() { return height_; }
+	const MSTRING& get_appname() const { return app_name_; } ;
 
+	inline int get_x_pos() const { return x_; }
+	inline int get_y_pos() const { return y_; }
+	inline int get_width() const { return width_; }
+	inline int get_height() const { return height_; }
+	inline bool is_full_screen() const { return fullscreen_; }
 
 private:
 	static Application* app_;

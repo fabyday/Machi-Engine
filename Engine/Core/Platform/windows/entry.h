@@ -32,7 +32,7 @@
 #include <Application/application.h>
 #include <OS/OS.h>
 #include <iostream>
-
+#include <spdlog/spdlog.h>
 
 
 // main function hijacking.
@@ -45,12 +45,10 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	config.pCmdLine = pCmdLine;
 	config.nCmdShow = nCmdShow;
 
-
 	//other code
+	spdlog::info("Window Platform Start...");
 	OS::get_instance();
 	OS::set_context(&config);
-	
-
 	Application* app = machi_main(__argc, __argv);
 	bool reval =  app->run(__argc, __argv);
 	delete app;
