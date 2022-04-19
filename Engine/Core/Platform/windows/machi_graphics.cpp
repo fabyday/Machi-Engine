@@ -100,16 +100,118 @@ typedef struct GraphicsDesc {
     ComPtr<ID3D12PipelineState> pipeline_state_;
     ComPtr<ID3D12GraphicsCommandList> command_list_;
     UINT rtv_descriptor_size_;
+
+    ComPtr<ID3D12Resource> vertex_buffer_;
+    D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view_;
 }GraphicsContext;
 
+void WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s);
 
 static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     
-//create command list
-    ThrowIfFailed(g.device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g.command_allocator_.Get(), nullptr, IID_PPV_ARGS(&g.command_list_)));
 
+    //create rootsignature
+    {
+        CD3DX12_ROOT_SIGNATURE_DESC rootsignatureDesc;
+        rootsignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+        ComPtr<ID3DBlob> signature;
+        ComPtr<ID3DBlob> error;
+        ThrowIfFailed(D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
+        ThrowIfFailed(g.device_->CreateRootSignature(0, 
+                                signature->GetBufferPointer(), 
+                                signature->GetBufferSize(), 
+                                IID_PPV_ARGS(&g.root_signature_))
+                    );
+    }
+    //create pipeline state
+    {
+        ComPtr<ID3DBlob> vertex_shader;
+        ComPtr<ID3DBlob> pixel_shader;
+#if defined(_DEBUG)
+        // Enable better shader debugging with the graphics debugging tools.
+        UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+        UINT compileFlags = 0;
+#endif
+        ThrowIfFailed(D3DCompileFromFile(L"resources/shader/test_vertex_shader.hlsl", nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &vertex_shader, nullptr));
+        ThrowIfFailed(D3DCompileFromFile(L"resources/shader/test_pixel_shader.hlsl", nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &pixel_shader, nullptr));
+        // Define the vertex input layout.
+        D3D12_INPUT_ELEMENT_DESC input_element_descs[] =
+        {
+           { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+           { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+        };
+
+        // Describe and create the graphics pipeline state object (PSO).
+        D3D12_GRAPHICS_PIPELINE_STATE_DESC pso_desc = {};
+        pso_desc.InputLayout = { input_element_descs, _countof(input_element_descs) };
+        pso_desc.pRootSignature = g.root_signature_.Get();
+        pso_desc.VS = CD3DX12_SHADER_BYTECODE(vertex_shader.Get());
+        pso_desc.PS = CD3DX12_SHADER_BYTECODE(pixel_shader.Get());
+        pso_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+        pso_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+        pso_desc.DepthStencilState.DepthEnable = FALSE;
+        pso_desc.DepthStencilState.StencilEnable = FALSE;
+        pso_desc.SampleMask = UINT_MAX;
+        pso_desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+        pso_desc.NumRenderTargets = 1;
+        pso_desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+        pso_desc.SampleDesc.Count = 1;
+
+        ThrowIfFailed(g.device_->CreateGraphicsPipelineState(&pso_desc, IID_PPV_ARGS(&g.pipeline_state_)));
+    }
+
+
+//create command list
+    ThrowIfFailed(g.device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g.command_allocator_.Get(), g.pipeline_state_.Get(), IID_PPV_ARGS(&g.command_list_)));
     // recording state(must be closed)
     ThrowIfFailed(g.command_list_->Close());
+    
+
+    float m_aspectRatio = static_cast<float>(1280) / static_cast<float>(960);
+
+
+    // Create the vertex buffer.
+    {
+        // Define the geometry for a triangle.
+        Vertex triangleVertices[] =
+        {
+            { { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+            { { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
+            { { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+        };
+
+        const UINT vertexBufferSize = sizeof(triangleVertices);
+
+        // Note: using upload heaps to transfer static data like vert buffers is not 
+        // recommended. Every time the GPU needs it, the upload heap will be marshalled 
+        // over. Please read up on Default Heap usage. An upload heap is used here for 
+        // code simplicity and because there are very few verts to actually transfer.
+        ThrowIfFailed(g.device_->CreateCommittedResource(
+            &CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+            D3D12_HEAP_FLAG_NONE,
+            &CD3DX12_RESOURCE_DESC::Buffer(vertexBufferSize),
+            D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr,
+            IID_PPV_ARGS(&g.vertex_buffer_)));
+
+        // Copy the triangle data to the vertex buffer.
+        UINT8* pVertexDataBegin;
+        CD3DX12_RANGE readRange(0, 0);        // We do not intend to read from this resource on the CPU.
+        ThrowIfFailed(g.vertex_buffer_->Map(0, &readRange, reinterpret_cast<void**>(&pVertexDataBegin)));
+        memcpy(pVertexDataBegin, triangleVertices, sizeof(triangleVertices));
+        g.vertex_buffer_->Unmap(0, nullptr);
+
+        // Initialize the vertex buffer view.
+        g.vertex_buffer_view_.BufferLocation = g.vertex_buffer_->GetGPUVirtualAddress();
+        g.vertex_buffer_view_.StrideInBytes = sizeof(Vertex);
+        g.vertex_buffer_view_.SizeInBytes = vertexBufferSize;
+    }
+
+
+
+
 
     //create syncronize object
     {
@@ -118,9 +220,15 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 
         // create fence event
         s.fence_event_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        if (s.fence_event_){
+        if (s.fence_event_ == nullptr){
             ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
         }
+
+
+        // Wait for the command list to execute; we are reusing the same command 
+        // list in our main loop but for now, we just want to wait for setup to 
+        // complete before continuing.
+        WaitForPreviousFrame(g, s);
     }
 
 }
@@ -131,27 +239,48 @@ PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
     
     ThrowIfFailed(g.command_allocator_->Reset());
     ThrowIfFailed(g.command_list_->Reset(g.command_allocator_.Get(), g.pipeline_state_.Get()));
+   
+
+    g.command_list_->SetGraphicsRootSignature(g.root_signature_.Get());
+    g.command_list_->RSSetViewports(1, &g.viewport_);
+    g.command_list_->RSSetScissorRects(1, &g.scissor_rect_);
+    
+    
+    // Indicate that the back buffer will be used as a render target.
     g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
-                                        g.render_targets_[s.frame_index_].Get(), 
-                                        D3D12_RESOURCE_STATE_PRESENT, 
+                                        g.render_targets_[s.frame_index_].Get(),
+                                        D3D12_RESOURCE_STATE_PRESENT,
                                         D3D12_RESOURCE_STATE_RENDER_TARGET)
                                     );
+
+
 
 
     CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(g.rtv_heap_->GetCPUDescriptorHandleForHeapStart(), 
                                             s.frame_index_, 
                                             g.rtv_descriptor_size_);
 
-
-
-    const float clearColor[] = { 0.0f, 0.2f, 0.4f, 1.0f };
+    g.command_list_->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
+    static float ts = 0.001f;
+    static int j = 0;
+    // record cmd
+    //float clearColor[] = { 0.0f, 0.2f , 0.4f, 1.0f };
+   
+    float clearColor[] = { 0.0f, 0.0f , (0.0f, 0.0f + ts * j) - (int)(0.0f, 0.0f + ts * j++) };
+    spdlog::info("test color {} : ", (0.0f, 0.0f + ts * j) - (int)(0.0f, 0.0f + ts * j++));
     g.command_list_->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
+    g.command_list_->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+    g.command_list_->IASetVertexBuffers(0, 1, &g.vertex_buffer_view_);
+    g.command_list_->DrawInstanced(3, 1, 0, 0);
+    // Indicate that the back buffer will now be used to present.
 
     g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
                                         g.render_targets_[s.frame_index_].Get(), 
                                         D3D12_RESOURCE_STATE_RENDER_TARGET, 
                                         D3D12_RESOURCE_STATE_PRESENT)
                                     );
+
+
 
     ThrowIfFailed(g.command_list_->Close());
 }
@@ -180,7 +309,7 @@ WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s)
     s.frame_index_= g.swap_chain_->GetCurrentBackBufferIndex();
 }
 
- void
+void
 GraphicManager::initialize(Application* app) {
     //load dx12 pipeline
     graphics_context_ = new GraphicsContext();
@@ -222,7 +351,7 @@ GraphicManager::initialize(Application* app) {
     {
         ComPtr<IDXGIAdapter1> hardwareAdapter;
         GetHardwareAdapter(factory.Get(), &hardwareAdapter, false);
-        
+
         ThrowIfFailed(D3D12CreateDevice(
             hardwareAdapter.Get(),
             D3D_FEATURE_LEVEL_11_0,
@@ -236,6 +365,12 @@ GraphicManager::initialize(Application* app) {
     queue_desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 
     ThrowIfFailed(graphics_context_->device_->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&(graphics_context_->command_queue_))));
+
+
+    //create viewport temporary and scissorrect
+    // 
+    graphics_context_->viewport_ = {(0.0f), 0.0f, static_cast<float>(app->get_width()), static_cast<float>(app->get_height())};
+    graphics_context_->scissor_rect_ = { 0, 0, static_cast<LONG>(app->get_width()), static_cast<LONG>(app->get_height()) };
 
     // Describe and create the swap chain.
     DXGI_SWAP_CHAIN_DESC1 swapchain_desc = {};
@@ -271,7 +406,7 @@ GraphicManager::initialize(Application* app) {
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         ThrowIfFailed(graphics_context_->device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&graphics_context_->rtv_heap_)));
-
+        
         graphics_context_->rtv_descriptor_size_= graphics_context_->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
     }
 
@@ -291,33 +426,6 @@ GraphicManager::initialize(Application* app) {
     ThrowIfFailed(graphics_context_->device_->CreateCommandAllocator(D3D12_COMMAND_LIST_TYPE_DIRECT, IID_PPV_ARGS(&graphics_context_->command_allocator_)));
 
 
-    //
-    //
-    //
-    // Create the command list.
-    ThrowIfFailed(graphics_context_->device_->CreateCommandList(
-                    0, D3D12_COMMAND_LIST_TYPE_DIRECT, 
-                    graphics_context_->command_allocator_.Get(), nullptr, 
-                    IID_PPV_ARGS(&graphics_context_->command_list_))
-                );
-
-    // Command lists are created in the recording state, but there is nothing
-    // to record yet. The main loop expects it to be closed, so close it now.
-    ThrowIfFailed(graphics_context_->command_list_->Close());
-
-    // Create synchronization objects.
-    {
-        ThrowIfFailed(graphics_context_->device_->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&syncronize_object_->fence_)));
-        syncronize_object_->fenceValue_= 1;
-
-        // Create an event handle to use for frame synchronization.
-        syncronize_object_->fence_event_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        if (syncronize_object_->fence_event_ == nullptr)
-        {
-            ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
-        }
-    }
-   
 
     load_assets(*graphics_context_, *syncronize_object_);
 
@@ -337,7 +445,6 @@ GraphicManager::render() {
      
      ThrowIfFailed(graphics_context_->swap_chain_->Present(1, 0));
      WaitForPreviousFrame(*graphics_context_, *syncronize_object_);
-
 }
 
  void

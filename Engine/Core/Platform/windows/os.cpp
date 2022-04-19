@@ -38,6 +38,7 @@
 #include <spdlog/spdlog.h>
 
 HWND WindowsPlatform::hwnd_ = nullptr;
+namespace fs = std::filesystem;
 
 
 
@@ -69,8 +70,11 @@ static void RedirectIOToConsole() {
 
 OS::OS() {
 	open_console();
+	spdlog::info(L"current working directory : {}", get_current_directory().c_str());
 }
-bool OS::open_console() {
+
+bool 
+OS::open_console() {
 	
 	RedirectIOToConsole();
 	return true;
@@ -78,7 +82,7 @@ bool OS::open_console() {
 
 MSTRING
 OS::get_current_directory() {
-	return L"test";
+	return fs::current_path();
 }
 
 
