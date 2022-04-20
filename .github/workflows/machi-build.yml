@@ -1,0 +1,50 @@
+name: Machi-Build
+
+on:
+  push:
+    branches:
+      - main
+      - dev1
+  pull_request:
+    branches:
+      - main
+      - dev1
+
+# env:
+  # CTEST_OUTPUT_ON_FAILURE: ON
+  # CTEST_PARALLEL_LEVEL: 2
+
+jobs:
+  Windows:
+    name: Windows 
+    runs-on: windows-2022
+    strategy:
+      fail-fast: false
+      matrix:
+        config: [Release]
+        static: [ON, OFF]
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 10
+          submodules : 'true'
+          # token : ${{secrets.PAT_TOKEN}}
+
+      - name: Install Ninja
+        uses: seanmiddleditch/gha-setup-ninja@master
+
+      - name: Set env variable for sccache
+        run: |
+          echo "appdata=$env:LOCALAPPDATA" >> ${env:GITHUB_ENV}
+
+      - name: Configure and build
+        shell: cmd
+        run: |
+          call "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\VsDevCmd.bat" -arch=x64
+          cmake -G Ninja ^
+            -B build ^
+            -S .
+          cmake --build build 
+      # - name: Tests
+      #   run: cd build; ctest --verbose -j2

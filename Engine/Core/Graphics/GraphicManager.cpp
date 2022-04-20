@@ -23,12 +23,23 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
 
-Application* machi_main(int argc, char** argv) {
+#include "GraphicManager.h"
+GraphicManager* GraphicManager::manager_ = nullptr;
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
+GraphicManager*
+GraphicManager::get_instance() {
+	if (GraphicManager::manager_ == nullptr) {
+		GraphicManager::manager_ = new GraphicManager;
+	}
+	return GraphicManager::manager_;
+}
+
+
+
+
+bool GraphicManager::regist_renderer()
+{
+	return false;
 }

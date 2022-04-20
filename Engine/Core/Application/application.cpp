@@ -22,13 +22,54 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+#include "application.h"
+#include <iostream>
 
-#include <entry.h>
-
-Application* machi_main(int argc, char** argv) {
+Application* Application::app_ = nullptr;
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
+
+
+bool
+Application::render() {
+	return true;
+}
+
+
+
+bool
+Application::update() {
+	return true;
+}
+
+
+bool
+Application::fixed_update() {
+	return true;
+}
+
+
+Application*
+Application::set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen) {
+	this->x_ = x; this->y_ = y; 
+	this->width_ = width; this->height_ = height; 
+	this->fullscreen_ = fullscreen;
+	
+	return this;
+}
+
+
+
+
+Application*
+Application::set_resolution(MINT width, MINT height, bool fullscreen) {
+	return set_resolution(0, 0, width, height, fullscreen);
+}
+
+
+
+Application* 
+Application::set_name(MSTRING name) {
+	this->app_name_ = name;
+	return this;
 }

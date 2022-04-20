@@ -22,13 +22,35 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+#pragma once
 
-#include <entry.h>
+#include "config.h"
+#include "os_native.h"
 
-Application* machi_main(int argc, char** argv) {
+#include <Windows.h>
+
+#include <Application/application.h>
+#include <OS/OS.h>
+#include <iostream>
+#include <spdlog/spdlog.h>
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
+// main function hijacking.
+Application* machi_main(int argc, char** argv); // User impl.
+
+int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
+	OSConfig config;
+	config.hInstance = &hInstance;
+	config.hPrevInstance = &hPrevInstance;
+	config.pCmdLine = pCmdLine;
+	config.nCmdShow = nCmdShow;
+
+	//other code
+	spdlog::info("Window Platform Start...");
+	OS::get_instance();
+	OS::set_context(&config);
+	Application* app = machi_main(__argc, __argv);
+	bool reval =  app->run(__argc, __argv);
+	delete app;
+	return reval;
 }

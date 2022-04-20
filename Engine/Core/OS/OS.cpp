@@ -23,12 +23,8 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
 
-Application* machi_main(int argc, char** argv) {
+#include "OS.h"
 
-
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+OSContext* OS::context_ = nullptr;
+OS* OS::instance_ = nullptr;

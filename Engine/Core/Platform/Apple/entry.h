@@ -23,12 +23,17 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
+#include "config.h"
+#include "../../Application/application.h"
+#include <Windows.h>
 
-Application* machi_main(int argc, char** argv) {
 
+// main function hijacking.
+Application* machi_main(int argc, char** argv); // User impl.
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
+int main(int argc, char* argv[]){	
+	Application* app = machi_main(argc, argv);
+	bool reval = app->run(0, NULL);
+	delete app;
+	return reval;
 }

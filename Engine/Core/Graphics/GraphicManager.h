@@ -23,12 +23,44 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
+#ifndef __GRAPHIC_MANAGER_H__
+#define __GRAPHIC_MANAGER_H__
 
-Application* machi_main(int argc, char** argv) {
+
+#include "primitive.h"
+#include <Platform/types.h>
+#include "../Application/application.h"
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+class GraphicManager {
+// Platform dependents
+private : 
+	static GraphicManager* manager_;
+	GraphicsContext* graphics_context_;
+	static const MUINT frame_count_= 2;
+	
+	SyncronizeObejct* syncronize_object_;
+
+	friend Application;
+
+	int n_frame_;
+
+
+	//only called in Application
+	virtual void initialize(Application* app);
+	virtual void render();
+	virtual void destroy();
+	GraphicManager() :n_frame_(1) {};
+
+public : 
+	static GraphicManager* get_instance();
+	
+
+	bool regist_renderer();
+	Buffer* make_buffer();
+	BufferView* make_buffer_view(Buffer& buf);
+	
+
+
+};
+#endif

@@ -22,13 +22,40 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+#pragma once
 
-#include <entry.h>
+#include <Windows.h>
+#include <string>
 
-Application* machi_main(int argc, char** argv) {
+#if defined(_UNICODE) || defined(UNICODE)
+#define MSTRING std::wstring
+#else 
+#define MSTRING std::string 
+#endif
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+#define MCHAR WCHAR
+
+#define MINT8 INT8
+#define MINT16 INT16
+#define MINT32 INT32
+#define MINT64 INT64
+#define MINT MINT32
+
+#define MUINT8 INT8
+#define MUINT16 INT16
+#define MUINT32 INT32
+
+#define MUINT UINT
+
+
+#define MLPWCHAR WCHAR*
+#define MWCHAR WCHAR
+#define MPWSTR PWSTR
+
+#define MLONG LONG
+
+#define MFLOAT float
+
+
+#define MDOUBLE double 

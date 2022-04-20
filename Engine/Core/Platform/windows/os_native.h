@@ -1,8 +1,3 @@
-//MIT License 
-//Copyright(c) 2022 Ji Hyun Roh
-// 
-// 
-//Permission is hereby granted, free of charge, to any person
 //obtaining a copy of this softwareand associated documentation
 //files(the "Software"), to deal in the Software without
 //restriction, including without limitation the rights to use,
@@ -22,13 +17,29 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
+#pragma once
+#include <Windows.h>
+#include <Application/application.h>
 
-#include <entry.h>
+#include "types.h"
 
-Application* machi_main(int argc, char** argv) {
+typedef  struct OSContext {
+	HINSTANCE* hInstance;
+	HINSTANCE* hPrevInstance;
+	MUINT nCmdShow;
+	MPWSTR pCmdLine;
+}OSConfig;
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+// OS specific function and configure collection.
+class WindowsPlatform {
+public:
+	static bool initialize(Application& app);
+	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+	static HWND get_HWND() { return hwnd_; }
+
+	friend Application;
+private:
+	static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
+	static HWND hwnd_;
+};

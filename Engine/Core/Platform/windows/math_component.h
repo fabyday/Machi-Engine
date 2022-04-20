@@ -23,12 +23,13 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
 
-Application* machi_main(int argc, char** argv) {
+#pragma once
+
+#include <d3dx12.h>
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+
+
+using namespace Microsoft;
+

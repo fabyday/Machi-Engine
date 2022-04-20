@@ -23,12 +23,16 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
+#ifdef MACHI_BUILD_DLL // MACHI_EXPORT
+	#define MACHI_API __attribute__((visibility("default")) 
+#else // MACHI_IMPORT
+	#define MACHI_API  __declspec(dllimport)
+#endif 
 
-Application* machi_main(int argc, char** argv) {
+
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers.
+#endif
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+

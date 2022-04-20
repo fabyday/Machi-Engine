@@ -23,12 +23,58 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include <entry.h>
 
-Application* machi_main(int argc, char** argv) {
+#include <config.h>
+#include <stdio.h>
+#include <io.h>
+#include <Windows.h>
+#include <string>
+#include <types.h>
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
-		->set_resolution(1280, 960, false);
-}
+//forward declartion
+typedef struct OSContext OSConfig;
+
+class MACHI_API OS {
+private:
+	static OSContext* context_;
+	static OS* instance_;
+	
+	int argc;
+	char** argv;
+
+	OS();
+public:
+
+	static void set_context(OSContext* ctx) {
+		context_ = ctx;
+	}
+
+	static OSContext* get_context() {
+		return context_;
+	}
+
+	static OS* get_instance() {
+		
+		if (instance_ == nullptr)
+			instance_ = new OS();
+		return instance_;
+	}
+	//load_dynamic_library();
+	MSTRING get_current_directory();
+	INT32 make_process();
+	bool open_console();
+	
+
+	
+
+
+
+
+
+
+
+
+
+
+};
