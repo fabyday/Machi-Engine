@@ -20,7 +20,7 @@ it is strongly inspired by **Unreal Engine**.
 
 
 # **Version**
-current branch :  dev.1
+current branch :  master
 
 ## **Branch Naming**
 - **master** : Program operation is ___guaranteed___.
