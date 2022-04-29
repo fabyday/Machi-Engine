@@ -96,28 +96,98 @@ typedef struct GraphicsDesc {
     ComPtr<ID3D12CommandAllocator> command_allocator_;
     ComPtr<ID3D12CommandQueue> command_queue_;
     ComPtr<ID3D12RootSignature> root_signature_;
+    
     ComPtr<ID3D12DescriptorHeap> rtv_heap_;
+    ComPtr<ID3D12DescriptorHeap> srv_heap_;
+
+
     ComPtr<ID3D12PipelineState> pipeline_state_;
     ComPtr<ID3D12GraphicsCommandList> command_list_;
     UINT rtv_descriptor_size_;
 
     ComPtr<ID3D12Resource> vertex_buffer_;
     D3D12_VERTEX_BUFFER_VIEW vertex_buffer_view_;
+    ComPtr<ID3D12Resource> texture_;
 }GraphicsContext;
 
 void WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s);
+// Generate a simple black and white checkerboard texture.
+std::vector<UINT8> gen_texture(UINT TextureWidth, UINT TextureHeight, UINT TexturePixelSize)
+{
+    const UINT rowPitch = TextureWidth * TexturePixelSize;
+    const UINT cellPitch = rowPitch >> 3;        // The width of a cell in the checkboard texture.
+    const UINT cellHeight = TextureWidth >> 3;    // The height of a cell in the checkerboard texture.
+    const UINT textureSize = rowPitch * TextureHeight;
 
+    std::vector<UINT8> data(textureSize);
+    UINT8* pData = &data[0];
+
+    for (UINT n = 0; n < textureSize; n += TexturePixelSize)
+    {
+        UINT x = n % rowPitch;
+        UINT y = n / rowPitch;
+        UINT i = x / cellPitch;
+        UINT j = y / cellHeight;
+
+        if (i % 2 == j % 2)
+        {
+            pData[n] = 0x00;        // R
+            pData[n + 1] = 0x00;    // G
+            pData[n + 2] = 0x00;    // B
+            pData[n + 3] = 0xff;    // A
+        }
+        else
+        {
+            pData[n] = 0xff;        // R
+            pData[n + 1] = 0xff;    // G
+            pData[n + 2] = 0xff;    // B
+            pData[n + 3] = 0xff;    // A
+        }
+    }
+
+    return data;
+}
 static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     
 
     //create rootsignature
     {
-        CD3DX12_ROOT_SIGNATURE_DESC rootsignatureDesc;
-        rootsignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        D3D12_FEATURE_DATA_ROOT_SIGNATURE feature_data = {};
+        feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+
+        if (FAILED(g.device_->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &feature_data, sizeof(feature_data)))) {
+            feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+        }
+        CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
+        ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+
+        CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+        rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_PIXEL);
+
+        D3D12_STATIC_SAMPLER_DESC sampler = {};
+        sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+        sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.MipLODBias = 0;
+        sampler.MaxAnisotropy = 0;
+        sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+        sampler.MinLOD = 0.0f;
+        sampler.MaxLOD = D3D12_FLOAT32_MAX;
+        sampler.ShaderRegister = 0;
+        sampler.RegisterSpace = 0;
+        sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+        //CD3DX12_ROOT_SIGNATURE_DESC rootsignatureDesc;
+        //rootsignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+        rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
 
         ComPtr<ID3DBlob> signature;
         ComPtr<ID3DBlob> error;
-        ThrowIfFailed(D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
+        //ThrowIfFailed(D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
+        ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, feature_data.HighestVersion, &signature, &error));
         ThrowIfFailed(g.device_->CreateRootSignature(0, 
                                 signature->GetBufferPointer(), 
                                 signature->GetBufferSize(), 
@@ -210,6 +280,68 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     }
 
 
+    //load texture
+    ComPtr<ID3D12Resource> texture_upload_heap;
+    {
+        D3D12_RESOURCE_DESC texture_desc= {};
+        texture_desc.MipLevels = 1;
+        texture_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+        texture_desc.Width = 256;
+        texture_desc.Height = 256;
+        texture_desc.Flags = D3D12_RESOURCE_FLAG_NONE;
+        texture_desc.DepthOrArraySize = 1;
+        texture_desc.SampleDesc.Count = 1;
+        texture_desc.SampleDesc.Quality = 0;
+        texture_desc.Dimension = D3D12_RESOURCE_DIMENSION_TEXTURE2D;
+
+
+        ThrowIfFailed(g.device_->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
+                                D3D12_HEAP_FLAG_NONE,
+                                &texture_desc,
+                                D3D12_RESOURCE_STATE_COPY_DEST, 
+                                nullptr, 
+                                IID_PPV_ARGS(&g.texture_)));
+        const MINT64 upload_buffer_size = GetRequiredIntermediateSize(g.texture_.Get(), 0, 1);
+
+
+
+        ThrowIfFailed(g.device_->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
+                                D3D12_HEAP_FLAG_NONE,
+                                &CD3DX12_RESOURCE_DESC::Buffer(upload_buffer_size), 
+                                D3D12_RESOURCE_STATE_GENERIC_READ, 
+                                nullptr, 
+                                IID_PPV_ARGS(&texture_upload_heap)));
+
+
+        std::vector<UINT8> texture = gen_texture(256,256,4);
+
+
+        D3D12_SUBRESOURCE_DATA texture_data = {};
+        texture_data.pData = &texture[0];
+        texture_data.RowPitch = 256 * 4; //texture width* pixelsize(rgba)
+        texture_data.SlicePitch = texture_data.RowPitch * 256; // rowpitch * TextureHeight
+
+        UpdateSubresources(g.command_list_.Get(), g.texture_.Get(), texture_upload_heap.Get(), 0, 0, 1, &texture_data);
+        g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(g.texture_.Get(),
+                                            D3D12_RESOURCE_STATE_COPY_DEST,
+                                            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+
+        //describe and create a srv for the texture
+        D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
+        srv_desc.Shader4ComponentMapping = D3D12_DEFAULT_SHADER_4_COMPONENT_MAPPING;
+        srv_desc.Format = texture_desc.Format;
+        srv_desc.ViewDimension = D3D12_SRV_DIMENSION_TEXTURE2D;
+        srv_desc.Texture2D.MipLevels = 1;
+        g.device_->CreateShaderResourceView(g.texture_.Get(), &srv_desc, g.srv_heap_->GetCPUDescriptorHandleForHeapStart());
+
+
+    }
+
+    // Close the command list and execute it to begin the initial GPU setup.
+    ThrowIfFailed(g.command_list_->Close());
+    ID3D12CommandList* ppCommandLists[] = { g.command_list_.Get() };
+    g.command_queue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+    
 
 
 
@@ -239,9 +371,16 @@ PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
     
     ThrowIfFailed(g.command_allocator_->Reset());
     ThrowIfFailed(g.command_list_->Reset(g.command_allocator_.Get(), g.pipeline_state_.Get()));
-   
+    
+    ID3D12DescriptorHeap* ppHeaps[] = { g.srv_heap_.Get() };
+
 
     g.command_list_->SetGraphicsRootSignature(g.root_signature_.Get());
+
+    g.command_list_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
+    g.command_list_->SetGraphicsRootDescriptorTable(0, g.srv_heap_->GetGPUDescriptorHandleForHeapStart());
+
+
     g.command_list_->RSSetViewports(1, &g.viewport_);
     g.command_list_->RSSetScissorRects(1, &g.scissor_rect_);
     
@@ -406,8 +545,20 @@ GraphicManager::initialize(Application* app) {
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         ThrowIfFailed(graphics_context_->device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&graphics_context_->rtv_heap_)));
+       
+        
+        
+        // Describe and create a shader resource view (SRV) heap for the texture.
+        D3D12_DESCRIPTOR_HEAP_DESC  srv_heap_desc = {};
+        srv_heap_desc.NumDescriptors = 1;
+        srv_heap_desc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_CBV_SRV_UAV;
+        srv_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
+        ThrowIfFailed(graphics_context_->device_->CreateDescriptorHeap(&srv_heap_desc, IID_PPV_ARGS(&graphics_context_->srv_heap_)));
+
+        
         
         graphics_context_->rtv_descriptor_size_= graphics_context_->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
     }
 
     // Create frame resources.
