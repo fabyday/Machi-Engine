@@ -56,7 +56,8 @@ using namespace DirectX;
 struct Vertex
 {
     XMFLOAT3 position;
-    XMFLOAT4 color;
+    //XMFLOAT4 color;
+    XMFLOAT2 uv;
 };
 typedef struct Buffer {
     template <typename T>
@@ -209,8 +210,11 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
         // Define the vertex input layout.
         D3D12_INPUT_ELEMENT_DESC input_element_descs[] =
         {
-           { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-           { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+           //{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+           //{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+
         };
 
         // Describe and create the graphics pipeline state object (PSO).
@@ -236,7 +240,7 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 //create command list
     ThrowIfFailed(g.device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g.command_allocator_.Get(), g.pipeline_state_.Get(), IID_PPV_ARGS(&g.command_list_)));
     // recording state(must be closed)
-    ThrowIfFailed(g.command_list_->Close());
+    //ThrowIfFailed(g.command_list_->Close());
     
 
     float m_aspectRatio = static_cast<float>(1280) / static_cast<float>(960);
@@ -247,9 +251,12 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
         // Define the geometry for a triangle.
         Vertex triangleVertices[] =
         {
-            { { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
+            /*{ { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 1.0f, 0.0f, 0.0f, 1.0f } },
             { { 0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 1.0f, 0.0f, 1.0f } },
-            { { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }
+            { { -0.25f, -0.25f * m_aspectRatio, 0.0f }, { 0.0f, 0.0f, 1.0f, 1.0f } }*/
+            { { 0.0f, 0.25f * m_aspectRatio, 0.0f }, { 0.5f, 0.0f } },
+            { { 0.25f, -0.25f * m_aspectRatio, 0.0f },  { 1.0f, 1.0f } },
+            { { -0.25f, -0.25f * m_aspectRatio, 0.0f },{ 0.0f, 1.0f } }
         };
 
         const UINT vertexBufferSize = sizeof(triangleVertices);
