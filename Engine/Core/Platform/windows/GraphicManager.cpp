@@ -22,7 +22,25 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include "machi_graphics.h"
+
+#include <Graphics/GraphicManager.h>
+#include "config.h"
+#include "d3d12.h"
+#include "d3dx12.h"
+#include "os_native.h"
+#include "dxhelper.h"
+#include <wrl.h> // ComPtr header
+#include <shellapi.h>
+
+#include <directxmath.h>
+#include <D3Dcompiler.h>
+#include <dxgi1_4.h>
+
+
+#include <d3d12sdklayers.h> // for debugging
+
+#include <DirectXMath.h>
+#include <spdlog/spdlog.h>
 
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "d3dcompiler.lib")
@@ -79,7 +97,7 @@ typedef struct GraphicsDesc {
     ComPtr<ID3D12CommandAllocator> command_allocator_;
     ComPtr<ID3D12CommandQueue> command_queue_;
     ComPtr<ID3D12RootSignature> root_signature_;
-    
+
     ComPtr<ID3D12DescriptorHeap> rtv_heap_;
     ComPtr<ID3D12DescriptorHeap> srv_heap_;
 
@@ -131,7 +149,7 @@ std::vector<UINT8> gen_texture(UINT TextureWidth, UINT TextureHeight, UINT Textu
     return data;
 }
 static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
-    
+
 
     //create rootsignature
     {
@@ -171,11 +189,11 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
         ComPtr<ID3DBlob> error;
         //ThrowIfFailed(D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
         ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, feature_data.HighestVersion, &signature, &error));
-        ThrowIfFailed(g.device_->CreateRootSignature(0, 
-                                signature->GetBufferPointer(), 
-                                signature->GetBufferSize(), 
-                                IID_PPV_ARGS(&g.root_signature_))
-                    );
+        ThrowIfFailed(g.device_->CreateRootSignature(0,
+            signature->GetBufferPointer(),
+            signature->GetBufferSize(),
+            IID_PPV_ARGS(&g.root_signature_))
+        );
     }
     //create pipeline state
     {
@@ -192,10 +210,10 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
         // Define the vertex input layout.
         D3D12_INPUT_ELEMENT_DESC input_element_descs[] =
         {
-           //{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-           //{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
-            { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
-            { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+            //{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+            //{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+             { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+             { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
 
         };
 
@@ -219,11 +237,11 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     }
 
 
-//create command list
+    //create command list
     ThrowIfFailed(g.device_->CreateCommandList(0, D3D12_COMMAND_LIST_TYPE_DIRECT, g.command_allocator_.Get(), g.pipeline_state_.Get(), IID_PPV_ARGS(&g.command_list_)));
     // recording state(must be closed)
     //ThrowIfFailed(g.command_list_->Close());
-    
+
 
     float m_aspectRatio = static_cast<float>(1280) / static_cast<float>(960);
 
@@ -272,7 +290,7 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     //load texture
     ComPtr<ID3D12Resource> texture_upload_heap;
     {
-        D3D12_RESOURCE_DESC texture_desc= {};
+        D3D12_RESOURCE_DESC texture_desc = {};
         texture_desc.MipLevels = 1;
         texture_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
         texture_desc.Width = 256;
@@ -285,24 +303,24 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 
 
         ThrowIfFailed(g.device_->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_DEFAULT),
-                                D3D12_HEAP_FLAG_NONE,
-                                &texture_desc,
-                                D3D12_RESOURCE_STATE_COPY_DEST, 
-                                nullptr, 
-                                IID_PPV_ARGS(&g.texture_)));
+            D3D12_HEAP_FLAG_NONE,
+            &texture_desc,
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            nullptr,
+            IID_PPV_ARGS(&g.texture_)));
         const MINT64 upload_buffer_size = GetRequiredIntermediateSize(g.texture_.Get(), 0, 1);
 
 
 
         ThrowIfFailed(g.device_->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(D3D12_HEAP_TYPE_UPLOAD),
-                                D3D12_HEAP_FLAG_NONE,
-                                &CD3DX12_RESOURCE_DESC::Buffer(upload_buffer_size), 
-                                D3D12_RESOURCE_STATE_GENERIC_READ, 
-                                nullptr, 
-                                IID_PPV_ARGS(&texture_upload_heap)));
+            D3D12_HEAP_FLAG_NONE,
+            &CD3DX12_RESOURCE_DESC::Buffer(upload_buffer_size),
+            D3D12_RESOURCE_STATE_GENERIC_READ,
+            nullptr,
+            IID_PPV_ARGS(&texture_upload_heap)));
 
 
-        std::vector<UINT8> texture = gen_texture(256,256,4);
+        std::vector<UINT8> texture = gen_texture(256, 256, 4);
 
 
         D3D12_SUBRESOURCE_DATA texture_data = {};
@@ -312,8 +330,8 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 
         UpdateSubresources(g.command_list_.Get(), g.texture_.Get(), texture_upload_heap.Get(), 0, 0, 1, &texture_data);
         g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(g.texture_.Get(),
-                                            D3D12_RESOURCE_STATE_COPY_DEST,
-                                            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
+            D3D12_RESOURCE_STATE_COPY_DEST,
+            D3D12_RESOURCE_STATE_PIXEL_SHADER_RESOURCE));
 
         //describe and create a srv for the texture
         D3D12_SHADER_RESOURCE_VIEW_DESC srv_desc = {};
@@ -330,7 +348,7 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
     ThrowIfFailed(g.command_list_->Close());
     ID3D12CommandList* ppCommandLists[] = { g.command_list_.Get() };
     g.command_queue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-    
+
 
 
 
@@ -341,7 +359,7 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 
         // create fence event
         s.fence_event_ = CreateEvent(nullptr, FALSE, FALSE, nullptr);
-        if (s.fence_event_ == nullptr){
+        if (s.fence_event_ == nullptr) {
             ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
         }
 
@@ -355,12 +373,12 @@ static void load_assets(GraphicsContext& g, SyncronizeObejct& s) {
 }
 
 
-void 
+void
 PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
-    
+
     ThrowIfFailed(g.command_allocator_->Reset());
     ThrowIfFailed(g.command_list_->Reset(g.command_allocator_.Get(), g.pipeline_state_.Get()));
-    
+
     ID3D12DescriptorHeap* ppHeaps[] = { g.srv_heap_.Get() };
 
 
@@ -372,28 +390,28 @@ PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
 
     g.command_list_->RSSetViewports(1, &g.viewport_);
     g.command_list_->RSSetScissorRects(1, &g.scissor_rect_);
-    
-    
+
+
     // Indicate that the back buffer will be used as a render target.
     g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
-                                        g.render_targets_[s.frame_index_].Get(),
-                                        D3D12_RESOURCE_STATE_PRESENT,
-                                        D3D12_RESOURCE_STATE_RENDER_TARGET)
-                                    );
+        g.render_targets_[s.frame_index_].Get(),
+        D3D12_RESOURCE_STATE_PRESENT,
+        D3D12_RESOURCE_STATE_RENDER_TARGET)
+    );
 
 
 
 
-    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(g.rtv_heap_->GetCPUDescriptorHandleForHeapStart(), 
-                                            s.frame_index_, 
-                                            g.rtv_descriptor_size_);
+    CD3DX12_CPU_DESCRIPTOR_HANDLE rtvHandle(g.rtv_heap_->GetCPUDescriptorHandleForHeapStart(),
+        s.frame_index_,
+        g.rtv_descriptor_size_);
 
     g.command_list_->OMSetRenderTargets(1, &rtvHandle, FALSE, nullptr);
     static float ts = 0.001f;
     static int j = 0;
     // record cmd
     //float clearColor[] = { 0.0f, 0.2f , 0.4f, 1.0f };
-   
+
     float clearColor[] = { 0.0f, 0.0f , (0.0f, 0.0f + ts * j) - (int)(0.0f, 0.0f + ts * j++) };
     spdlog::info("test color {} : ", (0.0f, 0.0f + ts * j) - (int)(0.0f, 0.0f + ts * j++));
     g.command_list_->ClearRenderTargetView(rtvHandle, clearColor, 0, nullptr);
@@ -403,100 +421,18 @@ PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
     // Indicate that the back buffer will now be used to present.
 
     g.command_list_->ResourceBarrier(1, &CD3DX12_RESOURCE_BARRIER::Transition(
-                                        g.render_targets_[s.frame_index_].Get(), 
-                                        D3D12_RESOURCE_STATE_RENDER_TARGET, 
-                                        D3D12_RESOURCE_STATE_PRESENT)
-                                    );
+        g.render_targets_[s.frame_index_].Get(),
+        D3D12_RESOURCE_STATE_RENDER_TARGET,
+        D3D12_RESOURCE_STATE_PRESENT)
+    );
 
 
 
     ThrowIfFailed(g.command_list_->Close());
 }
-bool GraphicsContextManager::init()
-{
-    UINT dxgiFactoryFlags = 0;
 
-#if defined(_DEBUG)
-    // Enable the debug layer (requires the Graphics Tools "optional feature").
-    // NOTE: Enabling the debug layer after device creation will invalidate the active device.
-    {
-        ComPtr<ID3D12Debug> debugController;
-        if (SUCCEEDED(D3D12GetDebugInterface(IID_PPV_ARGS(&debugController))))
-        {
-            debugController->EnableDebugLayer();
 
-            // Enable additional debug layers.
-            dxgiFactoryFlags |= DXGI_CREATE_FACTORY_DEBUG;
-        }
-    }
-#endif
-    ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&m_factory)));
-    return true;
-}
-bool Device::init_device(ComPtr<IDXGIFactory4> factory)
-{
-
-    {
-        ComPtr<IDXGIAdapter1> hardwareAdapter;
-        GetHardwareAdapter(factory.Get(), &hardwareAdapter, false);
-
-        ThrowIfFailed(D3D12CreateDevice(
-            hardwareAdapter.Get(),
-            D3D_FEATURE_LEVEL_11_0,
-            IID_PPV_ARGS(&m_device)
-        ));
-    }
-
-    return true;
-}
-
-bool CommandQueue::init_queue(ComPtr<ID3D12Device> device)
-{
-    // Describe and create the command queue.
-    D3D12_COMMAND_QUEUE_DESC queue_desc = {};
-    queue_desc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
-    queue_desc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
-
-    ThrowIfFailed(device->CreateCommandQueue(&queue_desc, IID_PPV_ARGS(&(m_command_queue))));
-    return true;
-}
-bool Viewport::init_viewport(MINT width, MINT height)
-{
-    m_viewport = { (0.0f), 0.0f, static_cast<float>(width), static_cast<float>(height) };
-    m_scissor_rect = { 0, 0, static_cast<LONG>(width), static_cast<LONG>(height) };
-
-    return true;
-}
-void SwapChain::init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_, MUINT width, MUINT height)
-{
-    // Describe and create the swap chain.
-    DXGI_SWAP_CHAIN_DESC1 swapchain_desc = {};
-    swapchain_desc.BufferCount = frame_count_;
-    swapchain_desc.Width = width;
-    swapchain_desc.Height = height;
-    swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
-    swapchain_desc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-    swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
-    swapchain_desc.SampleDesc.Count = 1;
-
-    ComPtr<IDXGISwapChain1> swap_chain;
-    ThrowIfFailed(factory->CreateSwapChainForHwnd(
-        swap_chain_.Get(),        // Swap chain needs the queue so that it can force a flush on it.
-        WindowsPlatform::get_HWND(),
-        &swapchain_desc,
-        nullptr,
-        nullptr,
-        &swap_chain
-    ));
-
-    // This sample does not support fullscreen transitions.
-    ThrowIfFailed(factory->MakeWindowAssociation(WindowsPlatform::get_HWND(), DXGI_MWA_NO_ALT_ENTER));
-
-    ThrowIfFailed(swap_chain.As(&swap_chain_));
-    syncronize_object_->frame_index_ = graphics_context_->swap_chain_->GetCurrentBackBufferIndex();
-
-}
-void 
+void
 WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s)
 {
     // WAITING FOR THE FRAME TO COMPLETE BEFORE CONTINUING IS NOT BEST PRACTICE.
@@ -516,7 +452,7 @@ WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s)
         WaitForSingleObject(s.fence_event_, INFINITE);
     }
 
-    s.frame_index_= g.swap_chain_->GetCurrentBackBufferIndex();
+    s.frame_index_ = g.swap_chain_->GetCurrentBackBufferIndex();
 }
 
 void
@@ -579,12 +515,12 @@ GraphicManager::initialize(Application* app) {
 
     //create viewport temporary and scissorrect
     // 
-    graphics_context_->viewport_ = {(0.0f), 0.0f, static_cast<float>(app->get_width()), static_cast<float>(app->get_height())};
+    graphics_context_->viewport_ = { (0.0f), 0.0f, static_cast<float>(app->get_width()), static_cast<float>(app->get_height()) };
     graphics_context_->scissor_rect_ = { 0, 0, static_cast<LONG>(app->get_width()), static_cast<LONG>(app->get_height()) };
 
     // Describe and create the swap chain.
     DXGI_SWAP_CHAIN_DESC1 swapchain_desc = {};
-    swapchain_desc.BufferCount =  frame_count_;
+    swapchain_desc.BufferCount = frame_count_;
     swapchain_desc.Width = app->get_width();
     swapchain_desc.Height = app->get_height();
     swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -616,9 +552,9 @@ GraphicManager::initialize(Application* app) {
         rtvHeapDesc.Type = D3D12_DESCRIPTOR_HEAP_TYPE_RTV;
         rtvHeapDesc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_NONE;
         ThrowIfFailed(graphics_context_->device_->CreateDescriptorHeap(&rtvHeapDesc, IID_PPV_ARGS(&graphics_context_->rtv_heap_)));
-       
-        
-        
+
+
+
         // Describe and create a shader resource view (SRV) heap for the texture.
         D3D12_DESCRIPTOR_HEAP_DESC  srv_heap_desc = {};
         srv_heap_desc.NumDescriptors = 1;
@@ -626,9 +562,9 @@ GraphicManager::initialize(Application* app) {
         srv_heap_desc.Flags = D3D12_DESCRIPTOR_HEAP_FLAG_SHADER_VISIBLE;
         ThrowIfFailed(graphics_context_->device_->CreateDescriptorHeap(&srv_heap_desc, IID_PPV_ARGS(&graphics_context_->srv_heap_)));
 
-        
-        
-        graphics_context_->rtv_descriptor_size_= graphics_context_->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
+
+
+        graphics_context_->rtv_descriptor_size_ = graphics_context_->device_->GetDescriptorHandleIncrementSize(D3D12_DESCRIPTOR_HEAP_TYPE_RTV);
 
     }
 
@@ -654,29 +590,29 @@ GraphicManager::initialize(Application* app) {
 }
 
 
- void 
+void
 GraphicManager::render() {
-     spdlog::info("frame : {}", n_frame_++);
-     //record all the command we need to render the scene into the command list
+    spdlog::info("frame : {}", n_frame_++);
+    //record all the command we need to render the scene into the command list
 
-     PopulateCommandList(*graphics_context_, *syncronize_object_);
+    PopulateCommandList(*graphics_context_, *syncronize_object_);
 
 
-     ID3D12CommandList* ppCommandLists[] = { graphics_context_->command_list_.Get() };
-     graphics_context_->command_queue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
-     
-     ThrowIfFailed(graphics_context_->swap_chain_->Present(1, 0));
-     WaitForPreviousFrame(*graphics_context_, *syncronize_object_);
+    ID3D12CommandList* ppCommandLists[] = { graphics_context_->command_list_.Get() };
+    graphics_context_->command_queue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
+
+    ThrowIfFailed(graphics_context_->swap_chain_->Present(1, 0));
+    WaitForPreviousFrame(*graphics_context_, *syncronize_object_);
 }
 
- void
+void
 GraphicManager::destroy() {
 
-     // Ensure that the GPU is no longer referencing resources that are about to be
-     // cleaned up by the destructor.
-     //WaitForPreviousFrame();
-     WaitForPreviousFrame(*graphics_context_, *syncronize_object_);
-     CloseHandle(syncronize_object_->fence_event_);
+    // Ensure that the GPU is no longer referencing resources that are about to be
+    // cleaned up by the destructor.
+    //WaitForPreviousFrame();
+    WaitForPreviousFrame(*graphics_context_, *syncronize_object_);
+    CloseHandle(syncronize_object_->fence_event_);
 }
 
 

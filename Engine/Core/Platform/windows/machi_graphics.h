@@ -23,34 +23,75 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
-
+#include <Graphics/GraphicManager.h>
 #include "config.h"
+#include "d3d12.h"
+#include "d3dx12.h"
 #include "os_native.h"
+#include "dxhelper.h"
+#include <wrl.h> // ComPtr header
+#include <shellapi.h>
 
-#include <Windows.h>
+#include <directxmath.h>
+#include <D3Dcompiler.h>
+#include <dxgi1_4.h>
 
-#include <Application/application.h>
-#include <OS/OS.h>
-#include <iostream>
+
+#include <d3d12sdklayers.h> // for debugging
+
+#include <DirectXMath.h>
 #include <spdlog/spdlog.h>
+#include <utility>
+template <typename T>
+using ComPtr = Microsoft::WRL::ComPtr<T>;
+using namespace DirectX;
+
+class Device;
+class CommandQueue;
+class SwapChain;
+
+class GraphicsContextManager final {
+	ComPtr<IDXGIFactory4> m_factory = nullptr;
+	std::unique_ptr<Device> m_device_ref = nullptr;
+	
+public:
+	bool init();
+};
+
+class Device final {
+
+	ComPtr<ID3D12Device> m_device;
+	bool init_device(ComPtr<IDXGIFactory4> factory);
 
 
-// main function hijacking.
-Application* machi_main(int argc, char** argv); // User impl.
+};
 
-int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
-	OSConfig config;
-	config.hInstance = &hInstance;
-	config.hPrevInstance = &hPrevInstance;
-	config.pCmdLine = pCmdLine;
-	config.nCmdShow = nCmdShow;
+class CommandQueue final {
+	ComPtr<ID3D12CommandQueue> m_command_queue;
+	bool init_queue(ComPtr<ID3D12Device> device);
 
-	//other code
-	spdlog::info("Window Platform Start...");
-	OS::get_instance();
-	OS::set_context(&config);
-	Application* app = machi_main(__argc, __argv);
-	bool reval =  app->run(__argc, __argv);
-	delete app;
-	return reval;
-}
+};
+
+class Viewport final {
+	D3D12_VIEWPORT m_viewport;
+	D3D12_RECT m_scissor_rect;
+	bool init_viewport(MINT width, MINT height);
+};
+
+class SwapChain final {
+	ComPtr<IDXGISwapChain3> swap_chain_;
+	void init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_, MUINT width, MUINT height);
+};
+
+
+
+
+
+class HlslShader final {
+
+
+
+
+};
+
+
