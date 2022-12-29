@@ -6,7 +6,7 @@ project(Machi-Engine)
 # language support info
 set(CMAKE_CXX_STANDARD 17)
 
-add_definitions("-DUNICODE -D_UNICODE") 
+add_definitions("-DUNICODE -D_UNICODE")
 
 
 # set cmakes files
@@ -22,9 +22,10 @@ include(cmakes/dependency_helper.cmake)
 
 option(Editor OFF "editor")
 option(Testbed ON "testbed")
-
+message("${Testbed}")
 add_subdirectory("Engine")
 
+    message("test")
 if(${Testbed})
 add_subdirectory("Test")
 endif()

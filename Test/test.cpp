@@ -25,10 +25,10 @@
 
 #include <entry.h>
 
-Application* machi_main(int argc, char** argv) {
+Machi::Application* machi_main(int argc, char** argv) {
 
 
-	return Application::get_instance()
-		->set_name(L"MACHI-AS-WELL")
+	return Machi::Application::get_instance()
+		->set_name(L"Machi-AS-WELL")
 		->set_resolution(1280, 960, false);
 }

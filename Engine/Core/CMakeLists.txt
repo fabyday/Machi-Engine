@@ -13,5 +13,6 @@ add_subdirectory(Application)
 add_subdirectory(Graphics)
 
 add_library(Core SHARED $<TARGET_OBJECTS:Machi::Application> $<TARGET_OBJECTS:Machi::OS> $<TARGET_OBJECTS:Machi::Graphics> $<TARGET_OBJECTS:Machi::Platform>)
+target_link_libraries(Core PUBLIC ${platform_dependent_lib} )
 target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${platform_dependent_directory})
 add_library(Machi::Core ALIAS Core)

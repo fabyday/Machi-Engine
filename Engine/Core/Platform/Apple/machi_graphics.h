@@ -32,7 +32,6 @@
 #include "metal-cpp/QuartzCore/QuartzCore.hpp"
 
 
-
 struct Vertex
 {
     DirectX::XMFLOAT3 position;

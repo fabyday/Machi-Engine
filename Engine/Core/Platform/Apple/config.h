@@ -24,15 +24,16 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 
 #ifdef MACHI_BUILD_DLL // MACHI_EXPORT
-	#define MACHI_API __attribute__((visibility("default")) 
+	#define MACHI_API
 #else // MACHI_IMPORT
-	#define MACHI_API  __declspec(dllimport)
-#endif 
-
-
-#ifndef WIN32_LEAN_AND_MEAN
-#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers.
+	#define MACHI_API
 #endif
+#ifdef MACHI_BUILD_DLL // MACHI_EXPORT
+#define MACHI_APPLE_EXPORT __attribute__((visibility("default"))
+#else // MACHI_IMPORT
+#define MACHI_APPLE_EXPORT
+#endif
+
 
 
 

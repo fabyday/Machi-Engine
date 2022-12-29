@@ -26,8 +26,6 @@
 
 #include <config.h>
 #include <stdio.h>
-#include <io.h>
-#include <Windows.h>
 #include <string>
 #include <types.h>
 
@@ -62,7 +60,7 @@ public:
 	}
 	//load_dynamic_library();
 	MSTRING get_current_directory();
-	INT32 make_process();
+	MINT32 make_process();
 	bool open_console();
 	
 

@@ -30,7 +30,7 @@
 #include <config.h>
 #include <Platform/types.h>
 
-
+namespace Machi{
  class MACHI_API Application   {
 
 
@@ -97,4 +97,5 @@ protected:
 	
 
 };
+}
 #endif // ! __APPLICATION_H__

@@ -22,6 +22,7 @@ function (ADD_MACHI_EXECUTABLE TARGET_NAME SRC MODE)
 if(WIN32)
     add_executable(${TARGET_NAME} WIN32 ${SRC})
 elseif(APPLE)
+    message("${SRC}")
     add_executable(${TARGET_NAME} ${SRC})
 elseif(UNIX AND NOT APPLE) # linux;
 

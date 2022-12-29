@@ -25,32 +25,32 @@
 #include "application.h"
 #include <iostream>
 
-Application* Application::app_ = nullptr;
+Machi::Application* Machi::Application::app_ = nullptr;
 
 
 
 
 bool
-Application::render() {
+Machi::Application::render() {
 	return true;
 }
 
 
 
 bool
-Application::update() {
+Machi::Application::update() {
 	return true;
 }
 
 
 bool
-Application::fixed_update() {
+Machi::Application::fixed_update() {
 	return true;
 }
 
 
-Application*
-Application::set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen) {
+Machi::Application*
+Machi::Application::set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen) {
 	this->x_ = x; this->y_ = y; 
 	this->width_ = width; this->height_ = height; 
 	this->fullscreen_ = fullscreen;
@@ -61,15 +61,15 @@ Application::set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullsc
 
 
 
-Application*
-Application::set_resolution(MINT width, MINT height, bool fullscreen) {
+Machi::Application*
+Machi::Application::set_resolution(MINT width, MINT height, bool fullscreen) {
 	return set_resolution(0, 0, width, height, fullscreen);
 }
 
 
 
-Application* 
-Application::set_name(MSTRING name) {
+Machi::Application*
+Machi::Application::set_name(MSTRING name) {
 	this->app_name_ = name;
 	return this;
 }
