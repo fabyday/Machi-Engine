@@ -63,12 +63,21 @@ typedef struct BufferView {
     }
 }BufferView;
 
-typedef struct SyncronizeDesc {
+typedef struct SyncronizeObejct {
+    static int g_frame_index;
     UINT frame_index_;
     HANDLE fence_event_;
     ComPtr<ID3D12Fence> fence_;
     UINT64 fenceValue_;
+
+    SyncronizeObejct() {
+        GraphicsContextManager::get_device().get_device()->CreateFence(g_frame_index, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&fence_));
+    }
+
 }SyncronizeObejct;
+int SyncronizeObejct::g_frame_index = 0;
+
+
 
 typedef struct GraphicsDesc {
     D3D12_VIEWPORT viewport_;
@@ -493,7 +502,7 @@ void SwapChain::init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_
     ThrowIfFailed(factory->MakeWindowAssociation(WindowsPlatform::get_HWND(), DXGI_MWA_NO_ALT_ENTER));
 
     ThrowIfFailed(swap_chain.As(&swap_chain_));
-    syncronize_object_->frame_index_ = graphics_context_->swap_chain_->GetCurrentBackBufferIndex();
+    //syncronize_object_->frame_index_ = graphics_context_->swap_chain_->GetCurrentBackBufferIndex();
 
 }
 void 
@@ -518,6 +527,7 @@ WaitForPreviousFrame(GraphicsContext& g, SyncronizeObejct& s)
 
     s.frame_index_= g.swap_chain_->GetCurrentBackBufferIndex();
 }
+std::unique_ptr<GraphicsContextManager> GraphicsContextManager::instance = nullptr;
 
 void
 GraphicManager::initialize(Application* app) {

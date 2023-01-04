@@ -45,6 +45,9 @@
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 using namespace DirectX;
+class ApplicationManager;
+class GraphicsManager;
+
 
 class Device;
 class CommandQueue;
@@ -53,22 +56,42 @@ class SwapChain;
 class GraphicsContextManager final {
 	ComPtr<IDXGIFactory4> m_factory = nullptr;
 	std::unique_ptr<Device> m_device_ref = nullptr;
+	static std::unique_ptr<GraphicsContextManager> instance;
+
+	Viewport m_viewport;
+
+
+	friend class ApplicationManager;
+	friend class GraphicsManager;
+private:
+	GraphicsContextManager() {
+
+	};
 	
-public:
 	bool init();
+public:
+	bool is_valid();
+
+	static Device& get_device() { return *(GraphicsContextManager::instance->m_device_ref); };
 };
 
 class Device final {
 
 	ComPtr<ID3D12Device> m_device;
+	friend class GraphicsContextManager;
 	bool init_device(ComPtr<IDXGIFactory4> factory);
+public:
+	ComPtr<ID3D12Device> get_device() { return m_device; };
 
+	
 
 };
 
 class CommandQueue final {
 	ComPtr<ID3D12CommandQueue> m_command_queue;
+	SwapChain m_swapchain;
 	bool init_queue(ComPtr<ID3D12Device> device);
+	bool connect_swapchian(SwapChain sc);
 
 };
 
@@ -78,9 +101,15 @@ class Viewport final {
 	bool init_viewport(MINT width, MINT height);
 };
 
+class Buffer;
 class SwapChain final {
 	ComPtr<IDXGISwapChain3> swap_chain_;
 	void init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_, MUINT width, MUINT height);
+	bool add_resources();
+	
+};
+class Buffer {
+	enum Type {COSNTANT, };
 };
 
 
@@ -88,7 +117,7 @@ class SwapChain final {
 
 
 class HlslShader final {
-
+	bool m_is_precompiled;
 
 
 
