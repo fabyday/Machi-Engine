@@ -1,29 +1,29 @@
 #include <Application/application.h>
 
-class AppDelegate : public NS::ApplicationDelegate
-{
-public:
-    ~MyAppDelegate();
-
-    NS::Menu* createMenuBar();
-
-    virtual void applicationWillFinishLaunching( NS::Notification* pNotification ) override;
-    virtual void applicationDidFinishLaunching( NS::Notification* pNotification ) override;
-    virtual bool applicationShouldTerminateAfterLastWindowClosed( NS::Application* pSender ) override;
-
-private:
-    NS::Window* _pWindow;
-    MTK::View* _pMtkView;
-    MTL::Device* _pDevice;
-    MyMTKViewDelegate* _pViewDelegate = nullptr;
-};
+#include "apple_delegate.h"
 
 
 
-void AppDelegate::applicationDidFinishLaunching(int *pNotification) {}
+static NS::Application* g_pSharedApplication = nullptr;
+Machi::apple_delegate g_app_delegate;
 
-bool AppDelegate::applicationShouldTerminateAfterLastWindowClosed(int *pSender) {}
 
-void AppDelegate::applicationWillFinishLaunching(int *pNotification) {}
 
-int *AppDelegate::createMenuBar() {}
+bool Machi::Application::_initialize(){
+    NS::AutoreleasePool* pAutoreleasePool = NS::AutoreleasePool::alloc()->init();
+    NS::Application* pSharedApplication = NS::Application::sharedApplication();
+    pSharedApplication->setDelegate( &g_app_delegate );
+    pSharedApplication->run();
+
+    pAutoreleasePool->release();
+
+    return true;
+}
+bool Machi::Application::_run_logic(){}
+
+bool Machi::Application::_finalize(){
+
+}
+bool Machi::Application::run(int argc, char** argv){
+
+}

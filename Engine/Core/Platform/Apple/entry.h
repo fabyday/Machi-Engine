@@ -25,6 +25,7 @@
 #pragma once
 #include "config.h"
 #include "../../Application/application.h"
+//#include <math.h>
 #include <metal_core.h>
 // main function hijacking.
 

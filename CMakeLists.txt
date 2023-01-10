@@ -7,8 +7,10 @@ project(Machi-Engine)
 set(CMAKE_CXX_STANDARD 17)
 
 add_definitions("-DUNICODE -D_UNICODE")
-
-
+if(APPLE)
+set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++")
+set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++")
+endif()
 # set cmakes files
 
 #SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
