@@ -22,13 +22,12 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-
-#include <entry.h>
+#include <Platform/entry.h>
 
 Machi::Application* machi_main(int argc, char** argv) {
 
-
-	return Machi::Application::get_instance()
-		->set_name(L"Machi-AS-WELL")
-		->set_resolution(1280, 960, false);
+//    return nullptr;
+	return Machi::Application::get_instance();
+//		->set_name(L"Machi-AS-WELL")
+//		->set_resolution(1280, 960, false);
 }

@@ -24,10 +24,10 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include <config.h>
+#include <Platform/config.h>
 #include <stdio.h>
 #include <string>
-#include <types.h>
+#include <Platform/types.h>
 
 
 //forward declartion

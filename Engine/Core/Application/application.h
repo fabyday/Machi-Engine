@@ -26,16 +26,20 @@
 #define __APPLICATION_H__
 
 
-
-#include <config.h>
+#include <Platform/config.h>
 #include <Platform/types.h>
 
 namespace Machi{
+
  class MACHI_API Application   {
 
 
+ private:
+     static Application* app_;
+     MSTRING app_name_;
+     time_t time_;
+     bool fullscreen_;
 	// platform dependents!
-public : 
 	/// <summary>
 	/// 
 	/// </summary>
@@ -44,27 +48,23 @@ public :
 	/// 
 	/// 
 
-
-	bool _initialize(); 
+ public:
+	bool _initialize();
 	bool _run_logic();
 	bool _finalize();
 	bool run(int argc, char** argv);
 
 
-public:
-	
-	
-	
-	
-	
-	virtual ~Application() {};
+	 ~Application() {};
+
 
 
 	static Application* get_instance() {
-		if (app_ == nullptr) {
-			app_ = new Application;
-		}
-		return app_;
+//		if (app_ == nullptr) {
+//			app_ = new Application();
+//		}
+        return new Application();
+//		return app_;
 	};
 
 	Application* set_resolution(MINT width, MINT height, bool fullscreen);
@@ -79,23 +79,20 @@ public:
 	inline int get_height() const { return height_; }
 	inline bool is_full_screen() const { return fullscreen_; }
 
-private:
-	static Application* app_;
-	MSTRING app_name_;
-	time_t time_;
-	bool fullscreen_;
-	
+
 	Application() {};
 //size configuration
 	int x_, y_, width_, height_;
 
 
 protected:
-	virtual bool update();
+	virtual bool update(){return true;};
 	virtual bool fixed_update();
-	virtual bool render();
-	
+	bool render();
+//
 
 };
+
+
 }
 #endif // ! __APPLICATION_H__

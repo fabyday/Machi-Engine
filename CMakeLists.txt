@@ -1,15 +1,15 @@
 cmake_minimum_required(VERSION 3.10)
+set(CMAKE_CXX_STANDARD 17)
 
 project(Machi-Engine)
 
 
 # language support info
-set(CMAKE_CXX_STANDARD 17)
 
 add_definitions("-DUNICODE -D_UNICODE")
 if(APPLE)
-set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++")
-set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++")
+#set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++")
+#set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++")
 endif()
 # set cmakes files
 

@@ -23,68 +23,39 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include "config.h"
+#include "Platform/Apple/config.h"
+#include <simd/simd.h>
+#include <MachiMetal/metal.h>
 
 
 
-#include "metal-cpp/Foundation/Foundation.hpp"
-#include "metal-cpp/Metal/Metal.hpp"
-#include "metal-cpp/QuartzCore/QuartzCore.hpp"
+static constexpr size_t kMaxFramesInFlight = 3;
 
+namespace Machi{
 
-struct Vertex
+class Renderer
 {
-    DirectX::XMFLOAT3 position;
-    DirectX::XMFLOAT4 color;
-};
-
-struct Triangle {
-
-
-    int order;
-
-};
-struct Buffer{
-    MTL::Buffer* buffer_;
-};
-
-
-struct BufferView{
-
-};
-
-class MACHI_API MGraphics {
 public:
-    virtual void initialize() ;
-    virtual void update() ;
-    virtual void render() ;
-    virtual void destroy() ;
-
+    Renderer( MTL::Device* pDevice );
+    ~Renderer();
+    void buildShaders();
+    void buildBuffers();
+    void draw( MTK::View* pView );
 
 private:
-
-    static const INT frame_count_ = 2;
-
-    // Pipeline objects.
-    MTL::Device* device_;
-    MTL::CommandQueue* command_queue_;
-    MTL::DepthStencilState* depth_stencil_state_;
-    MTL::RendererPipelineState* renderer_pipeline_state_;
-    MTL::Buffer* vertex_buffer_;
-    // App resources.
-    ComPtr<ID3D12Resource> m_vertexBuffer;
-    D3D12_VERTEX_BUFFER_VIEW m_vertexBufferView;
-
-    // Synchronization objects.
-    UINT m_frameIndex;
-    HANDLE m_fenceEvent;
-    ComPtr<ID3D12Fence> m_fence;
-    UINT64 m_fenceValue;
-
-    int LoadPipeline() ;
-    int LoadAssets() ;
-    int PopulateCommandList() ;
-    int WaitForPreviousFrame() ;
-
-
+    MTL::Device* _pDevice;
+    MTL::CommandQueue* _pCommandQueue;
+    MTL::Library* _pShaderLibrary;
+    MTL::RenderPipelineState* _pPSO;
+    MTL::Buffer* _pVertexDataBuffer;
+    MTL::Buffer* _pInstanceDataBuffer[kMaxFramesInFlight];
+    MTL::Buffer* _pIndexBuffer;
+    float _angle;
+    int _frame;
+    dispatch_semaphore_t _semaphore;
+    static const int kMaxFramesInFlight;
 };
+
+
+
+}
