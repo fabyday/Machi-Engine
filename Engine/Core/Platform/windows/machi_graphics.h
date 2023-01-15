@@ -38,7 +38,8 @@
 
 
 #include <d3d12sdklayers.h> // for debugging
-
+#include <set>
+#include <map>
 #include <DirectXMath.h>
 #include <spdlog/spdlog.h>
 #include <utility>
@@ -74,7 +75,12 @@ public:
 
 	static Device& get_device() { return *(GraphicsContextManager::instance->m_device_ref); };
 };
+class RootSignature final{
+	ComPtr<ID3D12RootSignature> m_rootsignature;
+public :
+	void init_rootsignature(Device& device);
 
+};
 class Device final {
 
 	ComPtr<ID3D12Device> m_device;
@@ -82,9 +88,6 @@ class Device final {
 	bool init_device(ComPtr<IDXGIFactory4> factory);
 public:
 	ComPtr<ID3D12Device> get_device() { return m_device; };
-
-	
-
 };
 
 class CommandQueue final {
@@ -100,27 +103,64 @@ class Viewport final {
 	D3D12_RECT m_scissor_rect;
 	bool init_viewport(MINT width, MINT height);
 };
+class Shader;
+
+class Pipeline {
+
+	enum input_data_format {MACHI_GRAPHICS_R32G32B32_FLOAT, MACHI_GRAPHICS_R32G32_FLOAT};
+	enum input_class_type {MACHI_CLASSFICATION_PER_VERTEX, MACHI_CLASSFICATION_PER_INSTANCE};
+	ComPtr<ID3D12PipelineState> m_pipeline_object;
+	
+
+	std::map<MSTRING, Shader> m_shader;
+	std::vector<D3D12_INPUT_ELEMENT_DESC> m_input_desc;
+	MUINT m_input_offset;
+
+	Pipeline& add_vertex_shader(const MSTRING& filename);
+	Pipeline& add_vertex_shader(Shader& shder); 
+	Pipeline& add_pixel_shader(const MSTRING& filename);
+	Pipeline& add_pixel_shader(Shader& shader);
+	Pipeline& add_shader(Shader& shader);
+	void init_pipeline();
+
+	Pipeline& add_input_schema(MSTRING& name, 
+		input_data_format format_type, 
+		input_class_type input_classfication_type, 
+		MUINT index = 0);
+	
+
+};
 
 class Buffer;
 class SwapChain final {
-	ComPtr<IDXGISwapChain3> swap_chain_;
+	ComPtr<IDXGISwapChain3> m_swaphain;
 	void init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_, MUINT width, MUINT height);
 	bool add_resources();
 	
 };
 class Buffer {
-	enum Type {COSNTANT, };
+	enum Type {COSNTANT, TEXTURE, };
+
+	std::vector<char> m_data;
+
+
 };
 
 
 
 
 
-class HlslShader final {
-	bool m_is_precompiled;
+class Shader final {
+	enum shader_type{VERTEX, PIXEL};
+	enum shader_status {PRECOMPILED};
+	bool m_precompiled_flag;
+	MSTRING m_name;
 
+	ComPtr<ID3DBlob> m_shader;
 
-
+	Shader& add_resource(MSTRING& filename, shader_type type);
+	Shader& input_description(MSTRING& input_name);
+	Shader& init_shader();
 };
 
 

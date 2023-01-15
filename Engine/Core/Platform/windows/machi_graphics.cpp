@@ -696,3 +696,146 @@ Buffer*
 GraphicManager::make_buffer() {
     return nullptr;
 }
+
+void RootSignature::init_rootsignature(Device& device)
+{
+    //create rootsignature
+    {
+        D3D12_FEATURE_DATA_ROOT_SIGNATURE feature_data = {};
+        feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
+        ComPtr<ID3D12Device> device_ref = device.get_device();
+        if (FAILED(device_ref->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &feature_data, sizeof(feature_data)))) {
+            feature_data.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
+        }
+        CD3DX12_DESCRIPTOR_RANGE1 ranges[1];
+        ranges[0].Init(D3D12_DESCRIPTOR_RANGE_TYPE_SRV, 1, 0, 0, D3D12_DESCRIPTOR_RANGE_FLAG_DATA_STATIC);
+
+        CD3DX12_ROOT_PARAMETER1 rootParameters[1];
+        rootParameters[0].InitAsDescriptorTable(1, &ranges[0], D3D12_SHADER_VISIBILITY_PIXEL);
+
+        D3D12_STATIC_SAMPLER_DESC sampler = {};
+        sampler.Filter = D3D12_FILTER_MIN_MAG_MIP_POINT;
+        sampler.AddressU = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressV = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.AddressW = D3D12_TEXTURE_ADDRESS_MODE_BORDER;
+        sampler.MipLODBias = 0;
+        sampler.MaxAnisotropy = 0;
+        sampler.ComparisonFunc = D3D12_COMPARISON_FUNC_NEVER;
+        sampler.BorderColor = D3D12_STATIC_BORDER_COLOR_TRANSPARENT_BLACK;
+        sampler.MinLOD = 0.0f;
+        sampler.MaxLOD = D3D12_FLOAT32_MAX;
+        sampler.ShaderRegister = 0;
+        sampler.RegisterSpace = 0;
+        sampler.ShaderVisibility = D3D12_SHADER_VISIBILITY_PIXEL;
+
+        //CD3DX12_ROOT_SIGNATURE_DESC rootsignatureDesc;
+        //rootsignatureDesc.Init(0, nullptr, 0, nullptr, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+        CD3DX12_VERSIONED_ROOT_SIGNATURE_DESC rootSignatureDesc;
+        rootSignatureDesc.Init_1_1(_countof(rootParameters), rootParameters, 1, &sampler, D3D12_ROOT_SIGNATURE_FLAG_ALLOW_INPUT_ASSEMBLER_INPUT_LAYOUT);
+
+        ComPtr<ID3DBlob> signature;
+        ComPtr<ID3DBlob> error;
+        //ThrowIfFailed(D3D12SerializeRootSignature(&rootsignatureDesc, D3D_ROOT_SIGNATURE_VERSION_1, &signature, &error));
+        ThrowIfFailed(D3DX12SerializeVersionedRootSignature(&rootSignatureDesc, feature_data.HighestVersion, &signature, &error));
+        ThrowIfFailed(device_ref->CreateRootSignature(0,
+            signature->GetBufferPointer(),
+            signature->GetBufferSize(),
+            IID_PPV_ARGS(&m_rootsignature))
+        );
+    }
+
+
+}
+
+Pipeline& Pipeline::add_vertex_shader(const MSTRING& filename)
+{
+    // TODO: 여기에 return 문을 삽입합니다.
+}
+
+Pipeline& Pipeline::add_pixel_shader(const MSTRING& filename)
+{
+    // TODO: 여기에 return 문을 삽입합니다.
+}
+
+void Pipeline::init_pipeline()
+{
+    //D3D12_INPUT_ELEMENT_DESC input_element_descs2;
+    //D3D12_INPUT_ELEMENT_DESC input_element_descs[] =
+    //{
+    //     { "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 },
+    //     { "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, 12, D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA, 0 }
+
+    //};
+    // Describe and create the graphics pipeline state object (PSO).
+    D3D12_GRAPHICS_PIPELINE_STATE_DESC pso_desc = {};
+    pso_desc.InputLayout = { m_input_desc.data(), static_cast<MUINT>(m_input_desc.size())};
+    pso_desc.pRootSignature = g.root_signature_.Get();
+    pso_desc.VS = CD3DX12_SHADER_BYTECODE(vertex_shader.Get());
+    pso_desc.PS = CD3DX12_SHADER_BYTECODE(pixel_shader.Get());
+    pso_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
+    pso_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+    pso_desc.DepthStencilState.DepthEnable = FALSE;
+    pso_desc.DepthStencilState.StencilEnable = FALSE;
+    pso_desc.SampleMask = UINT_MAX;
+    pso_desc.PrimitiveTopologyType = D3D12_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE;
+    pso_desc.NumRenderTargets = 1;
+    pso_desc.RTVFormats[0] = DXGI_FORMAT_R8G8B8A8_UNORM;
+    pso_desc.SampleDesc.Count = 1;
+
+    ThrowIfFailed(g.device_->CreateGraphicsPipelineState(&pso_desc, IID_PPV_ARGS(&m_pipeline_object)));
+
+}
+
+Pipeline& Pipeline::add_input_schema(MSTRING& name, input_data_format format_type, input_class_type input_classfication_type, MUINT index)
+{
+    const MCHAR* name = name.c_str();
+    D3D12_INPUT_ELEMENT_DESC desc;
+    desc.SemanticName = reinterpret_cast<LPCSTR>(name.c_str());
+    desc.SemanticIndex = index;
+    switch (format_type) {
+    case input_data_format::MACHI_GRAPHICS_R32G32B32_FLOAT:
+        desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+    case input_data_format::MACHI_GRAPHICS_R32G32_FLOAT:
+        desc.Format = DXGI_FORMAT_R32G32_FLOAT;
+    }
+    
+    desc.InputSlot = index;
+    desc.AlignedByteOffset = 12;
+    
+    switch (input_classfication_type) {
+    case input_class_type::MACHI_CLASSFICATION_PER_VERTEX:
+        desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_VERTEX_DATA;
+    case input_class_type::MACHI_CLASSFICATION_PER_INSTANCE:
+        desc.InputSlotClass = D3D12_INPUT_CLASSIFICATION_PER_INSTANCE_DATA;
+    }
+
+    desc.InstanceDataStepRate = 0;
+
+    m_input_desc.push_back(desc);
+}
+
+Shader& Shader::add_resource(MSTRING& filename, shader_type type)
+{
+    
+    return *this;
+}
+
+Shader& Shader::init_shader()
+{
+#if defined(_DEBUG)
+    // Enable better shader debugging with the graphics debugging tools.
+    UINT compileFlags = D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION;
+#else
+    UINT compileFlags = 0;
+#endif
+    switch (type) {
+    case shader_type::VERTEX:
+        ThrowIfFailed(D3DCompileFromFile(filename.c_str(), nullptr, nullptr, "VSMain", "vs_5_0", compileFlags, 0, &m_shader, nullptr));
+    case shader_type::PIXEL:
+        ThrowIfFailed(D3DCompileFromFile(filename.c_str(), nullptr, nullptr, "PSMain", "ps_5_0", compileFlags, 0, &m_shader, nullptr));
+
+    }
+
+
+    return *this;
+}
