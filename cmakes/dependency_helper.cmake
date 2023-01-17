@@ -1,6 +1,6 @@
 function (MACHI_FULL_DEPENDENCY_INJECTION TARGET_NAME)
 
-    set(Machi_lib_list Machi::Graphics Machi::OS Machi::Platform metal_wrapper )#Machi::Platform)
+    set(Machi_lib_list Machi::Application Machi::Graphics Machi::OS Machi::Platform metal_wrapper )#Machi::Platform)
     message("first : ${Machi_lib_list}")
     foreach(machi_component  ${Machi_lib_list}) 
         add_custom_command ( TARGET ${TARGET_NAME} POST_BUILD
@@ -28,7 +28,7 @@ elseif(APPLE)
 elseif(UNIX AND NOT APPLE) # linux;
 
 endif()
-set(Machi_lib_list Machi::Graphics Machi::OS Machi::Platform metal_wrapper )#Machi::Platform)
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::OS Machi::Platform metal_wrapper )#Machi::Platform)
 MACHI_FULL_DEPENDENCY_INJECTION(testapp)
 message("${Machi_lib_list} teswt")
 target_include_directories(testapp PRIVATE ${CMAKE_SOURCE_DIR}/Engine/Core)

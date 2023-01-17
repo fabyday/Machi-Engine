@@ -35,10 +35,10 @@ Machi::Application::render() {
 
 
 
-//bool
-//Machi::Application::update() {
-//	return true;
-//}
+bool
+Machi::Application::update() {
+	return true;
+}
 
 
 bool

@@ -60,11 +60,10 @@ namespace Machi{
 
 
 	static Application* get_instance() {
-//		if (app_ == nullptr) {
-//			app_ = new Application();
-//		}
+		if (app_ == nullptr) {
+			app_ = new Application();
+		}
         return new Application();
-//		return app_;
 	};
 
 	Application* set_resolution(MINT width, MINT height, bool fullscreen);
@@ -86,9 +85,9 @@ namespace Machi{
 
 
 protected:
-	virtual bool update(){return true;};
+	virtual bool update();
 	virtual bool fixed_update();
-	bool render();
+	virtual bool render();
 //
 
 };
