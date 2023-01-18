@@ -25,11 +25,11 @@
 
 
 #include "GraphicManager.h"
-GraphicManager* GraphicManager::manager_ = nullptr;
+Machi::GraphicManager* Machi::GraphicManager::manager_ = nullptr;
 
 
-GraphicManager*
-GraphicManager::get_instance() {
+Machi::GraphicManager*
+Machi::GraphicManager::get_instance() {
 	if (GraphicManager::manager_ == nullptr) {
 		GraphicManager::manager_ = new GraphicManager;
 	}
@@ -39,7 +39,32 @@ GraphicManager::get_instance() {
 
 
 
-bool GraphicManager::regist_renderer()
+bool Machi::GraphicManager::regist_renderer()
 {
 	return false;
+}
+
+void
+Machi::GraphicManager::initialize(Machi::Application* app) {
+
+}
+
+
+void
+Machi::GraphicManager::render() {
+
+}
+
+void
+Machi::GraphicManager::destroy() {
+
+
+}
+
+
+
+
+Buffer*
+Machi::GraphicManager::make_buffer() {
+    return nullptr;
 }

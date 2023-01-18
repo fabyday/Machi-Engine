@@ -25,10 +25,12 @@
 #include "machi_graphics.h"
 #include <stddef.h>
 static constexpr size_t kNumInstances = 32;
+
 #include <Graphics/GraphicManager.h>
 #include "../Platform/Apple/config.h"
 //#include <metal_core.h>
 #include "spdlog/spdlog.h"
+
 #include <MachiMetal/metal.h>
 const int Machi::Renderer::kMaxFramesInFlight = 3;
 
@@ -110,13 +112,13 @@ void Machi::Renderer::buildShaders()
     )";
 
     NS::Error* pError = nullptr;
+
     MTL::Library* pLibrary = _pDevice->newLibrary( NS::String::string(shaderSrc, UTF8StringEncoding), nullptr, &pError );
     if ( !pLibrary )
     {
         __builtin_printf( "%s", pError->localizedDescription()->utf8String() );
         assert( false );
     }
-
     MTL::Function* pVertexFn = pLibrary->newFunction( NS::String::string("vertexMain", UTF8StringEncoding) );
     MTL::Function* pFragFn = pLibrary->newFunction( NS::String::string("fragmentMain", UTF8StringEncoding) );
 
@@ -238,30 +240,4 @@ void Machi::Renderer::draw( MTK::View* pView )
     pCmd->commit();
 
     pPool->release();
-}
-
-
-void
-GraphicManager::initialize(Machi::Application* app) {
-
-}
-
-
-void
-GraphicManager::render() {
-
-}
-
-void
-GraphicManager::destroy() {
-
-
-}
-
-
-
-
-Buffer*
-GraphicManager::make_buffer() {
-    return nullptr;
 }

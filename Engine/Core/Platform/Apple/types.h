@@ -23,6 +23,7 @@
 
 #define MUINT u_int32_t
 
+#define MLENGTH size_t
 
 #define MLPWCHAR WCHAR*
 #define MWCHAR WCHAR

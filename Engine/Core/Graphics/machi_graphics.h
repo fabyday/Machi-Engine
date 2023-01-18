@@ -23,39 +23,15 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include "Platform/Apple/config.h"
-#include <simd/simd.h>
-#include <MachiMetal/metal.h>
 
 
 
-static constexpr size_t kMaxFramesInFlight = 3;
 
-namespace Machi{
-
-class Renderer
-{
-public:
-    Renderer( MTL::Device* pDevice );
-    ~Renderer();
-    void buildShaders();
-    void buildBuffers();
-    void draw( MTK::View* pView );
-
-private:
-    MTL::Device* _pDevice;
-    MTL::CommandQueue* _pCommandQueue;
-    MTL::Library* _pShaderLibrary;
-    MTL::RenderPipelineState* _pPSO;
-    MTL::Buffer* _pVertexDataBuffer;
-    MTL::Buffer* _pInstanceDataBuffer[kMaxFramesInFlight];
-    MTL::Buffer* _pIndexBuffer;
-    float _angle;
-    int _frame;
-    dispatch_semaphore_t _semaphore;
-    static const int kMaxFramesInFlight;
-};
+#if defined(__APPLE__)
+#include "machi_apple_graphics.h"
+#elif defined(_WIN64) || defined(_WIN32)
 
 
 
-}
+#endif
+

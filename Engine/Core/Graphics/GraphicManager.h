@@ -30,6 +30,7 @@
 #include <Platform/types.h>
 #include "../Application/application.h"
 
+namespace Machi{
 
 class GraphicManager {
 // Platform dependents
@@ -58,8 +59,9 @@ public :
 	bool regist_renderer();
 	Buffer* make_buffer();
 	BufferView* make_buffer_view(Buffer& buf);
-	
 
 
-};
+
+        };
+}
 #endif

@@ -16,7 +16,7 @@ namespace Machi{
         virtual void drawInMTKView( MTK::View* pView ) override;
 
     private:
-        Machi::Renderer* _pRenderer;
+        Renderer* _pRenderer;
     };
 
     class MachiAppDelegate: public NS::ApplicationDelegate

@@ -24,7 +24,7 @@ if(WIN32)
 
 elseif(APPLE)
     target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
-    target_link_libraries(Platform PUBLIC metal_wrapper Machi::Application)
+    target_link_libraries(Platform PUBLIC  Machi::Graphics metal_wrapper Machi::Application)
 
 elseif(UNIX AND NOT APPLE) # linux;
 
