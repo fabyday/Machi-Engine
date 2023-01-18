@@ -3,6 +3,7 @@
 //
 
 #include "apple_delegate.h"
+#include <Application/application.h>
 
 Machi::MachiAppDelegate::~MachiAppDelegate()
 {
@@ -18,7 +19,9 @@ NS::Menu* Machi::MachiAppDelegate::createMenuBar()
 
     NS::Menu* pMainMenu = NS::Menu::alloc()->init();
     NS::MenuItem* pAppMenuItem = NS::MenuItem::alloc()->init();
-    NS::Menu* pAppMenu = NS::Menu::alloc()->init( NS::String::string( "Appname", UTF8StringEncoding ) );
+    const MSTRING name = Machi::Application::get_instance()->get_appname();
+    const std::string tmp_name(name.begin(), name.end()) ;
+    NS::Menu* pAppMenu = NS::Menu::alloc()->init( NS::String::string( tmp_name.c_str(), UTF8StringEncoding ) );
 
     NS::String* appName = NS::RunningApplication::currentApplication()->localizedName();
     NS::String* quitItemName = NS::String::string( "Quit ", UTF8StringEncoding )->stringByAppendingString( appName );
