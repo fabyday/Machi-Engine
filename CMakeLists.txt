@@ -24,7 +24,7 @@ include(cmakes/dependency_helper.cmake)
 
 option(Editor OFF "editor")
 option(Testbed ON "testbed")
-message("${Testbed}")
+message("test : ${Testbed}")
 add_subdirectory("Engine")
 
     message("test")

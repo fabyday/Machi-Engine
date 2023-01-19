@@ -71,7 +71,7 @@ namespace shader_types
 void Machi::Renderer::buildShaders()
 {
     using NS::StringEncoding::UTF8StringEncoding;
-
+    
     const char* shaderSrc = R"(
         #include <metal_stdlib>
         using namespace metal;

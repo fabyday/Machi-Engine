@@ -1,7 +1,7 @@
 
 
 if(WIN32)
-set(platform_src   "windows/application.cpp"  "windows/os.cpp" "windows/machi_graphics.cpp")
+set(platform_src   "windows/application.cpp"  "windows/os.cpp" "windows/machi_windows_graphics.cpp")
 elseif(APPLE)
 #    set(platform_src  "Apple/entry.h" "Apple/metal-core.h" "Apple/application.cpp" "Apple/machi_graphics.cpp" "Apple/metal.cpp" )
     set(platform_src  "Apple/apple_delegate.h"   "Apple/apple_delegate.cpp"

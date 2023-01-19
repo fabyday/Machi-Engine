@@ -15,3 +15,6 @@ add_subdirectory(Graphics)
 add_subdirectory(Platform)
 
 
+
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::OS Machi::Platform CACHE INTERNAL "" FORCE)
+
