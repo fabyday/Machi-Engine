@@ -22,18 +22,31 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-
+#pragma once
 #include "config.h"
 #include "../../Application/application.h"
-#include <Windows.h>
+
+
 
 
 // main function hijacking.
-Application* machi_main(int argc, char** argv); // User impl.
+#include <stddef.h>
+#include "apple_delegate.h"
 
-int main(int argc, char* argv[]){	
-	Application* app = machi_main(argc, argv);
-	bool reval = app->run(0, NULL);
-	delete app;
-	return reval;
+
+Machi::Application* machi_main(int argc, char** argv); // User impl.
+
+
+int main(int argc, char* argv[]){
+    NS::AutoreleasePool* pAutoreleasePool = NS::AutoreleasePool::alloc()->init();
+    Machi::Application* app = machi_main(argc, argv);
+    Machi::MachiAppDelegate del;
+
+    NS::Application* pSharedApplication = NS::Application::sharedApplication();
+    pSharedApplication->setDelegate( &del );
+    pSharedApplication->run();
+
+    pAutoreleasePool->release();
+
+    return 0;
 }

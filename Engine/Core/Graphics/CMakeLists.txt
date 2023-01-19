@@ -1,6 +1,6 @@
-set(graphics_src "${CMAKE_CURRENT_SOURCE_DIR}/GraphicManager.cpp" )
-add_library(Graphics OBJECT ${graphics_src})
+set(graphics_src "primitive.h" "GraphicManager.h" "${CMAKE_CURRENT_SOURCE_DIR}/GraphicManager.cpp"  machi_graphics.cpp machi_graphics.h graphics_defined.h)
+add_library(Graphics SHARED ${graphics_src})
 #target_link_libraries(Platform INTERFACE ${graphics_libs})
 #target_include_directories(Platform INTERFACE ${p_dir} "../") # Windows or Apple, and Core Module Path("../..")
-
+target_link_libraries(Graphics PUBLIC metal_wrapper)
 add_library(Machi::Graphics ALIAS Graphics)
