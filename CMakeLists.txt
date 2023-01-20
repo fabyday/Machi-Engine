@@ -5,9 +5,9 @@ project(Machi-Engine)
 
 
 # language support info
-
+if(WIN32)
 add_definitions("-DUNICODE -D_UNICODE")
-if(APPLE)
+elseif(APPLE)
 #set(CMAKE_CXX_FLAGS "-std=c++17 -stdlib=libc++")
 #set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++")
 endif()

@@ -143,7 +143,6 @@ void Machi::Renderer::buildShaders()
 void Machi::Renderer::buildBuffers()
 {
     using simd::float3;
-
     const float s = 0.5f;
 
     float3 verts[] = {

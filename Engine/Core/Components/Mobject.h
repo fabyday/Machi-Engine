@@ -4,13 +4,13 @@
 
 #ifndef MACHI_ENGINE_OBJECT_H
 #define MACHI_ENGINE_OBJECT_H
-
+#include <Math/Vector.h>
 // All Components' super class
 namespace Machi{
 
     class MObject {
 
-
+        Vector;
 
 
     };

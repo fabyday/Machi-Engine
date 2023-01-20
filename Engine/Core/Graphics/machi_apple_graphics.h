@@ -16,10 +16,17 @@ static constexpr size_t kMaxFramesInFlight = 3;
 namespace Machi {
     class MachiAppDelegate;
     class NativeGraphicsManager;
-    class Buffer{
+    class Buffer final{
+        MTL::Buffer* m_buffer;
         friend NativeGraphicsManager;
-        Buffer(){
+        Buffer(MTL::Buffer* buffer):m_buffer(buffer){
 
+        }
+
+
+        ~Buffer (){
+
+            m_buffer->release();
         }
 
     };
@@ -33,6 +40,10 @@ namespace Machi {
 //        MTL::Library* m_shader_lib;
         MTL::Function* m_function_entry;
    public:
+       ~Shader(){
+           if(m_function_entry)
+            m_function_entry->release();
+       }
        typedef struct ShaderInfo{
 
            ShaderInputType m_input_type;
@@ -47,9 +58,6 @@ namespace Machi {
                 return *this;
             }
 
-            struct ShaderInfo& operator+(){
-
-            }
        };
 
    private:
@@ -84,7 +92,8 @@ namespace Machi {
       MTL::CommandQueue* m_command_queue;
 
       friend class NativeGraphicsManager;
-      CommandQueue(MTL::Device* device):m_command_queue(device->newCommandQueue()){
+      CommandQueue(MTL::CommandQueue* command_queue)
+              :m_command_queue(command_queue){
 
       }
 
@@ -114,10 +123,15 @@ namespace Machi {
       // make_shader();
 
       Shader* make_shader(Shader::ShaderDesc& shaderDesc);
+       Shader* make_shader(const MSTRING& filename, const MSTRING& function_name, const Shader::ShaderInfo& info);
+       CommandQueue* make_command_queue();
        Pipeline* make_pipeline(std::vector<Shader>& shaders);
        Buffer* make_buffer(MLENGTH buf_size, enum BufferResourceOption option);
 
-      // render();
+
+
+
+       bool render(Machi::Pipeline* pipeline);
 
         ~NativeGraphicsManager(){
 
