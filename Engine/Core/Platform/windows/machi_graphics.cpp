@@ -63,7 +63,7 @@ typedef struct BufferView {
     }
 }BufferView;
 
-typedef struct SyncronizeObejct {
+typedef struct SyncronizeObejct final{
     static int g_frame_index;
     UINT frame_index_;
     HANDLE fence_event_;
@@ -670,7 +670,7 @@ GraphicManager::render() {
      //record all the command we need to render the scene into the command list
 
      PopulateCommandList(*graphics_context_, *syncronize_object_);
-
+     
 
      ID3D12CommandList* ppCommandLists[] = { graphics_context_->command_list_.Get() };
      graphics_context_->command_queue_->ExecuteCommandLists(_countof(ppCommandLists), ppCommandLists);
@@ -838,4 +838,39 @@ Shader& Shader::init_shader()
 
 
     return *this;
+}
+
+SynchronizeObject&
+SynchronizeObject::init_fence(Device& device, CommandQueue* queue)
+{
+
+    ComPtr<ID3D12Device> p_device = device.get_device();
+    ThrowIfFailed(p_device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
+    m_fence_value = fence_value++;
+
+    // Create an event handle to use for frame synchronization.
+    m_fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+    if (m_fence_event == nullptr)
+    {
+        ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
+    }
+
+    //// Wait for the command list to execute; we are reusing the same command 
+    //// list in our main loop but for now, we just want to wait for setup to 
+    //// complete before continuing.
+    //wait_for();
+}
+void SynchronizeObject::wait_for() {
+    const MUINT fence = m_fence_value;
+    ThrowIfFailed(m_listen_queue->Signal(m_fence.Get(), fence));
+    m_fence_value++;
+
+    // Wait until the previous frame is finished.
+    if (m_fence->GetCompletedValue() < fence)
+    {
+        ThrowIfFailed(m_fence->SetEventOnCompletion(fence, m_fence_event));
+        WaitForSingleObject(m_fence_event, INFINITE);
+    }
+
+    //m_frameIndex = m_swapChain->GetCurrentBackBufferIndex();
 }

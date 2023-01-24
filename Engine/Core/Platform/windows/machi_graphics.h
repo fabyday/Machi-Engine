@@ -132,6 +132,8 @@ class Pipeline {
 };
 
 class Buffer;
+
+
 class SwapChain final {
 	ComPtr<IDXGISwapChain3> m_swaphain;
 	void init_swapchain(ComPtr<IDXGIFactory4> factory, MUINT frame_count_, MUINT width, MUINT height);
@@ -146,7 +148,24 @@ class Buffer {
 
 };
 
+class SynchronizeObject {
+private:
+	static int fence_value ;
+	ComPtr<ID3D12Fence> m_fence;
+	HANDLE m_fence_event;
+	MUINT m_fence_value;
 
+	CommandQueue* m_listen_queue;
+	
+	SynchronizeObject& init_fence(Device& device, CommandQueue* queue);
+	void wait_for();
+
+
+
+
+
+
+};
 
 
 
