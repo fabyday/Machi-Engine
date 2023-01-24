@@ -26,11 +26,11 @@
 #ifndef __GRAPHIC_MANAGER_H__
 #define __GRAPHIC_MANAGER_H__
 
-
 #include "primitive.h"
 #include <Platform/types.h>
 #include "../Application/application.h"
 
+namespace Machi{
 
 class GraphicManager {
 // Platform dependents
@@ -41,13 +41,13 @@ private :
 	
 	SyncronizeObejct* syncronize_object_;
 
-	friend Application;
+	friend Machi::Application;
 
 	int n_frame_;
 
 
 	//only called in Application
-	virtual void initialize(Application* app);
+	virtual void initialize(Machi::Application* app);
 	virtual void render();
 	virtual void destroy();
 	GraphicManager() :n_frame_(1) {};
@@ -59,8 +59,9 @@ public :
 	bool regist_renderer();
 	Buffer* make_buffer();
 	BufferView* make_buffer_view(Buffer& buf);
-	
 
 
-};
+
+        };
+}
 #endif

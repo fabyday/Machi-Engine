@@ -3,15 +3,18 @@
 add_definitions("-DMACHI_BUILD_DLL") 
 link_libraries(spdlog::spdlog)
 
+if(APPLE)
+    message("metal is ON")
+    add_subdirectory(MachiMetal)
+endif()
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
-
-
-add_subdirectory(Platform)
-include_directories(${platform_dependent_directory})
+#include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(OS)
 add_subdirectory(Application)
 add_subdirectory(Graphics)
+add_subdirectory(Platform)
 
-add_library(Core SHARED $<TARGET_OBJECTS:Machi::Application> $<TARGET_OBJECTS:Machi::OS> $<TARGET_OBJECTS:Machi::Graphics> $<TARGET_OBJECTS:Machi::Platform>)
-target_include_directories(Core PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} ${platform_dependent_directory})
-add_library(Machi::Core ALIAS Core)
+
+
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::OS Machi::Platform CACHE INTERNAL "" FORCE)
+

@@ -1,5 +1,5 @@
 //MIT License 
-//Copyright(c) 2022 fabyday
+//Copyright(c) 2022 Ji Hyun Roh
 // 
 // 
 //Permission is hereby granted, free of charge, to any person
@@ -24,12 +24,14 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 
 
-#pragma once
-
-#include <d3dx12.h>
 
 
 
+#if defined(__APPLE__)
+#include "machi_apple_graphics.h"
+#elif defined(_WIN64) || defined(_WIN32)
 
-using namespace Microsoft;
+
+
+#endif
 

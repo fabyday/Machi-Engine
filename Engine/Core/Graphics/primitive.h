@@ -33,3 +33,6 @@ typedef struct GraphicsDesc GraphicsContext; //
 
 
 typedef struct SyncronizeDesc SyncronizeObejct;
+
+
+
