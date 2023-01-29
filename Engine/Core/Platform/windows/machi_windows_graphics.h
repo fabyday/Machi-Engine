@@ -132,7 +132,7 @@ namespace Machi {
 
 
 
-		bool execute_command();
+		bool execute_command();1
 
 	};
 
@@ -171,14 +171,14 @@ namespace Machi {
 
 	struct IBufferData { //buffer interface
 
-		MUINT 
+		MUINT size;
 		MUINT get_vertex_size();
 		MUINT get_vertex_stride();
 	};
 
 
 
-	class Buffer {
+	class Buffer :public IBufferData{
 		enum Type { COSNTANT, TEXTURE, };
 
 		ComPtr<ID3D12Resource> m_vertexBuffer;
