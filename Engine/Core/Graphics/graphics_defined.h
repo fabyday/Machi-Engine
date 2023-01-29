@@ -24,6 +24,22 @@ namespace Machi{
         ResourceStorageModeManaged
     };
 
+
+
+
+
+    enum PrimitiveType {
+        MACHI_PRIMITIVE_TOPOLOGY_TRIANGLELIST
+    };
+
+
+
+
+
+
+
+
+
 }
 
 

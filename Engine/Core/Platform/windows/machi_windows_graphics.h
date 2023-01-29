@@ -109,8 +109,9 @@ namespace Machi {
 
 	class RootSignature final {
 		ComPtr<ID3D12RootSignature> m_rootsignature;
-	public:
 		void init_rootsignature(Device& device);
+		friend NativeGraphicsManager;
+	public:
 
 	};
 	class Device final {
@@ -127,6 +128,11 @@ namespace Machi {
 		SwapChain m_swapchain;
 		bool init_queue(ComPtr<ID3D12Device> device);
 		bool connect_swapchian(SwapChain sc);
+
+
+
+
+		bool execute_command();
 
 	};
 
@@ -163,11 +169,23 @@ namespace Machi {
 
 	};
 
+	struct IBufferData { //buffer interface
+
+		MUINT 
+		MUINT get_vertex_size();
+		MUINT get_vertex_stride();
+	};
+
+
+
 	class Buffer {
 		enum Type { COSNTANT, TEXTURE, };
 
-		std::vector<char> m_data;
+		ComPtr<ID3D12Resource> m_vertexBuffer;
+		std::unique_ptr<IBufferData> m_data;
 
+		Buffer& create(Device& device);//call last
+		get_buffer_view();
 
 	};
 
@@ -181,7 +199,45 @@ namespace Machi {
 	};
 
 
+	class Bundle {
+	private:
+		ComPtr<ID3D12CommandAllocator> m_command_allocator;
+		ComPtr<ID3D12GraphicsCommandList> m_bundle;
 
+	public:
+
+	};
+
+	class CommandList {
+		ComPtr<ID3D12GraphicsCommandList> m_command_list;
+		ComPtr<ID3D12CommandAllocator> m_bundle_allocator;
+		description m_desc;
+
+		typedef struct command_list_description{
+			Machi::PrimitiveType m_primitive;
+			std::shared_ptr<RootSignature> m_root_signature;
+			MUINT m_vertex_count;//total vertex count
+			MUINT
+		
+		}description;
+
+
+
+		CommandList& set_root_signature(Device& device, Pipeline& pipline);
+		CommandList& set_primitive_topology(Device& device, Pipeline& pipline);
+		CommandList& set_vertex_buffer(Device& device, Pipeline& pipline);
+		CommandList& draw_instance(Device& device, Pipeline& pipline);
+
+		CommandList& craete(Device& device, Pipeline& pipline);
+		
+
+		
+
+		
+
+
+	};
+	
 
 
 
