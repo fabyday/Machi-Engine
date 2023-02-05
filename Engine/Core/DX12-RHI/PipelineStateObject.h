@@ -1,0 +1,3 @@
+namespace {
+	class PipeLineState{};
+}

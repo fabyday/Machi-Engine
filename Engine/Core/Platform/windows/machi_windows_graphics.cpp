@@ -378,7 +378,6 @@ PopulateCommandList(GraphicsContext& g, SyncronizeObejct& s) {
     g.command_list_->SetDescriptorHeaps(_countof(ppHeaps), ppHeaps);
     g.command_list_->SetGraphicsRootDescriptorTable(0, g.srv_heap_->GetGPUDescriptorHandleForHeapStart());
 
-
     g.command_list_->RSSetViewports(1, &g.viewport_);
     g.command_list_->RSSetScissorRects(1, &g.scissor_rect_);
     

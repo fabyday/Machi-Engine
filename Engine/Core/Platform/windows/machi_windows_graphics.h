@@ -53,7 +53,6 @@ using namespace Microsoft;
 
 
 
-
 template <typename T>
 using ComPtr = Microsoft::WRL::ComPtr<T>;
 using namespace DirectX;
@@ -132,7 +131,7 @@ namespace Machi {
 
 
 
-		bool execute_command();1
+		bool execute_command(); 1
 
 	};
 
@@ -145,8 +144,7 @@ namespace Machi {
 
 	class Pipeline {
 
-		enum input_data_format { MACHI_GRAPHICS_R32G32B32_FLOAT, MACHI_GRAPHICS_R32G32_FLOAT };
-		enum input_class_type { MACHI_CLASSFICATION_PER_VERTEX, MACHI_CLASSFICATION_PER_INSTANCE };
+	
 		ComPtr<ID3D12PipelineState> m_pipeline_object;
 
 
@@ -159,6 +157,15 @@ namespace Machi {
 		Pipeline& add_pixel_shader(const MSTRING& filename);
 		Pipeline& add_pixel_shader(Shader& shader);
 		Pipeline& add_shader(Shader& shader);
+		
+		Pipeline& set_rootsignature(RootSignature& rootsignature);
+		Pipeline& set_depth_stencil_state(bool depth, bool stencil);
+		Pipeline& set_samplemask(bool depth, bool stencil);
+		Pipeline& set_primitive_topology_type(Machi::PrimitiveType type);
+		Pipeline& set_num_render_target(MUINT target);
+		Pipeline& set_render_target_format(Machi::RenderTargetFormat format);
+		Pipeline& set_sample_count(MUINT count);
+
 		void init_pipeline();
 
 		Pipeline& add_input_schema(MSTRING& name,
@@ -167,29 +174,33 @@ namespace Machi {
 			MUINT index = 0);
 
 
-	};
+		bool Pipeline& build();
 
-	struct IBufferData { //buffer interface
 
-		MUINT size;
-		MUINT get_vertex_size();
-		MUINT get_vertex_stride();
 	};
 
 
 
-	class Buffer :public IBufferData{
+	class Buffer  {
 		enum Type { COSNTANT, TEXTURE, };
 
 		ComPtr<ID3D12Resource> m_vertexBuffer;
 		std::unique_ptr<IBufferData> m_data;
+		MUINT size;
 
 		Buffer& create(Device& device);//call last
 		get_buffer_view();
 
+
+		MUINT get_vertex_size();
+		MUINT get_vertex_stride();
+
 	};
 
+	class DescriptorHeap {
+		ComPtr<ID3D12DescriptorHeap> m_rtvHeap;
 
+	};
 
 	class SwapChain final {
 		ComPtr<IDXGISwapChain3> m_swaphain;
@@ -198,46 +209,100 @@ namespace Machi {
 
 	};
 
+	class ICommandAllocator {
 
-	class Bundle {
+
+
 	private:
+		virtual ICommandAllocator& create(Device& device) = 0;
+
+
+	};
+
+
+	class CommandAllocator: public ICommandAllocator {
 		ComPtr<ID3D12CommandAllocator> m_command_allocator;
+
+		ComPtr<ID3D12CommandAllocator> m_bundleAllocator;
+		virtual ICommandAllocator& create(Device& device) override;
+
+	};
+	class BundleAllocator : public ICommandAllocator {
+		ComPtr<ID3D12CommandAllocator> m_bundle_allocator;
+
+		ComPtr<ID3D12CommandAllocator> m_bundleAllocator;
+		virtual ICommandAllocator& create(Device& device) override;
+
+	};
+
+	class IRenderCommand {
+
+	public:
+
+	protected:
+		virtual IRenderCommand& create(Device& device, ICommandAllocator& alloc) = 0;
+		virtual bool execute() = 0;
+		
+		virtual IRenderCommand& reset() = 0;
+
+		virtual IRenderCommand& set_root_signature(Device& device, Pipeline& pipline) = 0;
+		virtual IRenderCommand& set_primitive_topology(Device& device, Pipeline& pipline) = 0;
+		virtual IRenderCommand& set_vertex_buffer(Device& device, Pipeline& pipline) = 0;
+		virtual IRenderCommand& set_viewport(Viewport& viewport) = 0;
+		virtual IRenderCommand& set_viewport(Viewport& viewport) = 0;
+		virtual IRenderCommand& set_render_targets(DescriptorHeap& rtv_heap, MUINT frame_idx) = 0;
+		virtual IRenderCommand& clear_render_target_view(MFLOAT r, MFLOAT g, MFLOAT b, MFLOAT a) = 0;
+		virtual IRenderCommand& clear_render_target_view(MFLOAT r, MFLOAT g, MFLOAT b, MFLOAT a) = 0;
+		virtual IRenderCommand& resource_barrier_transistion(const ResourceState& before, const ResourceState before& after) = 0;
+
+
+		virtual IRenderCommand& close() = 0;
+
+
+		//virtual IRenderCommand& set_render_targets(DescriptorHeap& viewport) = 0;
+
+		
+
+		friend class CommandQueue;
+		virtual ID3D12GraphicsCommandList* get() = 0;
+
+	};
+
+
+	class Bundle :public IRenderCommand {
+	private:
+		ComPtr<ID3D12CommandAllocator> m_bundle_allocator;
 		ComPtr<ID3D12GraphicsCommandList> m_bundle;
 
 	public:
 
+	protected:
+		ID3D12GraphicsCommandList* get() override;
+
 	};
 
-	class CommandList {
+	class CommandList public IRenderCommand {
 		ComPtr<ID3D12GraphicsCommandList> m_command_list;
-		ComPtr<ID3D12CommandAllocator> m_bundle_allocator;
-		description m_desc;
+		ComPtr<ID3D12CommandAllocator> m_command_allocator;
+		IRenderCommand::description m_desc;
 
-		typedef struct command_list_description{
-			Machi::PrimitiveType m_primitive;
-			std::shared_ptr<RootSignature> m_root_signature;
-			MUINT m_vertex_count;//total vertex count
-			MUINT
+
+	protected:
+		virtual IRenderCommand& set_root_signature(Device& device, Pipeline& pipline);
+		virtual IRenderCommand& set_primitive_topology(Device& device, Pipeline& pipline);
+		virtual IRenderCommand& set_vertex_buffer(Device& device, Pipeline& pipline);
+		virtual IRenderCommand& reset() = 0;
+
+		friend class CommandQueue;
+		virtual ID3D12GraphicsCommandList* get() override;
 		
-		}description;
-
-
-
-		CommandList& set_root_signature(Device& device, Pipeline& pipline);
-		CommandList& set_primitive_topology(Device& device, Pipeline& pipline);
-		CommandList& set_vertex_buffer(Device& device, Pipeline& pipline);
-		CommandList& draw_instance(Device& device, Pipeline& pipline);
-
-		CommandList& craete(Device& device, Pipeline& pipline);
-		
-
-		
-
 		
 
 
+
+		
 	};
-	
+
 
 
 

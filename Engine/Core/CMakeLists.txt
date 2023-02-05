@@ -12,6 +12,7 @@ include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 add_subdirectory(OS)
 add_subdirectory(Application)
 add_subdirectory(Graphics)
+add_subdirectory(DX12-RHI)
 add_subdirectory(Platform)
 
 

@@ -1,0 +1,6 @@
+namespace Machi {
+	class Buffer {
+
+
+	};
+}
