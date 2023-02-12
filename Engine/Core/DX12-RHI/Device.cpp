@@ -33,12 +33,33 @@ bool Machi::Device::init_device(bool debug_mode)
 	}
 #endif
 
-	try{
+	try {
 		ThrowIfFailed(CreateDXGIFactory2(dxgiFactoryFlags, IID_PPV_ARGS(&factory)));
 	}
 	catch (HrException& e) {
 		std::cerr << e.what() << std::endl;
 		return false;
 	}
+
+
+
+	try {
+
+	ComPtr<IDXGIAdapter1> hardwareAdapter;
+	GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+
+	ThrowIfFailed(D3D12CreateDevice(
+		hardwareAdapter.Get(),
+		D3D_FEATURE_LEVEL_11_0,
+		IID_PPV_ARGS(&m_device)
+	));
+	}
+	catch (HrException& e) {
+		std::cerr << e.what() << std::endl;
+		return false;
+	}
+
+
+
 	return true;
 }

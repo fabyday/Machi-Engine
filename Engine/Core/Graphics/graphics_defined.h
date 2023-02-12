@@ -30,6 +30,14 @@ namespace Machi{
         MACHI_FORAMT_R8G8B8A8_UNORM
     };
 
+    enum {
+        MACHI_ROOT_CONSTANT,
+        MACHI_INLINE_ROOT_DESCRIPTOR,
+        MACHI_ROOT_DESCRIPTOR,
+        MACHI_DESCRIPTOR_TABLE,
+
+
+    };
 
     enum BufferUsage {
 

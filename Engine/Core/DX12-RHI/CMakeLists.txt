@@ -1,6 +1,6 @@
 #target_link_libraries(Platform INTERFACE ${graphics_libs})
 #target_include_directories(Platform INTERFACE ${p_dir} "../") # Windows or Apple, and Core Module Path("../..")
 if(WIN32)
-set(graphics_src "RootSignature.cpp" "RootSignature.h" "NativeGraphicsManager.cpp" "Device.cpp" "CommandQueue.cpp" "SwapChain.cpp" "CommandAllocator.cpp")
+set(graphics_src "RootSignature.cpp" "RootSignature.h" "NativeGraphicsManager.cpp" "Device.cpp" "CommandQueue.cpp" "SwapChain.cpp" "CommandAllocator.cpp" "RootParameter.cpp")
 add_library(DX12-RHI SHARED ${graphics_src})
 endif()

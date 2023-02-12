@@ -29,10 +29,10 @@
 
 #if defined(_UNICODE) || defined(UNICODE)
 #define MSTRING std::wstring
+#define to_string to_wstring
 #else 
 #define MSTRING std::string 
 #endif
-
 
 #define MCHAR WCHAR
 
