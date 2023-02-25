@@ -1,7 +1,7 @@
 #include "Commons.h"
 #include "Device.h"
 
-
+#include "RootParameter.h"
 
 namespace Machi {
 
@@ -16,16 +16,12 @@ namespace Machi {
 
 
 
-		void add_constant_buffer(Machi::RootSignature, MUINT size);
-		void add_constant_buffer_view();
 		
-		void 
-		void init(Device& device);
+		void init(Device& device, RootParameter& params);
 		friend class NativeGraphicsManager;
 
 
 
-	public:
 
 
 	};

@@ -6,6 +6,7 @@
 #include "SwapChain.h"
 #include "CommandAllocator.h"
 #include "GraphicsCommand.h"
+#include "Synchronizer.h"
 #include <memory>
 namespace Machi{
 
@@ -20,6 +21,7 @@ namespace Machi{
 
 		CommandQueue m_command_queue;
 		CommandAllocator m_command_allocator;
+		GraphicsSyncManager sync_manager;
 
 		bool init();
 	public:
@@ -33,8 +35,8 @@ namespace Machi{
 			}
 			return *instance;
 		}
-		Texture alloc_texture();
-		Buffer alloc_buffer();
+		Texture* alloc_texture();
+		Buffer* alloc_buffer();
 
 
 

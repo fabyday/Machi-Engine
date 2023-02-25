@@ -15,6 +15,9 @@ namespace Machi {
 		friend class CommandQueue;
 		friend class SwapChain;
 		friend class CommandAllocator;
+		friend class Buffer;
+		friend class Texture;
+		friend class GraphicsSyncManager;
 		bool m_is_valid_device = false;
 
 

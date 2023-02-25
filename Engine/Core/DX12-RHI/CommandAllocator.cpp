@@ -30,6 +30,7 @@ bool Machi::CommandAllocator::create(Device& device)
 		type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		break;
 	}
+
 	try {
 		ThrowIfFailed(device->CreateCommandAllocator(type, IID_PPV_ARGS(&m_command_allocator)));
 	}

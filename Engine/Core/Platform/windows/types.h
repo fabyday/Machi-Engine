@@ -47,7 +47,7 @@
 #define MUINT32 INT32
 
 #define MUINT UINT
-
+#define MUINT64 UINT64
 
 #define MLPWCHAR WCHAR*
 #define MWCHAR WCHAR

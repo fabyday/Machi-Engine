@@ -1,0 +1,8 @@
+namespace Machi {
+
+
+
+	class Command {
+
+	};
+}

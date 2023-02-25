@@ -47,6 +47,9 @@ namespace Machi {
 			return *this;
 
 		}
+
+		inline MUINT get_frame_num() { return m_swapchain_desc.BufferCount; };
+
 		inline SwapChain& set_frame_num(MUINT frame = 2) {
 			ready_flag.BufferCount = true;
 			m_swapchain_desc.BufferCount = frame;
