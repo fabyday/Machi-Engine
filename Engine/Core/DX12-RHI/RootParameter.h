@@ -5,6 +5,7 @@
 #include "Commons.h"
 #include <unordered_map>
 #include <utility>
+#include "native_format_converter.h"
 namespace Machi {
 	class RootParameter {
 
@@ -19,10 +20,9 @@ namespace Machi {
 			return m_root_params.size();
 		}
 		inline RootParameter& add_inline_constants(MSTRING name, MUINT size, MUINT shader_register, MUINT register_space = 0, ShaderVisibility visibility = MACHI_SHADER_VISIBILITY_ALL) {
-
 			const int idx = m_root_params.size();
-			m_mapper.insert(std::make_pair<MSTRING, int>(name, idx));
-			m_root_params.emplace_back({});
+			m_mapper.insert(std::make_pair(name, idx));
+			m_root_params.emplace_back();
 			m_root_params[idx].InitAsConstants(size, shader_register, register_space);
 
 
@@ -79,7 +79,7 @@ namespace Machi {
 
 			const int idx = m_root_params.size();
 			m_root_params.emplace_back();
-			m_root_params[idx].InitAsDescriptorTable(desc_range.size(), (desc_range.data()), visibility);
+			m_root_params[idx].InitAsDescriptorTable(desc_range.size(), desc_range.data(), shader_visibility_convert(visibility));
 
 			return *this;
 		}
@@ -88,15 +88,14 @@ namespace Machi {
 		inline RootParameter& add_inline_srv(MUINT size, MUINT shader_register, MUINT register_space = 0, ShaderVisibility visibility = MACHI_SHADER_VISIBILITY_ALL) {
 			const int idx = m_root_params.size();
 			m_root_params.emplace_back();
-			m_root_params[idx].InitAsShaderResourceView(shader_register, register_space, visibility);
-
+			m_root_params[idx].InitAsShaderResourceView(shader_register, register_space, shader_visibility_convert(visibility));
 			return *this;
 		}
 
 		inline RootParameter& add_inline_uav(MUINT size, MUINT shader_register, MUINT register_space = 0, ShaderVisibility visibility = MACHI_SHADER_VISIBILITY_ALL) {
 			const int idx = m_root_params.size();
 			m_root_params.emplace_back();
-			m_root_params[idx].InitAsUnorderedAccessView;
+			m_root_params[idx].InitAsUnorderedAccessView(shader_register, register_space, shader_visibility_convert(visibility));
 
 			return *this;
 		}
@@ -105,7 +104,7 @@ namespace Machi {
 		inline RootParameter& add_inline_cbv(MUINT size, MUINT shader_register, MUINT register_space = 0, ShaderVisibility visibility = MACHI_SHADER_VISIBILITY_ALL) {
 			const int idx = m_root_params.size();
 			m_root_params.emplace_back();
-			m_root_params[idx].InitAsConstantBufferView(shader_register, register_space, visibility);
+			m_root_params[idx].InitAsConstantBufferView(shader_register, register_space, shader_visibility_convert(visibility));
 
 			return *this;
 		}

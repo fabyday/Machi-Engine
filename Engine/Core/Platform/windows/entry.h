@@ -25,8 +25,7 @@
 #pragma once
 
 #include "config.h"
-#include "os_native.h"
-
+#include "windows_platform.h"
 #include <Windows.h>
 
 #include <Application/application.h>
@@ -36,9 +35,10 @@
 
 
 // main function hijacking.
-Application* machi_main(int argc, char** argv); // User impl.
+Machi::Application* machi_main(int argc, char** argv); // User impl.
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
+	using namespace Machi;
 	OSConfig config;
 	config.hInstance = &hInstance;
 	config.hPrevInstance = &hPrevInstance;
@@ -50,6 +50,8 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OS::get_instance();
 	OS::set_context(&config);
 	Application* app = machi_main(__argc, __argv);
+	g_application = new Machi::WindowsPlatform();
+	g_application->initialize(app);
 	bool reval =  app->run(__argc, __argv);
 	delete app;
 	return reval;

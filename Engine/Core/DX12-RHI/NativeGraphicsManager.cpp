@@ -17,7 +17,7 @@ bool Machi::NativeGraphicsManager::init()
 		return false;
 	}
 
-	if (!sync_manager.create(m_swapchain.get_frame_num())) {
+	if (!sync_manager.create(m_device, m_swapchain.get_frame_num())) {
 		return false;
 	}
 

@@ -1,3 +1,4 @@
+#pragma once
 #include "Device.h"
 #include "RootSignature.h"
 #include "Texture.h"
@@ -22,7 +23,8 @@ namespace Machi{
 		CommandQueue m_command_queue;
 		CommandAllocator m_command_allocator;
 		GraphicsSyncManager sync_manager;
-
+		class InputLayoutSpecifier;
+		class RenderObject;
 		bool init();
 	public:
 
@@ -35,12 +37,19 @@ namespace Machi{
 			}
 			return *instance;
 		}
-		Texture* alloc_texture();
-		Buffer* alloc_buffer();
+		Texture* alloc_texture2d(MUINT width, MUINT height);
+		Texture* alloc_texture3d(MUINT width, MUINT height, MUINT depth);
+		Texture* alloc_texture1d(MUINT size);
+
+		Buffer* alloc_buffer(MUINT byte_size);
+		PipeLineState* alloc_pso();
+
+		// handle root params
+		InputLayoutSpecifier* create_input_layout();
+		RenderObject* create_render_object(InputLayoutSpecifier* specifier); 
 
 
-
-		bool render();
+		bool render(RenderObject* object);
 
 
 	};

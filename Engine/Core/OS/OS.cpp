@@ -25,6 +25,31 @@
 
 
 #include "OS.h"
-
+#include <Platform/config.h>
 OSContext* OS::context_ = nullptr;
 OS* OS::instance_ = nullptr;
+
+
+
+OS::OS() {
+	open_console();
+	spdlog::info(L"current working directory : {}", get_current_directory().c_str());
+}
+
+bool
+OS::open_console() {
+
+	RedirectIOToConsole();
+	return true;
+}
+
+MSTRING
+OS::get_current_directory() {
+	return fs::current_path();
+}
+
+
+INT32
+OS::make_process() {
+	return -1;
+}

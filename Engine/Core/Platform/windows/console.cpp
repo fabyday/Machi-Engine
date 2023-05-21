@@ -23,27 +23,14 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 
-#include "config.h"
-#include "types.h"
-#include <stdio.h>
-#include <io.h>
-#include <Windows.h>
-#include "os_native.h"
-#include <OS/OS.h>
+#include "console.h"
 
-#include <filesystem>
-#include <iostream>
-
-
-#include <spdlog/spdlog.h>
-
-HWND WindowsPlatform::hwnd_ = nullptr;
 namespace fs = std::filesystem;
 
 
 
 
-static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
+void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
 	const HANDLE h_existing = GetStdHandle(p_std_handle);
 	if (h_existing != INVALID_HANDLE_VALUE) { // Redirect only if attached console have a valid handle.
 		const HANDLE h_cpp = reinterpret_cast<HANDLE>(_get_osfhandle(_fileno(p_cpp_stream)));
@@ -55,7 +42,7 @@ static void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_
 	}
 }
 
-static void RedirectIOToConsole() {
+void RedirectIOToConsole() {
 		AllocConsole();
 
 		RedirectStream("CONIN$", "r", stdin, STD_INPUT_HANDLE);
@@ -66,27 +53,3 @@ static void RedirectIOToConsole() {
 }
 
 
-
-
-OS::OS() {
-	open_console();
-	spdlog::info(L"current working directory : {}", get_current_directory().c_str());
-}
-
-bool 
-OS::open_console() {
-	
-	RedirectIOToConsole();
-	return true;
-}
-
-MSTRING
-OS::get_current_directory() {
-	return fs::current_path();
-}
-
-
-INT32 
-OS::make_process() {
-	return -1;
-}

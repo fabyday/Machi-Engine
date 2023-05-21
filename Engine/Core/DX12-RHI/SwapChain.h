@@ -1,7 +1,7 @@
 #pragma once
 #include "Commons.h"
 #include <Windows.h>
-#include <Platform/windows/os_native.h>
+#include <Platform/windows/windows_platform.h>
 #include "CommandQueue.h"
 #include <memory>
 namespace Machi {
@@ -65,10 +65,10 @@ namespace Machi {
 
 			return *this;
 		}
-		inline SwapChain& set_foramt(InputDataForamt format = MACHI_FORMAT_R32G32B32_FLOAT) {
+		inline SwapChain& set_foramt(ResourceFormat format = MACHI_FORMAT_R32G32B32_FLOAT) {
 			ready_flag.Format = true;
 			switch (format) {
-				case InputDataForamt::MACHI_FORMAT_R32G32B32_FLOAT:
+				case ResourceFormat::MACHI_FORMAT_R32G32B32_FLOAT:
 					m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
 					break;
 				default:
@@ -122,14 +122,19 @@ namespace Machi {
 			switch (effect)
 			{
 			case Machi::MACHI_SWAP_EFFECT_DISCARD:
+				m_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 				break;
 			case Machi::MACHI_SWAP_EFFECT_SEQUENTIAL:
+				m_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_SEQUENTIAL;
 				break;
 			case Machi::MACHI_SWAP_EFFECT_FLIP_SEQUENTIAL:
+				m_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL;
 				break;
 			case Machi::MACHI_SWAP_EFFECT_FLIP_DISCARD:
+				m_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 				break;
 			default:
+				m_swapchain_desc.SwapEffect = DXGI_SWAP_EFFECT_FLIP_DISCARD;
 				break;
 			}
 			return *this;
@@ -151,6 +156,8 @@ namespace Machi {
 
 
 		
-
+		IDXGISwapChain3* operator->() {
+			return m_swaphain.Get();
+		}
 	};
 }

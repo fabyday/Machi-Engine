@@ -29,68 +29,68 @@
 #include <Platform/config.h>
 #include <Platform/types.h>
 
-namespace Machi{
+namespace Machi {
 
- class MACHI_API Application   {
-
-
- private:
-     static Application* app_;
-     MSTRING app_name_;
-     time_t time_;
-     bool fullscreen_;
-	// platform dependents!
-	/// <summary>
-	/// 
-	/// </summary>
-	/// <returns></returns>
-	/// 
-	/// 
-	/// 
-
- public:
-	bool _initialize();
-	bool _run_logic();
-	bool _finalize();
-	bool run(int argc, char** argv);
+	class MACHI_API Application {
 
 
-	 ~Application() {};
+	private:
+		static Application* app_;
+		MSTRING app_name_;
+		time_t time_;
+		bool fullscreen_;
+		// platform dependents!
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		/// 
+		/// 
+		/// 
+
+	public:
+		bool _initialize();
+		bool _run_logic();
+		bool _finalize();
+		bool run(int argc, char** argv);
+
+
+		~Application() {};
 
 
 
-	static Application* get_instance() {
-		if (app_ == nullptr) {
-			app_ = new Application();
-		}
-        return new Application();
+		static Application* get_instance() {
+			if (app_ == nullptr) {
+				app_ = new Application();
+			}
+			return new Application();
+		};
+
+		Application* set_resolution(MINT width, MINT height, bool fullscreen);
+		Application* set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen);
+		Application* set_name(MSTRING name);
+
+		const MSTRING& get_appname() const { return app_name_; };
+
+		inline int get_x_pos() const { return x_; }
+		inline int get_y_pos() const { return y_; }
+		inline int get_width() const { return width_; }
+		inline int get_height() const { return height_; }
+		inline bool is_full_screen() const { return fullscreen_; }
+
+
+		Application() {};
+		//size configuration
+		int x_, y_, width_, height_;
+
+
+	protected:
+		virtual bool update();
+		virtual bool fixed_update();
+		virtual bool render();
+		//
+
 	};
-
-	Application* set_resolution(MINT width, MINT height, bool fullscreen);
-	Application* set_resolution(MINT x, MINT y, MINT width, MINT height, bool fullscreen);
-	Application* set_name(MSTRING name);
-
-	const MSTRING& get_appname() const { return app_name_; } ;
-
-	inline int get_x_pos() const { return x_; }
-	inline int get_y_pos() const { return y_; }
-	inline int get_width() const { return width_; }
-	inline int get_height() const { return height_; }
-	inline bool is_full_screen() const { return fullscreen_; }
-
-
-	Application() {};
-//size configuration
-	int x_, y_, width_, height_;
-
-
-protected:
-	virtual bool update();
-	virtual bool fixed_update();
-	virtual bool render();
-//
-
-};
 
 
 }

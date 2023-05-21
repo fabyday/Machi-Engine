@@ -25,18 +25,25 @@
 #include <Application/application.h>
 #include <Graphics/GraphicManager.h>
 #include <OS/OS.h>
-#include "os_native.h"
+#include "windows_platform.h"
 #include "common.h"
 #include "types.h"
 #include <stdexcept>
 #include <spdlog/spdlog.h>
 
 
+namespace Machi {
+    WindowsPlatform* g_application = nullptr;
+};
+
+HWND Machi::WindowsPlatform::hwnd_ = nullptr;
+
 bool 
-WindowsPlatform::initialize(Application& app) {
+Machi::WindowsPlatform::initialize(Application* app) {
     // window initialize.
+    m_app = app;
     const OSContext* context = OS::get_context();
-    const MWCHAR* app_name =  app.get_appname().c_str();
+    const MWCHAR* app_name =  app->get_appname().c_str();
     spdlog::info(L"app name : {}", app_name);
 
 
@@ -45,14 +52,14 @@ WindowsPlatform::initialize(Application& app) {
     WNDCLASSEX windowClass = { 0 };
     windowClass.cbSize = sizeof(WNDCLASSEX);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    windowClass.lpfnWndProc = WindowsPlatform::WindowProc;
+    windowClass.lpfnWndProc = Machi::WindowsPlatform::WindowProc;
     windowClass.hInstance = *(context->hInstance);
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.lpszClassName = app_name;
 
     RegisterClassEx(&windowClass);
 
-    RECT windowRect = { app.get_x_pos(), app.get_y_pos(), static_cast<MLONG>(app.get_width()), static_cast<MLONG>(app.get_height()) };
+    RECT windowRect = { app->get_x_pos(), app->get_y_pos(), static_cast<MLONG>(app->get_width()), static_cast<MLONG>(app->get_height()) };
 
 
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
@@ -81,12 +88,25 @@ WindowsPlatform::initialize(Application& app) {
     WindowsPlatform::set_HWND(_handle);
     ShowWindow(_handle, context->nCmdShow);
 
+
+
+
+    // directX Graphics components initialize.
+    try {
+
+        GraphicManager::get_instance()->initialize(m_app);
+    }
+    catch (std::runtime_error e) {
+        std::cerr << e.what() << std::endl;
+        return false;
+    }
+
     return true;
 }
 
 
 LRESULT 
-WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     UINT uMsg  = message;
@@ -154,14 +174,12 @@ WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
 }
 
 bool 
-Application::_run_logic() {
+Machi::WindowsPlatform::_run_logic() {
     // Main sample loop.
     MSG msg = {};
-    while (msg.message != WM_QUIT)
-    {
+    while (msg.message != WM_QUIT){
         // Process any messages in the queue.
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
-        {
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)){
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
@@ -171,41 +189,25 @@ Application::_run_logic() {
     return true;
 }
 
-bool
-Application::_initialize() {
-    if (!WindowsPlatform::initialize(*this)) // window platform initialize
-        return false;
 
-    // directX Graphics components initialize.
-    try{
-
-        GraphicManager::get_instance()->initialize(this);
-    }
-    catch (std::runtime_error e) {
-        std::cerr << e.what() << std::endl;
-        return false;
-    }
-    
-    return true;
-}
 
 // de-allocate resources.
 bool 
-Application::_finalize() {
+Machi::WindowsPlatform::_finalize() {
+
+    spdlog::info("finalized...");
+
 
 
     return true;
 }
 
+
+
 bool 
-Application::run(int agrc, char** argv) {
-    if (!_initialize())
-        return false;
+Machi::WindowsPlatform::run(int agrc, char** argv) {
     if (!_run_logic())
         return false;
-    if(!_finalize())
-        return false;
-    
     return true;
 
 }

@@ -26,12 +26,21 @@
 
 #include <Windows.h>
 #include <string>
-
+#include <sys/stat.h>
 #if defined(_UNICODE) || defined(UNICODE)
 #define MSTRING std::wstring
 #define to_string to_wstring
+
+typedef struct _stat64i32 _sel_stat;
+#define MSTAT _sel_stat
+#define MSTAT_FUNC(x, y) _wstat((x), (y))
+
 #else 
 #define MSTRING std::string 
+typedef struct stat _sel_stat;
+#define MSTAT _sel_stat;
+#define MSTAT_FUNC(x, y) stat((x),(y))
+
 #endif
 
 #define MCHAR WCHAR

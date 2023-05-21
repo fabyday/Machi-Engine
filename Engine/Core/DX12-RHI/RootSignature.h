@@ -18,7 +18,12 @@ namespace Machi {
 
 		
 		void init(Device& device, RootParameter& params);
+
+		inline ID3D12RootSignature* Get() { return m_rootsignature.Get(); };
+
+
 		friend class NativeGraphicsManager;
+		friend class PipeLineState;
 
 
 

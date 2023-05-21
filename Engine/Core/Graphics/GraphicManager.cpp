@@ -36,6 +36,11 @@ Machi::GraphicManager::get_instance() {
 	return GraphicManager::manager_;
 }
 
+std::shared_ptr<Machi::Renderer> Machi::GraphicManager::make_renderer()
+{
+	return std::shared_ptr<Renderer>();
+}
+
 
 
 

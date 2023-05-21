@@ -1,0 +1,12 @@
+namespace Machi {
+
+
+
+	class Renderer {
+
+
+
+
+
+	};
+}

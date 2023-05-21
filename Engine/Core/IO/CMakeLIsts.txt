@@ -1,0 +1,5 @@
+
+set(io_src "read_file.h"  "read_file.cpp")
+add_library(IO SHARED ${io_src})
+# target_link_libraries(Graphics PUBLIC metal_wrapper)
+add_library(Machi::IO ALIAS IO)

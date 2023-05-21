@@ -31,15 +31,35 @@ typedef  struct OSContext {
 }OSConfig;
 
 
-// OS specific function and configure collection.
-class WindowsPlatform {
-public:
-	static bool initialize(Application& app);
-	static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-	static HWND get_HWND() { return hwnd_; }
 
-	friend Application;
-private:
-	static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
-	static HWND hwnd_;
-};
+
+namespace Machi {
+
+	class WindowsPlatform;
+	extern WindowsPlatform* g_application;
+
+
+
+	// OS specific function and configure collection.
+	class WindowsPlatform {
+	public:
+		bool initialize(Application* app);
+		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+		static HWND get_HWND() { return hwnd_; }
+		
+		Application* m_app;
+		~WindowsPlatform() {
+			_finalize();
+		}
+
+		bool _finalize();
+
+		bool _run_logic();
+		bool run(int agrc, char** argv);
+
+		friend class Application;
+	private:
+		static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
+		static HWND hwnd_;
+	};
+}

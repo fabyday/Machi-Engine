@@ -1,4 +1,4 @@
-
+#pragma once
 #include "Commons.h"
 
 namespace Machi {
@@ -9,7 +9,7 @@ namespace Machi {
 	class Device final {
 	private:
 		ComPtr<ID3D12Device> m_device;
-
+		friend class PipeLineState;
 		friend class RootSignature;
 		friend class NativeGraphicsManager;
 		friend class CommandQueue;
@@ -17,6 +17,7 @@ namespace Machi {
 		friend class CommandAllocator;
 		friend class Buffer;
 		friend class Texture;
+		friend class PipeLineState;
 		friend class GraphicsSyncManager;
 		bool m_is_valid_device = false;
 

@@ -18,7 +18,7 @@ namespace Machi {
 		MUINT m_cpu_handle_increment_size;
 		MUINT m_cur_index;
 
-		inline DescriptorHeap& setup(DescriptorHeapType type, MUINT num_descriptors, DescriptorHeapFlags flag = DescriptorHeapFlags::MACHI_DESCRIPTOR_HEAP_FLAG_NONE, MUINT nodemask = 0) {
+		inline DescriptorHeap& add_setup(DescriptorHeapType type, MUINT num_descriptors, DescriptorHeapFlags flag = DescriptorHeapFlags::MACHI_DESCRIPTOR_HEAP_FLAG_NONE, MUINT nodemask = 0) {
 			m_desc.Type = type;
 			m_desc.NumDescriptors = num_descriptors;
 			m_desc.Flags = flag;
@@ -51,7 +51,7 @@ namespace Machi {
 			return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_cpu_handle_begin, index * m_cpu_handle_increment_size);
 		};
 
-		inline D3D12_GPU_DESCRIPTOR_HANDLE get_cpu_handle(MUINT index) {
+		inline D3D12_GPU_DESCRIPTOR_HANDLE get_gpu_handle(MUINT index) {
 			return CD3DX12_GPU_DESCRIPTOR_HANDLE(m_gpu_handle_begin, index * m_cpu_handle_increment_size);
 		};
 	};

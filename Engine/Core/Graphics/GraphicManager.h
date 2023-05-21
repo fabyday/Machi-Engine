@@ -28,14 +28,18 @@
 
 #include "primitive.h"
 #include <Platform/types.h>
-#include "../Application/application.h"
-
+#include <Application/application.h>
+#include <memory>
+#include "Renderer.h"
 namespace Machi{
 
 class GraphicManager {
 // Platform dependents
 private : 
 	static GraphicManager* manager_;
+
+	friend class WindowsPlatform;
+
 	GraphicsContext* graphics_context_;
 	static const MUINT frame_count_= 2;
 	
@@ -50,15 +54,18 @@ private :
 	virtual void initialize(Machi::Application* app);
 	virtual void render();
 	virtual void destroy();
-	GraphicManager() :n_frame_(1) {};
+	GraphicManager() :n_frame_(0) {};
+
+	bool regist_renderer();
+	Buffer* make_buffer();
 
 public : 
 	static GraphicManager* get_instance();
 	
 
-	bool regist_renderer();
-	Buffer* make_buffer();
-	BufferView* make_buffer_view(Buffer& buf);
+
+	std::shared_ptr<Renderer> make_renderer();
+
 
 
 

@@ -14,7 +14,7 @@ void Machi::GraphicsSyncManager::wait_gpu(CommandQueue& queue, MUINT frame_index
 }
 
 
-void Machi::GraphicsSyncManager::next_frame(CommandQueue& queue, MUINT frame_index) {
+void Machi::GraphicsSyncManager::next_frame(CommandQueue& queue, SwapChain& swapchain) {
 
     // Schedule a Signal command in the queue.
     const UINT64 cur_fence_value = m_fence_value[frame_index];
@@ -23,7 +23,7 @@ void Machi::GraphicsSyncManager::next_frame(CommandQueue& queue, MUINT frame_ind
     std::cout << m_fence->GetCompletedValue() << std::endl;
 
     // Update the frame index.
-    frame_index = m_swapChain->GetCurrentBackBufferIndex();
+    frame_index = swapchain->GetCurrentBackBufferIndex();
 
     // If the next frame is not ready to be rendered yet, wait until it is ready.
     if (m_fence->GetCompletedValue() < m_fence_value[frame_index])
@@ -33,5 +33,5 @@ void Machi::GraphicsSyncManager::next_frame(CommandQueue& queue, MUINT frame_ind
     }
 
     // Set the fence value for the next frame.
-    m_fence_value[m_frameIndex] = cur_fence_value + 1;
+    m_fence_value[frame_index] = cur_fence_value + 1;
 }

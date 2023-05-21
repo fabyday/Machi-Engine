@@ -1,7 +1,8 @@
-#include "Commons.h"
-#include "CommandQueue.h"
 #include <memory>
 
+#include "Commons.h"
+#include "CommandQueue.h"
+#include "SwapChain.h"
 namespace Machi {
 
 
@@ -33,6 +34,9 @@ namespace Machi {
 			{
 				ThrowIfFailed(HRESULT_FROM_WIN32(GetLastError()));
 			}
+
+
+			return true;
 		}
 
 		void wait_gpu(CommandQueue& queue);

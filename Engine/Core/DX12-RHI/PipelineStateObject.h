@@ -1,35 +1,43 @@
-namespace {
-	class PipeLineState{
+#pragma once
+
+#include "Commons.h"
+#include "RootSignature.h"
+#include "Shader.h"
+#include "Device.h"
+#include <map>
+#include "native_format_converter.h"
+
+namespace Machi {
+	class PipeLineState {
 
 		ComPtr<ID3D12PipelineState> m_pipeline_object;
-
+		D3D12_GRAPHICS_PIPELINE_STATE_DESC m_desc;
 
 		std::map<MSTRING, Shader> m_shader;
 		std::vector<D3D12_INPUT_ELEMENT_DESC> m_input_desc;
 		MUINT m_input_offset;
 
-		Pipeline& add_vertex_shader(const MSTRING& filename);
-		Pipeline& add_vertex_shader(Shader& shder);
-		Pipeline& add_pixel_shader(const MSTRING& filename);
-		Pipeline& add_pixel_shader(Shader& shader);
-		Pipeline& add_shader(Shader& shader);
-
-		Pipeline& set_rootsignature(RootSignature& rootsignature);
-		Pipeline& set_depth_stencil_state(bool depth, bool stencil);
-		Pipeline& set_samplemask(bool depth, bool stencil);
-		Pipeline& set_primitive_topology_type(Machi::PrimitiveType type);
-		Pipeline& set_num_render_target(MUINT target);
-		Pipeline& set_render_target_format(Machi::RenderTargetFormat format);
-		Pipeline& set_sample_count(MUINT count);
-
-		void init();
-
-		Pipeline& add_input_schema(MSTRING& name,
-			input_data_format format_type,
-			input_class_type input_classfication_type,
-			MUINT index = 0);
+		//PipeLineState& add_vertex_shader(const MSTRING& filename);
+		//PipeLineState& add_vertex_shader(Shader& shder);
+		//PipeLineState& add_pixel_shader(const MSTRING& filename);
+		//PipeLineState& add_pixel_shader(Shader& shader);
+		PipeLineState& add_shader(Shader& shader);
+		//PipeLineState& add_shader(MSTRING& filename);
 
 
-		bool Pipeline& build();
+		PipeLineState& set_rootsignature(RootSignature& rootsignature);
+		PipeLineState& set_depth_stencil_state(bool depth, bool stencil);
+		PipeLineState& set_samplemask(MUINT sample_mask = UINT_MAX);
+		PipeLineState& set_primitive_topology_type(Machi::PrimitiveType type);
+		PipeLineState& set_num_render_target(MUINT target);
+		PipeLineState& set_render_target_format(Machi::RenderTargetFormat format);
+		PipeLineState& set_sample_count(SampleType count);
+
+
+		PipeLineState& add_input_schema(MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, 
+			MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate);
+
+
+		bool build(Device& device);
 	};
 }
