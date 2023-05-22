@@ -84,7 +84,7 @@ namespace Machi {
 		int x_, y_, width_, height_;
 
 
-	protected:
+	public:
 		virtual bool update();
 		virtual bool fixed_update();
 		virtual bool render();

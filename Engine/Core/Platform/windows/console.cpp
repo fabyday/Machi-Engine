@@ -25,7 +25,6 @@
 
 #include "console.h"
 
-namespace fs = std::filesystem;
 
 
 

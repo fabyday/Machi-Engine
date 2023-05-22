@@ -22,9 +22,9 @@
 //WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
-#include <Application/application.h>
-#include <Graphics/GraphicManager.h>
-#include <OS/OS.h>
+//#include <Application/application.h>
+//#include <Graphics/GraphicManager.h>
+//#include <OS/OS.h>
 #include "windows_platform.h"
 #include "common.h"
 #include "types.h"
@@ -33,17 +33,18 @@
 
 
 namespace Machi {
-    WindowsPlatform* g_application = nullptr;
+    WindowsPlatform* g_platform = nullptr;
 };
 
 HWND Machi::WindowsPlatform::hwnd_ = nullptr;
+struct OSContext Machi::WindowsPlatform::ctx_ = { 0 };
 
 bool 
-Machi::WindowsPlatform::initialize(Application* app) {
+Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
     // window initialize.
-    m_app = app;
-    const OSContext* context = OS::get_context();
-    const MWCHAR* app_name =  app->get_appname().c_str();
+    const struct OSContext* context = &WindowsPlatform::ctx_;
+    //const struct OSContext* context = nullptr;
+    const MWCHAR* app_name =  name;
     spdlog::info(L"app name : {}", app_name);
 
 
@@ -59,7 +60,7 @@ Machi::WindowsPlatform::initialize(Application* app) {
 
     RegisterClassEx(&windowClass);
 
-    RECT windowRect = { app->get_x_pos(), app->get_y_pos(), static_cast<MLONG>(app->get_width()), static_cast<MLONG>(app->get_height()) };
+    RECT windowRect = { x, y, static_cast<MLONG>(width), static_cast<MLONG>(height) };
 
 
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
@@ -76,7 +77,9 @@ Machi::WindowsPlatform::initialize(Application* app) {
         nullptr,        // We have no parent window.
         nullptr,        // We aren't using menus.
         *(context->hInstance),
-        &app);
+        NULL);
+    //&app);
+
 
     if (_handle == nullptr) {
         int x = GetLastError();
@@ -91,15 +94,15 @@ Machi::WindowsPlatform::initialize(Application* app) {
 
 
 
-    // directX Graphics components initialize.
-    try {
+    //// directX Graphics components initialize.
+    //try {
 
-        GraphicManager::get_instance()->initialize(m_app);
-    }
-    catch (std::runtime_error e) {
-        std::cerr << e.what() << std::endl;
-        return false;
-    }
+    //    GraphicManager::get_instance()->initialize(m_app);
+    //}
+    //catch (std::runtime_error e) {
+    //    std::cerr << e.what() << std::endl;
+    //    return false;
+    //}
 
     return true;
 }
@@ -107,7 +110,7 @@ Machi::WindowsPlatform::initialize(Application* app) {
 
 LRESULT 
 Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
-    Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    //Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
 
     UINT uMsg  = message;
     switch (uMsg)
@@ -143,25 +146,25 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     return 0;
 
     case WM_KEYDOWN:
-        if (app)
-        {
-            //app->OnKeyDown(static_cast<UINT8>(wParam));
-        }
+        //if (app)
+        //{
+        //    //app->OnKeyDown(static_cast<UINT8>(wParam));
+        //}
         return 0;
 
     case WM_KEYUP:
-        if (app)
-        {
-            //pSample->OnKeyUp(static_cast<UINT8>(wParam));
-        }
+        //if (app)
+        //{
+        //    //pSample->OnKeyUp(static_cast<UINT8>(wParam));
+        //}
         return 0;
 
     case WM_PAINT:
-        if (app)
-        {/*
-            pSample->OnUpdate();
-            pSample->OnRender();*/
-        }
+        //if (app)
+        //{/*
+        //    pSample->OnUpdate();
+        //    pSample->OnRender();*/
+        //}
         return 0;
 
     case WM_DESTROY:
@@ -184,7 +187,7 @@ Machi::WindowsPlatform::_run_logic() {
             DispatchMessage(&msg);
         }
 
-        GraphicManager::get_instance()->render();
+        //GraphicManager::get_instance()->render();
     }
     return true;
 }
@@ -210,5 +213,10 @@ Machi::WindowsPlatform::run(int agrc, char** argv) {
         return false;
     return true;
 
+}
+
+OSContext* Machi::WindowsPlatform::get_context()
+{
+    return nullptr;
 }
 

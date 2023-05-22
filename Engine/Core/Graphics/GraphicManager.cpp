@@ -50,7 +50,7 @@ bool Machi::GraphicManager::regist_renderer()
 }
 
 void
-Machi::GraphicManager::initialize(Machi::Application* app) {
+Machi::GraphicManager::initialize() {
 
 }
 

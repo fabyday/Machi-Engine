@@ -16,16 +16,11 @@ endif()
 add_library(Platform SHARED ${platform_src})
 
 if(WIN32)
-    #set(graphics_libs d3d12 dxgi dxguid d3dcompiler) #D3d12SDKLayers)
     set(platform_dependent_directory  ${platform_dependent_directory} "${CMAKE_CURRENT_SOURCE_DIR}/windows" PARENT_SCOPE) # can't use relative paths
-    #target_link_libraries(Platform PUBLIC ${graphics_libs})
-    target_link_libraries(Platform PRIVATE Machi::Graphics Machi::Application)
     target_include_directories(Platform PUBLIC ${p_dir} "windows") # Windows or Apple, and Core Module Path("../..")
 
 elseif(APPLE)
     target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
-    target_link_libraries(Platform PUBLIC  Machi::Graphics metal_wrapper Machi::Application)
-
 elseif(UNIX AND NOT APPLE) # linux;
     
 endif()

@@ -26,8 +26,7 @@
 
 #ifdef MACHI_BUILD_DLL // MACHI_EXPORT
 	#define MACHI_API  __declspec(dllexport)
-#elif defined(MACHI_BUILD_EXECUTABLE)
-	#define MACHI_API 
+
 #else // MACHI_IMPORT
 	#define MACHI_API  __declspec(dllimport)
 #endif 

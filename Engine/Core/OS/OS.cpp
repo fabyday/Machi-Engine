@@ -25,10 +25,13 @@
 
 
 #include "OS.h"
-#include <Platform/config.h>
+#include <Platform/console.h>
+
+
+
+
 OSContext* OS::context_ = nullptr;
 OS* OS::instance_ = nullptr;
-
 
 
 OS::OS() {

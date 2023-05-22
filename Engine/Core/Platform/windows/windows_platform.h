@@ -19,9 +19,11 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <Windows.h>
-#include <Application/application.h>
+//#include <Application/application.h>
 
 #include "types.h"
+#include <functional>
+
 
 typedef  struct OSContext {
 	HINSTANCE* hInstance;
@@ -36,18 +38,22 @@ typedef  struct OSContext {
 namespace Machi {
 
 	class WindowsPlatform;
-	extern WindowsPlatform* g_application;
+	extern WindowsPlatform* g_platform;
 
 
 
 	// OS specific function and configure collection.
 	class WindowsPlatform {
 	public:
-		bool initialize(Application* app);
+		bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		static HWND get_HWND() { return hwnd_; }
 		
-		Application* m_app;
+		WindowsPlatform(HINSTANCE* hInstance, HINSTANCE* hPrevInstance, MUINT nCmdShow, MPWSTR pCmdLine) {
+			WindowsPlatform::ctx_ = { hInstance, hPrevInstance, nCmdShow, pCmdLine };
+		}
+		//Application* m_app;
+		//friend class Application;
 		~WindowsPlatform() {
 			_finalize();
 		}
@@ -57,9 +63,22 @@ namespace Machi {
 		bool _run_logic();
 		bool run(int agrc, char** argv);
 
-		friend class Application;
+
+		struct OSContext* get_context();
+	public:
+		std::function<bool(void)> update_function;
+		std::function<bool(void)> render_function;
+
 	private:
+
+
+
+
 		static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
 		static HWND hwnd_;
+		static struct OSContext ctx_;
 	};
+
+
+	typedef WindowsPlatform Platform;
 }

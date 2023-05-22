@@ -50,9 +50,11 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	OS::get_instance();
 	OS::set_context(&config);
 	Application* app = machi_main(__argc, __argv);
-	g_application = new Machi::WindowsPlatform();
-	g_application->initialize(app);
-	bool reval =  app->run(__argc, __argv);
+	g_platform = new Machi::Platform(hInstance, hPrevInstance, pCmdLine, nCmdShow);
+	g_platform->update_function = app->update;
+	g_platform->render_function = app->render;
+	g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
+	//bool reval =  app->run(__argc, __argv);
 	delete app;
 	return reval;
 }

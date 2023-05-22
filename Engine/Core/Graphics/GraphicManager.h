@@ -28,7 +28,6 @@
 
 #include "primitive.h"
 #include <Platform/types.h>
-#include <Application/application.h>
 #include <memory>
 #include "Renderer.h"
 namespace Machi{
@@ -38,20 +37,18 @@ class GraphicManager {
 private : 
 	static GraphicManager* manager_;
 
-	friend class WindowsPlatform;
 
 	GraphicsContext* graphics_context_;
 	static const MUINT frame_count_= 2;
 	
 	SyncronizeObejct* syncronize_object_;
 
-	friend Machi::Application;
 
 	int n_frame_;
 
 
 	//only called in Application
-	virtual void initialize(Machi::Application* app);
+	virtual void initialize();
 	virtual void render();
 	virtual void destroy();
 	GraphicManager() :n_frame_(0) {};
