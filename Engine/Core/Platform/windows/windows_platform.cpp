@@ -186,7 +186,7 @@ Machi::WindowsPlatform::_run_logic() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-
+        this->update_function();
         //GraphicManager::get_instance()->render();
     }
     return true;
@@ -217,6 +217,6 @@ Machi::WindowsPlatform::run(int agrc, char** argv) {
 
 OSContext* Machi::WindowsPlatform::get_context()
 {
-    return nullptr;
+    return &WindowsPlatform::ctx_;
 }
 

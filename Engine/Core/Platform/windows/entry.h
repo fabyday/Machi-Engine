@@ -39,22 +39,30 @@ Machi::Application* machi_main(int argc, char** argv); // User impl.
 
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 	using namespace Machi;
-	OSConfig config;
+	/*OSConfig config;
 	config.hInstance = &hInstance;
 	config.hPrevInstance = &hPrevInstance;
 	config.pCmdLine = pCmdLine;
-	config.nCmdShow = nCmdShow;
+	config.nCmdShow = nCmdShow;*/
 
 	//other code
 	spdlog::info("Window Platform Start...");
-	OS::get_instance();
-	OS::set_context(&config);
-	Application* app = machi_main(__argc, __argv);
 	g_platform = new Machi::Platform(hInstance, hPrevInstance, pCmdLine, nCmdShow);
-	g_platform->update_function = app->update;
+	OS::get_instance()->set_context(g_platform->get_context());
+#ifdef MACHI_EDITOR_MODE
+
+#endif // MACHI_EDITOR_MODE
+
+	Application* app = machi_main(__argc, __argv);
+	
+	g_platform->update_function = &(app->update);
 	g_platform->render_function = app->render;
+	
 	g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
-	//bool reval =  app->run(__argc, __argv);
+	
+	int ret = g_platform->run(__argc, __argv);
+
 	delete app;
-	return reval;
+
+	return ret;
 }

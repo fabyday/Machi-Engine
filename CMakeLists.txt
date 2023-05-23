@@ -27,7 +27,11 @@ option(Testbed ON "testbed")
 message("test : ${Testbed}")
 add_subdirectory("Engine")
 
-    message("test")
+
+if (${Editor})
+add_definitions("-DMACHI_EDITOR_MODE")
+endif()
+
 if(${Testbed})
 add_subdirectory("Test")
 endif()

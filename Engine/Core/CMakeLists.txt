@@ -16,7 +16,7 @@ add_subdirectory(Platform)
 add_subdirectory(Graphics)
 add_subdirectory(Application)
 add_subdirectory(OS)
-#add_subdirectory(IO)
+add_subdirectory(IO)
 
 
 

@@ -28,7 +28,7 @@
 
 #include <Platform/config.h>
 #include <Platform/types.h>
-
+#include <Platform/inputs.h>
 namespace Machi {
 
 	class MACHI_API Application {
@@ -87,6 +87,9 @@ namespace Machi {
 	public:
 		virtual bool update();
 		virtual bool fixed_update();
+		virtual bool on_key_pressed();
+		virtual bool on_key_clicked();
+		virtual bool on_key_released();
 		virtual bool render();
 		//
 
