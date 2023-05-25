@@ -20,17 +20,10 @@
 #pragma once
 #include <Windows.h>
 //#include <Application/application.h>
-
+#include "config.h"
 #include "types.h"
 #include <functional>
 
-
-typedef  struct OSContext {
-	HINSTANCE* hInstance;
-	HINSTANCE* hPrevInstance;
-	MUINT nCmdShow;
-	MPWSTR pCmdLine;
-}OSConfig;
 
 
 
@@ -38,19 +31,26 @@ typedef  struct OSContext {
 namespace Machi {
 
 	class WindowsPlatform;
-	extern WindowsPlatform* g_platform;
+	extern MACHI_API WindowsPlatform* g_platform;
+
+	typedef  struct MACHI_API OSContext {
+		HINSTANCE* hInstance;
+		HINSTANCE* hPrevInstance;
+		MUINT nCmdShow;
+		MPWSTR pCmdLine;
+	}OSConfig;
 
 
 
 	// OS specific function and configure collection.
-	class WindowsPlatform {
+	 class MACHI_API WindowsPlatform {
 	public:
 		bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 		static HWND get_HWND() { return hwnd_; }
 		
-		WindowsPlatform(HINSTANCE* hInstance, HINSTANCE* hPrevInstance, MUINT nCmdShow, MPWSTR pCmdLine) {
-			WindowsPlatform::ctx_ = { hInstance, hPrevInstance, nCmdShow, pCmdLine };
+		WindowsPlatform(HINSTANCE* hInstance, HINSTANCE* hPrevInstance, MPWSTR nCmdShow, MUINT  pCmdLine) {
+			WindowsPlatform::ctx_ = { hInstance, hPrevInstance, pCmdLine, nCmdShow };
 		}
 		//Application* m_app;
 		//friend class Application;
@@ -67,6 +67,7 @@ namespace Machi {
 		struct OSContext* get_context();
 	public:
 		std::function<bool(void)> update_function;
+		std::function<bool(void)> fixed_update_function;
 		std::function<bool(void)> render_function;
 
 	private:

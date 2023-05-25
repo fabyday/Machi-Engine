@@ -34,10 +34,10 @@
 
 namespace Machi {
     WindowsPlatform* g_platform = nullptr;
+    struct OSContext WindowsPlatform::ctx_ = { 0 };
+    HWND WindowsPlatform::hwnd_ = nullptr;
 };
 
-HWND Machi::WindowsPlatform::hwnd_ = nullptr;
-struct OSContext Machi::WindowsPlatform::ctx_ = { 0 };
 
 bool 
 Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
@@ -215,7 +215,7 @@ Machi::WindowsPlatform::run(int agrc, char** argv) {
 
 }
 
-OSContext* Machi::WindowsPlatform::get_context()
+Machi::OSContext* Machi::WindowsPlatform::get_context()
 {
     return &WindowsPlatform::ctx_;
 }

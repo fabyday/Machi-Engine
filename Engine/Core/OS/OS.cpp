@@ -30,29 +30,37 @@
 
 
 
-OSContext* OS::context_ = nullptr;
-OS* OS::instance_ = nullptr;
+Machi::OS* Machi::OS::instance_ = nullptr;
 
 
-OS::OS() {
+
+Machi::OS* Machi::OS::get_instance() {
+
+	if (instance_ == nullptr)
+		instance_ = new OS();
+	return instance_;
+}
+
+Machi::OS::OS() {
 	open_console();
 	spdlog::info(L"current working directory : {}", get_current_directory().c_str());
 }
 
+
 bool
-OS::open_console() {
+Machi::OS::open_console() {
 
 	RedirectIOToConsole();
 	return true;
 }
 
 MSTRING
-OS::get_current_directory() {
+Machi::OS::get_current_directory() {
 	return fs::current_path();
 }
 
 
 INT32
-OS::make_process() {
+Machi::OS::make_process() {
 	return -1;
 }

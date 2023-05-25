@@ -1,12 +1,17 @@
 namespace Machi {
 
+	namespace Graphics {
 
 
-	class Renderer {
+		class Renderer {
 
 
 
 
 
-	};
+		};
+
+
+
+	}
 }

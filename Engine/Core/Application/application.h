@@ -87,14 +87,18 @@ namespace Machi {
 	public:
 		virtual bool update();
 		virtual bool fixed_update();
-		virtual bool on_key_pressed();
+		
+		virtual bool render();
+		
+		
+		
+		/*virtual bool on_key_pressed();
 		virtual bool on_key_clicked();
 		virtual bool on_key_released();
-		virtual bool render();
-		//
+		*///
 
 	};
 
 
 }
-#endif // ! __APPLICATION_H__
+#endif // ! __APPLICATION_H__ 

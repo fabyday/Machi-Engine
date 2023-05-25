@@ -1,7 +1,10 @@
 #include "read_file.h"
 #include <Platform/types.h>
+using namespace Machi;
 
-long Machi::get_file_size(const MSTRING& filename) {
+
+
+long IO::get_file_size(const MSTRING& filename) {
 
 	std::string tmp(filename.begin(), filename.end());
 	struct stat stat_buf;
@@ -9,13 +12,13 @@ long Machi::get_file_size(const MSTRING& filename) {
 	return rc == 0 ? stat_buf.st_size : -1;
 }
 
-void Machi::read_str_from_file(const MSTRING& filename, MSTRING& result){
+
+void IO::read_str_from_file(const MSTRING& filename, MSTRING& result){
 
 
 	 std::ifstream readFile;
-
 	 readFile.open(filename);
-	 const long file_size = get_file_size(filename);
+	 const long file_size = IO::get_file_size(filename);
 	 result.reserve(file_size);
 
 	 if (readFile.is_open())

@@ -24,12 +24,16 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #include "application.h"
 #include <iostream>
-
+#include <Graphics/GraphicManager.h>
 Machi::Application* Machi::Application::app_ = nullptr;
 
 
 bool
 Machi::Application::render() {
+
+
+	using namespace Machi::Graphics;
+	auto gmng = GraphicManager::get_instance();
 	return true;
 }
 
@@ -76,6 +80,9 @@ Machi::Application::set_name(MSTRING name) {
 
 
 bool Machi::Application::_initialize(){
+	using namespace Machi;
+	auto manager = Graphics::GraphicManager::get_instance();
+	manager->initialize();
 
     return true;
 }

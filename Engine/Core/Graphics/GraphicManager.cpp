@@ -25,18 +25,20 @@
 
 
 #include "GraphicManager.h"
-Machi::GraphicManager* Machi::GraphicManager::manager_ = nullptr;
 
+using namespace Machi::Graphics;
 
-Machi::GraphicManager*
-Machi::GraphicManager::get_instance() {
+GraphicManager* GraphicManager::manager_ = nullptr;
+
+GraphicManager*
+GraphicManager::get_instance() {
 	if (GraphicManager::manager_ == nullptr) {
 		GraphicManager::manager_ = new GraphicManager;
 	}
 	return GraphicManager::manager_;
 }
 
-std::shared_ptr<Machi::Renderer> Machi::GraphicManager::make_renderer()
+std::shared_ptr<Renderer> GraphicManager::make_renderer()
 {
 	return std::shared_ptr<Renderer>();
 }
@@ -44,24 +46,24 @@ std::shared_ptr<Machi::Renderer> Machi::GraphicManager::make_renderer()
 
 
 
-bool Machi::GraphicManager::regist_renderer()
+bool GraphicManager::regist_renderer()
 {
 	return false;
 }
 
 void
-Machi::GraphicManager::initialize() {
+GraphicManager::initialize() {
 
 }
 
 
 void
-Machi::GraphicManager::render() {
+GraphicManager::render() {
 
 }
 
 void
-Machi::GraphicManager::destroy() {
+GraphicManager::destroy() {
 
 
 }
@@ -70,6 +72,6 @@ Machi::GraphicManager::destroy() {
 
 
 Buffer*
-Machi::GraphicManager::make_buffer() {
+GraphicManager::make_buffer() {
     return nullptr;
 }

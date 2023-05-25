@@ -27,7 +27,7 @@
 Machi::Application* machi_main(int argc, char** argv) {
 
 //    return nullptr;
-	return Machi::Application::get_instance();
-//		->set_name(L"Machi-AS-WELL")
-//		->set_resolution(1280, 960, false);
+	return Machi::Application::get_instance()
+		->set_name(L"Machi-AS-WELL")
+		->set_resolution(1280, 960, false);
 }

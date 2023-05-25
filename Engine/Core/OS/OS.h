@@ -28,51 +28,36 @@
 #include <stdio.h>
 #include <string>
 #include <Platform/types.h>
+//#include <Platform/windows/windows_platform.h>
+namespace Machi {
+	//forward declartion
+	typedef struct OSContext OSConfig;
 
+	class MACHI_API OS {
+	private:
+		OSContext* m_ctx;
+		static OS* instance_;
 
-//forward declartion
-typedef struct OSContext OSConfig;
+		int argc;
+		char** argv;
 
-class MACHI_API OS {
-private:
-	static OSContext* context_;
-	static OS* instance_;
-	
-	int argc;
-	char** argv;
+		OS();
+	public:
 
-	OS();
-public:
+		OS& set_context(OSContext* ctx) {
+			m_ctx = ctx;
+			return *this;
+		}
 
-	static void set_context(OSContext* ctx) {
-		context_ = ctx;
-	}
+		OSContext* get_context() {
+			return m_ctx;
+		}
 
-	static OSContext* get_context() {
-		return context_;
-	}
+		static OS* get_instance();
+		//load_dynamic_library();
+		MSTRING get_current_directory();
+		MINT32 make_process();
+		bool open_console();
 
-	static OS* get_instance() {
-		
-		if (instance_ == nullptr)
-			instance_ = new OS();
-		return instance_;
-	}
-	//load_dynamic_library();
-	MSTRING get_current_directory();
-	MINT32 make_process();
-	bool open_console();
-	
-
-	
-
-
-
-
-
-
-
-
-
-
-};
+	};
+}

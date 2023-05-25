@@ -26,46 +26,51 @@
 #ifndef __GRAPHIC_MANAGER_H__
 #define __GRAPHIC_MANAGER_H__
 
-#include "primitive.h"
 #include <Platform/types.h>
+#include <Platform/config.h>
 #include <memory>
+#include "primitive.h"
 #include "Renderer.h"
-namespace Machi{
-
-class GraphicManager {
-// Platform dependents
-private : 
-	static GraphicManager* manager_;
-
-
-	GraphicsContext* graphics_context_;
-	static const MUINT frame_count_= 2;
-	
-	SyncronizeObejct* syncronize_object_;
+namespace Machi {
+	namespace Graphics {
+		class MACHI_API GraphicManager {
+			// Platform dependents
+		private:
+			static GraphicManager* manager_;
 
 
-	int n_frame_;
+			GraphicsContext* graphics_context_;
+			static const MUINT frame_count_ = 2;
 
+			SyncronizeObejct* syncronize_object_;
 
-	//only called in Application
-	virtual void initialize();
-	virtual void render();
-	virtual void destroy();
-	GraphicManager() :n_frame_(0) {};
+			char* device_name;
 
-	bool regist_renderer();
-	Buffer* make_buffer();
+			int n_frame_;
 
-public : 
-	static GraphicManager* get_instance();
-	
-
-
-	std::shared_ptr<Renderer> make_renderer();
+			friend class Application;
+			//only called in Application
+			virtual void initialize();
+			virtual void render();
+			virtual void destroy();
 
 
 
+			GraphicManager() :n_frame_(0) {};
 
-        };
+			bool regist_renderer();
+			Buffer* make_buffer();
+
+		public:
+			static GraphicManager* get_instance();
+
+
+
+			std::shared_ptr<Renderer> make_renderer();
+
+
+
+		};
+	}
 }
 #endif

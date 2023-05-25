@@ -32,6 +32,7 @@
 #include <OS/OS.h>
 #include <iostream>
 #include <spdlog/spdlog.h>
+#include <functional>
 
 
 // main function hijacking.
@@ -47,20 +48,21 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	//other code
 	spdlog::info("Window Platform Start...");
-	g_platform = new Machi::Platform(hInstance, hPrevInstance, pCmdLine, nCmdShow);
-	OS::get_instance()->set_context(g_platform->get_context());
+	Machi::g_platform = new Machi::WindowsPlatform(&hInstance, &hPrevInstance, pCmdLine, nCmdShow);
+	Machi::OS::get_instance()->set_context(Machi::g_platform->get_context());
 #ifdef MACHI_EDITOR_MODE
 
 #endif // MACHI_EDITOR_MODE
 
 	Application* app = machi_main(__argc, __argv);
 	
-	g_platform->update_function = &(app->update);
-	g_platform->render_function = app->render;
+	Machi::g_platform->update_function = std::bind(&Application::update, app);
+	Machi::g_platform->fixed_update_function = std::bind(&Application::fixed_update, app);
+	Machi::g_platform->render_function = std::bind(&Application::render, app);
 	
-	g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
+	Machi::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
 	
-	int ret = g_platform->run(__argc, __argv);
+	int ret = Machi::g_platform->run(__argc, __argv);
 
 	delete app;
 

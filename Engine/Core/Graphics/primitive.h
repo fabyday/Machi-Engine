@@ -24,13 +24,27 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 
 
-typedef struct Buffer Buffer;
 typedef struct BufferView BufferView;
 
 
 typedef struct GraphicsDesc GraphicsContext; // 
 
+//template<int Dims>
+//struct Buffer {
+//	enum type {
+//		UNKNOWN,
+//		TEXTURE1D,
+//		TEXTURE2D,
+//		TEXTURE3D
+//	};
+//	MCHAR* m_data;
+//	const int m_dim = Dims;
+//	enum type m_type;
+//};
 
+typedef struct Texture1D;
+typedef struct Texture2D;
+typedef struct Texture3D;
 
 typedef struct SyncronizeDesc SyncronizeObejct;
 
