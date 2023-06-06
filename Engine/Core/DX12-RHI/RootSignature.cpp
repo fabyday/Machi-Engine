@@ -1,5 +1,8 @@
 #include "RootSignature.h"
-void Machi::RootSignature::init(Device& device, RootParameter& root_params) {
+
+#include "dxhelper.h"
+using namespace Machi::NativeGraphics;
+void RootSignature::init(Device& device, RootParameter& root_params) {
     
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
 

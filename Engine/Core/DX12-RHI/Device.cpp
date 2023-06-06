@@ -1,8 +1,9 @@
 #include "Device.h"
 #include <iostream>
+#include "dxhelper.h"
 
-
-bool Machi::Device::init_device(bool debug_mode)
+using namespace Machi::NativeGraphics;
+bool Device::init_device(bool debug_mode)
 {
 	UINT dxgiFactoryFlags = 0;
 	ComPtr<IDXGIFactory4> factory = nullptr;

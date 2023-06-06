@@ -23,13 +23,20 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
-
+#define MODULE_NAME "OS"
+#ifdef MACHI_OS
+#define MACHI_OS_API __declspec(dllexport)
+#else
+#define MACHI_OS_API __declspec(dllimport)
+#endif
+/*
 #ifdef MACHI_BUILD_DLL // MACHI_EXPORT
 	#define MACHI_API  __declspec(dllexport)
 
 #else // MACHI_IMPORT
 	#define MACHI_API  __declspec(dllimport)
 #endif 
+*/
 
 
 #ifndef WIN32_LEAN_AND_MEAN

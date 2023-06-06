@@ -1,4 +1,4 @@
-#include "config.h"
+#include "../platform_config.h"
 #include "types.h"
 #include <stdio.h>
 #include <io.h>
@@ -13,5 +13,5 @@
 
 namespace fs = std::filesystem;
 
-void MACHI_API RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle);
-void MACHI_API RedirectIOToConsole();
+void MACHI_PLATFORM_API RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle);
+void MACHI_PLATFORM_API RedirectIOToConsole();

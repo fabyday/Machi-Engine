@@ -24,7 +24,7 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 
 
-#include <Platform/config.h>
+#include "os_config.h"
 #include <stdio.h>
 #include <string>
 #include <Platform/types.h>
@@ -33,7 +33,7 @@ namespace Machi {
 	//forward declartion
 	typedef struct OSContext OSConfig;
 
-	class MACHI_API OS {
+	class MACHI_OS_API OS {
 	private:
 		OSContext* m_ctx;
 		static OS* instance_;

@@ -20,7 +20,7 @@
 #pragma once
 #include <Windows.h>
 //#include <Application/application.h>
-#include "config.h"
+#include "../platform_config.h"
 #include "types.h"
 #include <functional>
 
@@ -31,9 +31,9 @@
 namespace Machi {
 
 	class WindowsPlatform;
-	extern MACHI_API WindowsPlatform* g_platform;
+	extern MACHI_PLATFORM_API WindowsPlatform* g_platform;
 
-	typedef  struct MACHI_API OSContext {
+	typedef  struct MACHI_PLATFORM_API OSContext {
 		HINSTANCE* hInstance;
 		HINSTANCE* hPrevInstance;
 		MUINT nCmdShow;
@@ -43,7 +43,7 @@ namespace Machi {
 
 
 	// OS specific function and configure collection.
-	 class MACHI_API WindowsPlatform {
+	 class MACHI_PLATFORM_API WindowsPlatform {
 	public:
 		bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
 		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);

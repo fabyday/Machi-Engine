@@ -1,29 +1,32 @@
 #include "CommandAllocator.h"
 #include <iostream>
-bool Machi::CommandAllocator::create(Device& device)
-{
+using namespace Machi::NativeGraphics;
+#include "dxhelper.h"
+
+
+bool CommandAllocator::create(Device& device){
 	D3D12_COMMAND_LIST_TYPE type;
 	switch (m_type)
 	{
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_DIRECT:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_DIRECT:
 		type = D3D12_COMMAND_LIST_TYPE_DIRECT;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_BUNDLE:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_BUNDLE:
 		type = D3D12_COMMAND_LIST_TYPE_BUNDLE;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_COMPUTE:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_COMPUTE:
 		type = D3D12_COMMAND_LIST_TYPE_COMPUTE;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_COPY:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_COPY:
 		type = D3D12_COMMAND_LIST_TYPE_COPY;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_DECODE:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_DECODE:
 		type = D3D12_COMMAND_LIST_TYPE_VIDEO_DECODE;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_PROCESS:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_PROCESS:
 		type = D3D12_COMMAND_LIST_TYPE_VIDEO_PROCESS;
 		break;
-	case Machi::CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_ENCODE:
+	case CommandAllocator::MACHI_COMMAND_LIST_TYPE_VIDEO_ENCODE:
 		type = D3D12_COMMAND_LIST_TYPE_VIDEO_ENCODE;
 		break;
 	default:

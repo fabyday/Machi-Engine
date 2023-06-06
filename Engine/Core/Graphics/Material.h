@@ -1,6 +1,6 @@
 #pragma once 
 #include "primitive.h"
-
+#include "Buffer.h"
 
 namespace Machi {
 

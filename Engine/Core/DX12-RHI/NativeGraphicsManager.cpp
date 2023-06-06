@@ -1,7 +1,11 @@
 #include "NativeGraphicsManager.h"
 
+using namespace Machi::NativeGraphics;
 
-bool Machi::NativeGraphicsManager::init()
+NativeGraphicsManager* NativeGraphicsManager::instance_ = nullptr;
+
+
+bool NativeGraphicsManager::initialize()
 {
 	
 
@@ -17,10 +21,8 @@ bool Machi::NativeGraphicsManager::init()
 		return false;
 	}
 
-	if (!sync_manager.create(m_device, m_swapchain.get_frame_num())) {
+	if (!m_sync_manager.create(m_device, m_swapchain.get_frame_num())) {
 		return false;
 	}
-
-
 	return true;
 }

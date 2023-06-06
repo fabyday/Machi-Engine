@@ -1,6 +1,8 @@
 #include "SwapChain.h"
 #include <iostream>
-bool Machi::SwapChain::init()
+using namespace Machi::NativeGraphics;
+#include "dxhelper.h"
+bool SwapChain::init()
 {
 
 	// Describe and create the swap chain.

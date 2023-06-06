@@ -21,7 +21,7 @@ endif()
 #SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 #SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 include(cmakes/dependency_helper.cmake)
-
+include(cmakes/build_conf_helper.cmake)
 option(Editor OFF "editor")
 option(Testbed ON "testbed")
 message("test : ${Testbed}")

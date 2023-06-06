@@ -35,7 +35,7 @@
 namespace Machi {
     WindowsPlatform* g_platform = nullptr;
     struct OSContext WindowsPlatform::ctx_ = { 0 };
-    HWND WindowsPlatform::hwnd_ = nullptr;
+     HWND WindowsPlatform::hwnd_ = nullptr;
 };
 
 

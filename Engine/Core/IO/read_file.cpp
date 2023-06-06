@@ -36,5 +36,4 @@ void IO::read_str_from_file(const MSTRING& filename, MSTRING& result){
 
 	 readFile.close();
 
-
 }

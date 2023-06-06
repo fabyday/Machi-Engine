@@ -276,7 +276,7 @@ void ResetUniquePtrArray(T* uniquePtrArray)
 // Helper function for acquiring the first available hardware adapter that supports Direct3D 12.
 // If no such adapter can be found, *ppAdapter will be set to nullptr.
 
-void GetHardwareAdapter(
+inline void GetHardwareAdapter(
     IDXGIFactory1* pFactory,
     IDXGIAdapter1** ppAdapter,
     bool requestHighPerformanceAdapter)

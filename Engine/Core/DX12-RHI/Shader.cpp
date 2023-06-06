@@ -1,6 +1,8 @@
 #include "Shader.h"
-
-void Machi::Shader::create()
+using namespace Machi::Graphics;
+using namespace Machi::NativeGraphics;
+#include "dxhelper.h"
+void Shader::create()
 {
 
 	{

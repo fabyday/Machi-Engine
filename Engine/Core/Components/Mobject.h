@@ -11,7 +11,6 @@ namespace Machi{
         class MACHI_API MObject {
 
 
-
             void update();
             void fixed_update();// fixed time update.
             void add_component();

@@ -26,12 +26,12 @@
 #define __APPLICATION_H__
 
 
-#include <Platform/config.h>
+#include "application_config.h"
 #include <Platform/types.h>
 #include <Platform/inputs.h>
 namespace Machi {
 
-	class MACHI_API Application {
+	class MACHI_APPLICATION_API Application {
 
 
 	private:

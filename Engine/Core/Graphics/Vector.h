@@ -1,0 +1,10 @@
+namespace Machi {
+
+
+	namespace Graphics {
+
+
+
+
+	}
+}

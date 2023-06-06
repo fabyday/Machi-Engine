@@ -1,6 +1,12 @@
+//#ifdef DX12_INNER_ONLY_INCLUDE
+//#include "common.h"
+//#endif
 #include "CommandQueue.h"
 #include <iostream>
-bool Machi::CommandQueue::init(Device& device)
+#include "dxhelper.h"
+using namespace Machi::NativeGraphics;
+
+bool CommandQueue::init(Device& device)
 {
     // Describe and create the command queue.
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};

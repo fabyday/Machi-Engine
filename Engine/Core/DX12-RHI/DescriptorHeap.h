@@ -1,60 +1,55 @@
-#include "Commons.h"
+#pragma once
 #include <Graphics/graphics_defined.h>
-
+#include "Commons.h"
+#include "native_format_converter.h"
 #include "Device.h"
-#include "Resouce.h"
+#include "IResouce.h"
 namespace Machi {
 
+	namespace NativeGraphics {
 
-	class DescriptorHeap {
-
-
-		D3D12_DESCRIPTOR_HEAP_DESC m_desc;
-		ComPtr<ID3D12DescriptorHeap> m_heap;
-		D3D12_CPU_DESCRIPTOR_HANDLE m_cpu_handle_begin;
-		D3D12_GPU_DESCRIPTOR_HANDLE m_gpu_handle_begin;
+		class DescriptorHeap {
 
 
-		MUINT m_cpu_handle_increment_size;
-		MUINT m_cur_index;
+			D3D12_DESCRIPTOR_HEAP_DESC m_desc;
+			ComPtr<ID3D12DescriptorHeap> m_heap;
+			D3D12_CPU_DESCRIPTOR_HANDLE m_cpu_handle_begin;
+			D3D12_GPU_DESCRIPTOR_HANDLE m_gpu_handle_begin;
 
-		inline DescriptorHeap& add_setup(DescriptorHeapType type, MUINT num_descriptors, DescriptorHeapFlags flag = DescriptorHeapFlags::MACHI_DESCRIPTOR_HEAP_FLAG_NONE, MUINT nodemask = 0) {
-			m_desc.Type = type;
-			m_desc.NumDescriptors = num_descriptors;
-			m_desc.Flags = flag;
-			m_desc.NodeMask = mask;
-			return *this;
-		}
-		inline DescriptorHeap& init(Device& device) {
 
-			ThrowIfFailed(device->CreateDescriptorHeap(&m_desc, IID_PPV_ARGS(m_heap.GetAddressOf())));
-			m_cpu_handle_begin = m_heap->GetCPUDescriptorHandleForHeapStart();
-			m_gpu_handle_begin = m_heap->GetGPUDescriptorHandleForHeapStart();
-			m_cpu_handle_increment_size = device->GetDescriptorHandleIncrementSize(m_desc.Type);
-			m_cur_index = 0;
-			return *this;
+			MUINT m_cpu_handle_increment_size;
+			MUINT m_cur_index;
+			bool m_is_init = false;
 
-		}
-
-		inline bool connect_view(Device& device, IResource& resource) {
-			if (m_cur_index < size()) {
-				resource.connect_to_heap(device, get_cpu_handle(m_cur_index++));
-				return true
+			inline DescriptorHeap& add_setup(Machi::Graphics::DescriptorHeapType type, MUINT num_descriptors, Machi::Graphics::DescriptorHeapFlags flag = Machi::Graphics::DescriptorHeapFlags::MACHI_DESCRIPTOR_HEAP_FLAG_NONE, MUINT nodemask = 0) {
+				m_desc.Type = descriptor_heap_type_convert(type);
+				m_desc.NumDescriptors = num_descriptors;
+				m_desc.Flags = descriptor_heap_flag_convert(flag);
+				m_desc.NodeMask = nodemask;
+				return *this;
 			}
-			return false;
-		}
-		inline MUINT size() {
-			return m_desc.NumDescriptors;
-		};
 
-		inline D3D12_CPU_DESCRIPTOR_HANDLE get_cpu_handle(MUINT index) {
-			return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_cpu_handle_begin, index * m_cpu_handle_increment_size);
-		};
+			DescriptorHeap& init(Device& device);
+			inline bool is_init() { return m_is_init; };
+			inline bool connect_view(Device& device, IResource& resource) {
+				if (m_cur_index < size()) {
+					resource.connect_to_heap(device, get_cpu_handle(m_cur_index++));
+					return true;
+				}
+				return false;
+			}
+			inline MUINT size() {
+				return m_desc.NumDescriptors;
+			};
 
-		inline D3D12_GPU_DESCRIPTOR_HANDLE get_gpu_handle(MUINT index) {
-			return CD3DX12_GPU_DESCRIPTOR_HANDLE(m_gpu_handle_begin, index * m_cpu_handle_increment_size);
-		};
-	};
+			inline D3D12_CPU_DESCRIPTOR_HANDLE get_cpu_handle(MUINT index) {
+				return CD3DX12_CPU_DESCRIPTOR_HANDLE(m_cpu_handle_begin, index * m_cpu_handle_increment_size);
+			};
 
+			inline D3D12_GPU_DESCRIPTOR_HANDLE get_gpu_handle(MUINT index) {
+				return CD3DX12_GPU_DESCRIPTOR_HANDLE(m_gpu_handle_begin, index * m_cpu_handle_increment_size);
+			};
+		};
+	}
 
 }

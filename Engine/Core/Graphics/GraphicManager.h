@@ -27,13 +27,19 @@
 #define __GRAPHIC_MANAGER_H__
 
 #include <Platform/types.h>
-#include <Platform/config.h>
+#include "graphics_config.h"
+
+#include <DX12-RHI/NativeGraphicsManager.h>
+
 #include <memory>
+
 #include "primitive.h"
 #include "Renderer.h"
+#include "Buffer.h"
+
 namespace Machi {
 	namespace Graphics {
-		class MACHI_API GraphicManager {
+		class MACHI_GRAPHICS_API GraphicManager {
 			// Platform dependents
 		private:
 			static GraphicManager* manager_;

@@ -27,13 +27,13 @@
 #include "GraphicManager.h"
 
 using namespace Machi::Graphics;
-
+using namespace Machi;
 GraphicManager* GraphicManager::manager_ = nullptr;
 
 GraphicManager*
 GraphicManager::get_instance() {
 	if (GraphicManager::manager_ == nullptr) {
-		GraphicManager::manager_ = new GraphicManager;
+		GraphicManager::manager_ = new GraphicManager();
 	}
 	return GraphicManager::manager_;
 }
@@ -53,7 +53,7 @@ bool GraphicManager::regist_renderer()
 
 void
 GraphicManager::initialize() {
-
+	NativeGraphics::NativeGraphicsManager::get_instance()->initialize();
 }
 
 

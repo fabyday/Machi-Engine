@@ -81,9 +81,8 @@ Machi::Application::set_name(MSTRING name) {
 
 bool Machi::Application::_initialize(){
 	using namespace Machi;
-	auto manager = Graphics::GraphicManager::get_instance();
-	manager->initialize();
-
+	Graphics::GraphicManager::get_instance()->initialize();
+	
     return true;
 }
 bool Machi::Application::_run_logic(){

@@ -24,7 +24,6 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 
-#include "config.h"
 #include "windows_platform.h"
 #include <Windows.h>
 

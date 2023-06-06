@@ -1,8 +1,9 @@
 namespace Machi {
 
 
+	namespace NativeGraphics {
+		class Command {
 
-	class Command {
-
-	};
+		};
+	}
 }

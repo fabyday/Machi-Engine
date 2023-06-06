@@ -5,12 +5,13 @@
 namespace Machi {
 
 
+	namespace NativeGraphics {
+		class RenderDescriptor {
 
-	class RenderDescriptor{
 
 
 
-		
 
+		}
 	}
 }

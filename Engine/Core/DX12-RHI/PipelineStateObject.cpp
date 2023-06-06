@@ -1,35 +1,9 @@
 #include "PipelineStateObject.h"
-using namespace Machi;
+//using namespace Machi;
+using namespace Machi::NativeGraphics;
+#include "dxhelper.h"
 
-//PipeLineState& Machi::PipeLineState::add_vertex_shader(const MSTRING& filename)
-//{
-//	// TODO: insert return statement here
-//
-//
-//	return *this;
-//}
-//
-//PipeLineState& Machi::PipeLineState::add_vertex_shader(Shader& shder)
-//{
-//	// TODO: insert return statement here
-//
-//
-//	return *this;
-//}
-//
-//PipeLineState& Machi::PipeLineState::add_pixel_shader(const MSTRING& filename)
-//{
-//	// TODO: insert return statement here
-//
-//
-//	return *this;
-//}
-//
-//PipeLineState& Machi::PipeLineState::add_pixel_shader(Shader& shader)
-//{
-//}
-
-PipeLineState& Machi::PipeLineState::add_shader(Shader& shader)
+PipeLineState& PipeLineState::add_shader(Shader& shader)
 {
 
 	// TODO: insert return statement here
@@ -45,13 +19,13 @@ PipeLineState& Machi::PipeLineState::add_shader(Shader& shader)
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_rootsignature(RootSignature& rootsignature)
+PipeLineState& PipeLineState::set_rootsignature(RootSignature& rootsignature)
 {
 	m_desc.pRootSignature = rootsignature.Get();
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_depth_stencil_state(bool depth, bool stencil)
+PipeLineState& PipeLineState::set_depth_stencil_state(bool depth, bool stencil)
 {
 	m_desc.DepthStencilState.DepthEnable = depth;
 	m_desc.DepthStencilState.StencilEnable = stencil;
@@ -59,14 +33,14 @@ PipeLineState& Machi::PipeLineState::set_depth_stencil_state(bool depth, bool st
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_samplemask(MUINT sample_mask)
+PipeLineState& PipeLineState::set_samplemask(MUINT sample_mask)
 {
 	m_desc.SampleMask = sample_mask;
 
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_primitive_topology_type(PrimitiveType type)
+PipeLineState& PipeLineState::set_primitive_topology_type(PrimitiveType type)
 {
 	//D3D12
 	switch (type) {
@@ -90,19 +64,19 @@ PipeLineState& Machi::PipeLineState::set_primitive_topology_type(PrimitiveType t
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_num_render_target(MUINT size)
+PipeLineState& PipeLineState::set_num_render_target(MUINT size)
 {
 	m_desc.NumRenderTargets = size;
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_render_target_format(RenderTargetFormat format)
+PipeLineState& PipeLineState::set_render_target_format(RenderTargetFormat format)
 {
 	m_desc.RTVFormats[0] = resource_format_convert(format);
 	return *this;
 }
 
-PipeLineState& Machi::PipeLineState::set_sample_count(SampleType type)
+PipeLineState& PipeLineState::set_sample_count(SampleType type)
 {
 	switch (type) {
 	case SampleType::MSAAx4:
@@ -118,7 +92,7 @@ PipeLineState& Machi::PipeLineState::set_sample_count(SampleType type)
 }
 
 
-PipeLineState& Machi::PipeLineState::add_input_schema(MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate)
+PipeLineState& PipeLineState::add_input_schema(MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate)
 {
 	std::string asci_name(name.begin(), name.end());
 	//asci_name.assign(name.begin(), name.end());
@@ -128,7 +102,7 @@ PipeLineState& Machi::PipeLineState::add_input_schema(MSTRING& name, ShaderInput
 	return *this;
 }
 
-bool Machi::PipeLineState::build(Device& device)
+bool PipeLineState::build(Device& device)
 {
 
 

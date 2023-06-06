@@ -18,6 +18,13 @@ add_library(Platform SHARED ${platform_src})
 if(WIN32)
     set(platform_dependent_directory  ${platform_dependent_directory} "${CMAKE_CURRENT_SOURCE_DIR}/windows" PARENT_SCOPE) # can't use relative paths
     target_include_directories(Platform PUBLIC ${p_dir} "windows") # Windows or Apple, and Core Module Path("../..")
+    # set(MODULE_NAME "PLATFORM")
+    # configure_file(windows/config.h.in config.h @ONLY)
+    # target_include_directories(Platform PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
+   
+    TARGET_CONFIGURE_SETUP(Platform "PLATFORM")
+    message("mod ${MODULE_NAME}")
+
 
 elseif(APPLE)
     target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
