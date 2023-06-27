@@ -1,12 +1,13 @@
 ﻿#include <fstream>
 #include <string>
 #include <Platform/types.h>
+#include "io_config.h"
 namespace Machi {
 
 	namespace IO {
 
-	void read_str_from_file(const MSTRING& filename, MSTRING& result);
+	void MACHI_IO_API read_str_from_file(const MSTRING& filename, MSTRING& result);
 
-	long get_file_size(const MSTRING& filename);
+	long MACHI_IO_API get_file_size(const MSTRING& filename);
 	}
 }

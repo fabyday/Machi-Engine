@@ -5,28 +5,23 @@ namespace Machi {
 
 	namespace DataStructure {
 		
-		template<typename T>
-		class Array {
-			T* m_data;
-			MUINT m_capacity;
+		class ArrayView {
+			void* m_data;
 			MUINT m_size;
+			
 
-
-
-			void resize(MUINT size) {
-				assert(size > 0 && "size is not signed.");
-				if (m_capacity < size) {
-					m_capacity = size;
-					T* tmp = new T[size];
-					memcpy_s(tmp, size, m_Data, m_size);
-				}
-				else {
-
-					m_capacity
-				}
+			ArrayView(T* data, MUINT size) :m_size(size), m_data(data) {};
+			ArrayView(ArrayView&& other) {
+				m_data = other.m_data;
+				m_size = other.m_size;
 			}
-
-
+			template<typename T>
+			T& operator[](MUINT index) {
+				MUINT max_index = m_size/sizeof(T);
+				if(index >= max_index)
+					throw std::exception("array out of range...")
+				return *reinterpret_cast<T>(m_data)[index];
+			}
 
 		};
 

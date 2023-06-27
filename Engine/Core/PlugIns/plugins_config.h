@@ -23,49 +23,22 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
-
-#include <Windows.h>
-#include <string>
-#include <sys/stat.h>
-#if defined(_UNICODE) || defined(UNICODE)
-#define MSTRING std::wstring
-#define to_string to_wstring
-
-typedef struct _stat64i32 _sel_stat;
-#define MSTAT _sel_stat
-#define MSTAT_FUNC(x, y) _wstat((x), (y))
-
-#else 
-#define MSTRING std::string 
-typedef struct stat _sel_stat;
-#define MSTAT _sel_stat;
-#define MSTAT_FUNC(x, y) stat((x),(y))
-
+#define MODULE_NAME "PLUGINS"
+#ifdef MACHI_PLUGINS
+#define MACHI_PLUGINS_API __declspec(dllexport)
+#else
+#define MACHI_PLUGINS_API __declspec(dllimport)
 #endif
+/*
+#ifdef MACHI_BUILD_DLL // MACHI_EXPORT
+	#define MACHI_API  __declspec(dllexport)
 
-#define MCHAR WCHAR
-
-#define MINT8 INT8
-#define MINT16 INT16
-#define MINT32 INT32
-#define MINT64 INT64
-#define MINT MINT32
-
-#define MUINT8 INT8
-#define MUINT16 INT16
-#define MUINT32 INT32
-
-#define MUINT UINT
-#define MUINT64 UINT64
-
-#define MLPWCHAR WCHAR*
-#define MWCHAR WCHAR
-#define MPWSTR PWSTR
-
-#define MLONG LONG
-#define MLONGLONG long long
-#define MSIZE_T long long
-#define MFLOAT float
+#else // MACHI_IMPORT
+	#define MACHI_API  __declspec(dllimport)
+#endif 
+*/
 
 
-#define MDOUBLE double 
+#ifndef WIN32_LEAN_AND_MEAN
+#define WIN32_LEAN_AND_MEAN             // Exclude rarely-used stuff from Windows headers.
+#endif

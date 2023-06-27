@@ -1,6 +1,9 @@
 #
 
 add_definitions("-DMACHI_BUILD_DLL") 
+message("init Engine-Core")
+
+
 link_libraries(spdlog::spdlog)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(ENGINE_CORE_PATH ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")
@@ -16,6 +19,7 @@ add_subdirectory(OS)
 add_subdirectory(IO)
 add_subdirectory(Application)
 add_subdirectory(Graphics)
+add_subdirectory(PlugIns)
 
 
 

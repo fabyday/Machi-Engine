@@ -4,3 +4,4 @@
 CMakeSettings.json
 cmake-build-debug
 .DS_Store
+Engine/Resources/data

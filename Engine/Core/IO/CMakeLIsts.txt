@@ -1,5 +1,8 @@
 
-set(io_src  "read_file.cpp")
+set(io_src  "read_file.cpp" "ObjReader.cpp")
 add_library(IO SHARED ${io_src})
+TARGET_CONFIGURE_SETUP(IO "IO")
+
 # target_link_libraries(Graphics PUBLIC metal_wrapper)
+target_link_libraries(IO PRIVATE tinyobjloader)
 add_library(Machi::IO ALIAS IO)
