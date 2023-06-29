@@ -5,3 +5,9 @@
 	path = Engine/ThirdParty/imgui
 	url = https://github.com/ocornut/imgui.git
 	branch = docking
+[submodule "Engine/ThirdParty/tinyobjloader"]
+	path = Engine/ThirdParty/tinyobjloader
+	url = https://github.com/tinyobjloader/tinyobjloader.git
+[submodule "Engine/ThirdParty/tinyply"]
+	path = Engine/ThirdParty/tinyply
+	url = https://github.com/ddiakopoulos/tinyply.git

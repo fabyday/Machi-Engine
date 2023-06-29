@@ -23,11 +23,11 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
-#define MODULE_NAME "GRAPHICS"
-#ifdef MACHI_GRAPHICS
-#define MACHI_GRAPHICS_API __declspec(dllexport)
+#define MODULE_NAME "DATASTRUCTURE"
+#ifdef MACHI_DATASTRUCTURE
+#define MACHI_DATASTRUCTURE_API __declspec(dllexport)
 #else
-#define MACHI_GRAPHICS_API __declspec(dllimport)
+#define MACHI_DATASTRUCTURE_API __declspec(dllimport)
 #endif
 /*
 #ifdef MACHI_BUILD_DLL // MACHI_EXPORT

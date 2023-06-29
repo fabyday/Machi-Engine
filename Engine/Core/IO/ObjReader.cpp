@@ -2,6 +2,7 @@
 #define TINYOBJLOADER_IMPLEMENTATION // define this in only *one* .cc
 #include <tiny_obj_loader.h>
 #include <iostream>
+#include <map>
 using namespace Machi::IO;
 
 bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh* meshes, int& read_mesh_num) {
@@ -25,12 +26,57 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh* meshes, in
 	if (!ret) {
 		throw std::exception("return error.");
 	}
+
+
+	// init and alloc meshes memories.
 	meshes = new Machi::Geometry::Mesh[shapes.size()];
 	for (int i = 0; i < shapes.size(); i++) {
-		meshes[i].allocate(Geometry::Mesh::element_type::VERTEX_ALLOCATE, sizeof(tinyobj::real_t)*attrib.vertices.size());
-		meshes
+		meshes[i].allocate(Geometry::Mesh::element_type::VERTEX, sizeof(MDOUBLE)*shapes[i].points.indices.size());
+		meshes[i].allocate(Geometry::Mesh::element_type::FACE, sizeof(MDOUBLE)*shapes[i].mesh.indices.size());
+		meshes[i].allocate(Geometry::Mesh::element_type::NORMAL, sizeof(MDOUBLE)*shapes[i].points.indices.size());
+		meshes[i].allocate(Geometry::Mesh::element_type::TEX_COORDINATE, sizeof(MDOUBLE)*shapes[i].points.indices.size());
+	}
+	std::map<int, int> v_idx_converter;
+	std::map<int, int> f_idx_helper;
+	for (int i = 0; i < shapes.size(); i++) {
+		using namespace Machi::Geometry;
+		MSIZE_T index_offset = 0;
+		MSIZE_T max_v_idx = 0;
+		MSIZE_T v_idx = 0;
+		for (size_t f = 0; f < shapes[i].mesh.num_face_vertices.size(); f++) {
+			MINT f_th_face_size = shapes[i].mesh.num_face_vertices[f];
+
+
+			for (size_t fi = 0; fi < f_th_face_size; fi++) {// fi := face index
+				tinyobj::index_t idx = shapes[i].mesh.indices[index_offset + fi];
+				
+				meshes[i].get_elem_view<Mesh::element_type::FACE>(index_offset);
+
+
+				//vertex
+				tinyobj::real_t vx = attrib.vertices[3 * idx.vertex_index + 0];
+				tinyobj::real_t vy = attrib.vertices[3 * idx.vertex_index + 1];
+				tinyobj::real_t vz = attrib.vertices[3 * idx.vertex_index + 2];
+
+
+				std::map<int, int>::iterator iter = v_idx_converter.find(idx.vertex_index);
+				if (iter == v_idx_converter.end()) {
+					v_idx = max_v_idx++;
+					v_idx_converter.insert({ idx.vertex_index , v_idx });
+				}
+				else {
+					v_idx = iter->second;
+				}
+				//meshes[i].get_elem_view< Mesh::element_type::VERTEX>(v_idx);
+			}
+			index_offset += f_th_face_size;
+		}
+
+
 
 	}
+
+
 
 	for (int s = 0; s < shapes.size(); s++) {
 		MSIZE_T index_offset = 0;
@@ -61,7 +107,7 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh* meshes, in
 		}
 	}
 
-
+return false;
 
 
 }

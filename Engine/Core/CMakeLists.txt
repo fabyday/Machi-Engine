@@ -16,6 +16,8 @@ elseif(WIN32)
 endif()
 add_subdirectory(Platform)
 add_subdirectory(OS)
+add_subdirectory(DataStruct)
+add_subdirectory(Geometry)
 add_subdirectory(IO)
 add_subdirectory(Application)
 add_subdirectory(Graphics)
@@ -23,5 +25,5 @@ add_subdirectory(PlugIns)
 
 
 
-set(Machi_lib_list Machi::Application Machi::Graphics Machi::OS Machi::Platform CACHE INTERNAL "" FORCE)
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform CACHE INTERNAL "" FORCE)
 

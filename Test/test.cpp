@@ -23,11 +23,22 @@
 //FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
 //OTHER DEALINGS IN THE SOFTWARE.
 #include <Platform/entry.h>
+#include <IO/ObjReader.h>
+
 
 Machi::Application* machi_main(int argc, char** argv) {
 
 //    return nullptr;
-	return Machi::Application::get_instance()
+	Machi::Application* ret = Machi::Application::get_instance()
 		->set_name(L"Machi-AS-WELL")
 		->set_resolution(1280, 960, false);
+
+	Machi::IO::OBJReader reader; 
+	/*MSTRING test = MESH_RESOURCE_DIRECTORY"bunny/bunny.obj";
+	Machi::Geometry::Mesh mesh;
+	int tt = -1;
+	reader.read_mesh(test, &mesh, tt);*/
+	return ret;
+
+
 }

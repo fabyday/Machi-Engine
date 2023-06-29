@@ -12,7 +12,6 @@ if(APPLE)
 #set(CMAKE_EXE_LINKER_FLAGS "-stdlib=libc++")
 endif()
 # set cmakes files
-
 #SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 #SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 #SET(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
@@ -20,6 +19,9 @@ endif()
 #SET(CMAKE_LIBRARY_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
 #SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/bin)
 #SET(CMAKE_ARCHIVE_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/bin)
+
+add_definitions(-DMESH_RESOURCE_DIRECTORY=L\"\"${PROJECT_SOURCE_DIR}/Engine/Resources/data/mesh/\"\")
+#add_definitions(MESH_RESOURCE_DIRECTORY=L"${PROJECT_SOURCE_DIR}/Engine/Resources/data/mesh/")
 include(cmakes/dependency_helper.cmake)
 include(cmakes/build_conf_helper.cmake)
 option(Editor OFF "editor")
