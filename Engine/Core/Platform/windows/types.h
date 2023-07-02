@@ -44,6 +44,7 @@ typedef struct stat _sel_stat;
 #endif
 
 #define MCHAR WCHAR
+#define MUCHAR unsigned char
 
 #define MINT8 INT8
 #define MINT16 INT16

@@ -34,10 +34,12 @@ Machi::Application* machi_main(int argc, char** argv) {
 		->set_resolution(1280, 960, false);
 
 	Machi::IO::OBJReader reader; 
-	/*MSTRING test = MESH_RESOURCE_DIRECTORY"bunny/bunny.obj";
-	Machi::Geometry::Mesh mesh;
+	
+	//MSTRING test = L"D:/project/Machi-Engine/Engine/Resources/data/mesh""bunny/bunny.obj";
+	MSTRING test = MESH_RESOURCE_DIRECTORY"teapot/teapot.obj";
+	Machi::Geometry::Mesh* mesh;
 	int tt = -1;
-	reader.read_mesh(test, &mesh, tt);*/
+	reader.read_mesh(test, &mesh, tt);
 	return ret;
 
 

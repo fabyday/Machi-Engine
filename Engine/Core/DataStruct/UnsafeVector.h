@@ -20,11 +20,14 @@ namespace Machi {
 			//PredefArrayView(const PredefArrayView& other) = delete;
 			//PredefArrayView() :m_size(10) { };
 			PredefArrayView() = delete;
+			MUINT size() {
+				return m_size;
+			}
 			T& operator[](MUINT index) {
-				if (index >= m_sizse || index < 0) {
+				if (index >= m_size || index < 0) {
 					throw std::out_of_range("array out of range...");
 				}
-				return *reinterpret_cast<T>(m_data)[index];
+				return reinterpret_cast<T*>(m_data)[index];
 			}
 		};
 

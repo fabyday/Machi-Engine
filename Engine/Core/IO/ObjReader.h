@@ -9,7 +9,7 @@ namespace Machi {
 		class MACHI_IO_API OBJReader {
 			
 		public:
-			static bool read_mesh(const MSTRING& name, Machi::Geometry::Mesh* meshes, int& read_mesh_num);
+			static bool read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes, int& read_mesh_num);
 			static bool write_mesh(MSTRING& name, Machi::Geometry::Mesh* mesh);
 
 
