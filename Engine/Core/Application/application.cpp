@@ -25,6 +25,7 @@
 #include "application.h"
 #include <iostream>
 #include <Graphics/GraphicManager.h>
+#include <spdlog/spdlog.h>
 Machi::Application* Machi::Application::app_ = nullptr;
 
 
@@ -41,6 +42,7 @@ Machi::Application::render() {
 
 bool
 Machi::Application::update() {
+	spdlog::info("updated");
 	return true;
 }
 

@@ -5,19 +5,22 @@
 #include <map>
 #include <algorithm>
 #include <set>
+#include <spdlog/spdlog.h>
 using namespace Machi::IO;
 
 void extract_data_from_tinyobjloader();
 
-
 bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, int& read_mesh_num) {
 	using namespace Machi;
-	
+
 	tinyobj::attrib_t attrib;
 	std::vector<tinyobj::shape_t> shapes;
 	std::vector<tinyobj::material_t> materials;
 	std::string err;
 	std::string warn;
+#ifdef _DEBUG
+	spdlog::set_level(spdlog::level::debug);
+#endif
 
 
 	std::string one_b_string(name.begin(), name.end());
@@ -32,12 +35,14 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 		throw std::exception("return error.");
 	}
 
-	Machi::Geometry::Mesh* meshes = NULL ;
+	Machi::Geometry::Mesh* meshes = NULL;
 	// init and alloc meshes memories.
 	meshes = new Machi::Geometry::Mesh[shapes.size()];
 	std::set<int> test;
-	
-	
+
+	spdlog::debug("load meshes...");
+	spdlog::debug("mesh size : {}", shapes.size());
+
 	for (int i = 0; i < shapes.size(); i++) {
 		std::set<int> v_size_checker;
 		std::for_each(shapes[i].mesh.indices.begin(), shapes[i].mesh.indices.end(),
@@ -50,17 +55,13 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 	}
 
 
-
-
-
 	std::map<int, int> v_idx_converter;
 	std::map<int, int> f_idx_helper;
-	std::cout << v_idx_converter.max_size() << std::endl;
 	for (int i = 0; i < shapes.size(); i++) {
 		using namespace Machi::Geometry;
 		using namespace Machi::DataStructure;
-		
-		MUINT count_f = std::count(shapes[i].mesh.num_face_vertices.begin(), shapes[i].mesh.num_face_vertices.end(), *(shapes[i].mesh.num_face_vertices.begin()) );
+
+		MUINT count_f = std::count(shapes[i].mesh.num_face_vertices.begin(), shapes[i].mesh.num_face_vertices.end(), *(shapes[i].mesh.num_face_vertices.begin()));
 		if (count_f == shapes[i].mesh.num_face_vertices.size()) { // if size is same.
 			meshes[i].set_face_nums(count_f);
 		}
@@ -93,7 +94,7 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 				}
 
 				PredefArrayView<MDOUBLE> vertex = meshes[i].get_elem_view<Mesh::element_type::VERTEX>(v_idx);
-				//vertex[0] = vx; vertex[1] = vy; vertex[2] = vz;
+				vertex[0] = vx; vertex[1] = vy; vertex[2] = vz;
 
 				if (idx.normal_index != -1) {// if normal data existed
 					tinyobj::real_t nx = attrib.normals[3 * idx.normal_index + 0];
@@ -112,12 +113,11 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 			}
 			index_offset += f_th_face_size;
 		}
-
 	}
 
 
 	*meshes1 = meshes;
-return true;
+	return true;
 
 
 }

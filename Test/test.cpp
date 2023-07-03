@@ -25,14 +25,27 @@
 #include <Platform/entry.h>
 #include <IO/ObjReader.h>
 
+class NewApp : public Machi::Application {
+public:
+
+	
+
+
+
+};
+
+
+
 
 Machi::Application* machi_main(int argc, char** argv) {
 
 //    return nullptr;
-	Machi::Application* ret = Machi::Application::get_instance()
+	//Machi::Application* ret = Machi::Application::get_instance()
+		//->set_name(L"Machi-AS-WELL")
+		//->set_resolution(1280, 960, false);
+	Machi::Application* ret = NewApp::get_instance()
 		->set_name(L"Machi-AS-WELL")
 		->set_resolution(1280, 960, false);
-
 	Machi::IO::OBJReader reader; 
 	
 	//MSTRING test = L"D:/project/Machi-Engine/Engine/Resources/data/mesh""bunny/bunny.obj";
@@ -40,6 +53,8 @@ Machi::Application* machi_main(int argc, char** argv) {
 	Machi::Geometry::Mesh* mesh;
 	int tt = -1;
 	reader.read_mesh(test, &mesh, tt);
+	
+
 	return ret;
 
 

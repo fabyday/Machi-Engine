@@ -85,7 +85,6 @@ namespace Machi {
 				using   type =  Machi::DataStructure::PredefArrayView<MDOUBLE> ;
 			};
 
-
 			template<>
 			struct PreDefArrayViewType<element_type::FACE> {
 				using  type =  Machi::DataStructure::PredefArrayView<MUINT> ;

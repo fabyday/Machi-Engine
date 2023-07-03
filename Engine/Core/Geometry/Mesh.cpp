@@ -50,22 +50,22 @@ void Machi::Geometry::Mesh::allocate(element_type type, MSIZE_T size)
 		//	// else do noting
 		//}
 
-		simple_alloc_function(&m_vertice, &(attr.m_vertice_size), sizeof(double) * size);
+		simple_alloc_function(&m_vertice, &(attr.m_vertice_size), sizeof(MDOUBLE) * size * 3);
 	}
 		break;
 	case Machi::Geometry::Mesh::element_type::FACE:
 	{
-		simple_alloc_function(&m_faces, &(attr.m_face_size), sizeof(MUINT) * size);
+		simple_alloc_function(&m_faces, &(attr.m_face_size), sizeof(MUINT) * size );
 	}
 		break;
 	case Machi::Geometry::Mesh::element_type::NORMAL:
 	{
-		simple_alloc_function(&m_normals, &(attr.m_normal_size), sizeof(double) * size);
+		simple_alloc_function(&m_normals, &(attr.m_normal_size), sizeof(MDOUBLE) * size*3);
 	}
 		break;
 	case Machi::Geometry::Mesh::element_type::TEX_COORDINATE:
 	{
-		simple_alloc_function(&m_tex_coord, &(attr.m_texcoord_size), sizeof(double) * size);
+		simple_alloc_function(&m_tex_coord, &(attr.m_texcoord_size), sizeof(MDOUBLE) * size*2);
 	}
 		break;
 	default:

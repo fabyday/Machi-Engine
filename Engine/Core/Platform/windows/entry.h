@@ -36,7 +36,6 @@
 
 // main function hijacking.
 Machi::Application* machi_main(int argc, char** argv); // User impl.
-
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 	using namespace Machi;
 	/*OSConfig config;
@@ -44,6 +43,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	config.hPrevInstance = &hPrevInstance;
 	config.pCmdLine = pCmdLine;
 	config.nCmdShow = nCmdShow;*/
+
 
 	//other code
 	spdlog::info("Window Platform Start...");
