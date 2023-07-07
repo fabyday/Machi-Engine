@@ -31,6 +31,6 @@ elseif(APPLE)
 elseif(UNIX AND NOT APPLE) # linux;
     
 endif()
-
+target_link_libraries(Platform PUBLIC Machi::Logger)
 add_library(Machi::Platform ALIAS Platform)
 

@@ -30,25 +30,55 @@
 #include <Application/application.h>
 #include <OS/OS.h>
 #include <iostream>
-#include <spdlog/spdlog.h>
+//#include <spdlog/spdlog.h>
 #include <functional>
+#include <Logger/Logger.h>
 
 
 // main function hijacking.
 Machi::Application* machi_main(int argc, char** argv); // User impl.
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 	using namespace Machi;
-	/*OSConfig config;
-	config.hInstance = &hInstance;
-	config.hPrevInstance = &hPrevInstance;
-	config.pCmdLine = pCmdLine;
-	config.nCmdShow = nCmdShow;*/
 
+//	//init logger.
+//	Logger::MLogger& logger = Logger::MLogger::get_instance();
+//	//logger.init_console_logging();
+//	logger.init_file_logging(MSTRING(OS::get_instance()->get_current_directory() + MTEXT("/engine_log.txt")));
+//
+//
+//#ifdef _DEBUG //logging level setup
+//	logger.set_level(MACHI_DEFAULT_FILE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
+//#else
+//	logger.set_level(Logger::MLogger::level::INFO);
+//#endif
 
-	//other code
-	spdlog::info("Window Platform Start...");
+	//init first, platform dependent parts.
 	Machi::g_platform = new Machi::WindowsPlatform(&hInstance, &hPrevInstance, pCmdLine, nCmdShow);
 	Machi::OS::get_instance()->set_context(Machi::g_platform->get_context());
+
+//
+//#ifdef _DEBUG //logging level setup
+//	logger.set_level(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
+//#else
+//	logger.set_level(Logger::MLogger::level::INFO);
+//#endif
+
+
+
+
+
+	//logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "OS dependent Platform Start...");
+	//switch (logger.get_level(MACHI_DEFAULT_CONSOLE_LOGGER_NAME)) {
+	//case Logger::MLogger::level::DEBUG:
+	//	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME,"test {}", "deb");
+	//	break;
+	//case Logger::MLogger::level::INFO:
+	//	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test {}", "if");
+
+	//}
+	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test");
+	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test {}", "test");
+
 #ifdef MACHI_EDITOR_MODE
 
 #endif // MACHI_EDITOR_MODE
@@ -62,8 +92,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	Machi::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
 	
 	int ret = Machi::g_platform->run(__argc, __argv);
-
+	//spdlog::shutdown();
 	delete app;
-
-	return ret;
+	return 0;
 }

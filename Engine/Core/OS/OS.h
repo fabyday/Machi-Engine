@@ -40,7 +40,7 @@ namespace Machi {
 
 		int argc;
 		char** argv;
-
+		bool m_is_console_opened;
 		OS();
 	public:
 
@@ -52,12 +52,20 @@ namespace Machi {
 		OSContext* get_context() {
 			return m_ctx;
 		}
+		~OS(){
+			close_console();
+		}
+
 
 		static OS* get_instance();
 		//load_dynamic_library();
 		MSTRING get_current_directory();
 		MINT32 make_process();
 		bool open_console();
+		bool close_console();
+
+
+		inline bool is_console_opened() { return m_is_console_opened; };
 
 	};
 }

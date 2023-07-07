@@ -30,6 +30,7 @@
 #if defined(_UNICODE) || defined(UNICODE)
 #define MSTRING std::wstring
 #define to_string to_wstring
+#define MTEXT(x) L##x
 
 typedef struct _stat64i32 _sel_stat;
 #define MSTAT _sel_stat
@@ -40,7 +41,7 @@ typedef struct _stat64i32 _sel_stat;
 typedef struct stat _sel_stat;
 #define MSTAT _sel_stat;
 #define MSTAT_FUNC(x, y) stat((x),(y))
-
+#define MTEXT(x) ##x
 #endif
 
 #define MCHAR WCHAR

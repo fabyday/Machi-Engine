@@ -15,12 +15,6 @@ namespace Machi {
 				TEX_COORDINATE,
 			};
 
-			enum class element_size_type {
-				DEFAULT, 
-				ELEM2,
-				ELEM3,
-				ELEM4
-			};
 			typedef struct mesh_attribute
 			{
 				MSIZE_T m_vertice_size = 0;
@@ -35,7 +29,7 @@ namespace Machi {
 			
 			void* m_faces;
 			void* m_face_elem_nums; // each face size;
-			MUINT m_face_elem_nums_size;
+			MSIZE_T m_face_elem_nums_size;
 			bool m_is_all_face_size_same; // if this is true, m_face_elem_nums contains just 1 elem.
 			
 			void* m_normals;
@@ -108,7 +102,8 @@ namespace Machi {
 			}
 
 
-			bool set_face_nums(MUCHAR size);
+			bool set_face_nums(MSIZE_T size);
+			bool set_face_nums(const std::vector<MSIZE_T>& sizes);
 			bool set_face_nums(const std::vector<MUCHAR>& sizes);
 
 			MDOUBLE& get_as_array(element_type type, MUINT index);

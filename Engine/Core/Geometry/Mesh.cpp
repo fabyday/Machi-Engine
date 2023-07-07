@@ -55,7 +55,12 @@ void Machi::Geometry::Mesh::allocate(element_type type, MSIZE_T size)
 		break;
 	case Machi::Geometry::Mesh::element_type::FACE:
 	{
-		simple_alloc_function(&m_faces, &(attr.m_face_size), sizeof(MUINT) * size );
+		if (m_is_all_face_size_same && *reinterpret_cast<MSIZE_T*>(m_face_elem_nums)) {
+			simple_alloc_function(&m_faces, &(attr.m_face_size), sizeof(MUINT) * size* (*reinterpret_cast<MSIZE_T*>(m_face_elem_nums)) );
+		}
+		else {
+			simple_alloc_function(&m_faces, &(attr.m_face_size), sizeof(MUINT) * size );
+		}
 	}
 		break;
 	case Machi::Geometry::Mesh::element_type::NORMAL:
@@ -73,30 +78,39 @@ void Machi::Geometry::Mesh::allocate(element_type type, MSIZE_T size)
 	}
 }
 
-bool Mesh::set_face_nums(MUCHAR size)
+bool Mesh::set_face_nums(MSIZE_T size)
 {
 	if (m_face_elem_nums == NULL)
-		m_face_elem_nums = new MUCHAR;
+		m_face_elem_nums = new MSIZE_T;
 	if (size > 0)
-		*reinterpret_cast<MUCHAR*>(m_face_elem_nums) = size;
+		*reinterpret_cast<MSIZE_T*>(m_face_elem_nums) = size;
 	m_face_elem_nums_size = 1;
 	m_is_all_face_size_same = true;
 	return true;
 }
 
-bool Mesh::set_face_nums(const std::vector<MUCHAR>& sizes) {
+bool Mesh::set_face_nums(const std::vector<MSIZE_T>& sizes) {
 
 	const int size = sizes.size();
 	if (m_face_elem_nums == NULL)
-		m_face_elem_nums = new MUCHAR[size];
+		m_face_elem_nums = new MSIZE_T[size];
 	else {
 		if (size > m_face_elem_nums_size) {
 			delete [] m_face_elem_nums;
-			m_face_elem_nums = new MUCHAR[size];
+			m_face_elem_nums = new MSIZE_T[size];
 		}
 	}
 	
-	memcpy_s(m_face_elem_nums, size, sizes.data(), size);
+	memcpy_s(m_face_elem_nums, sizeof(MSIZE_T)*size, sizes.data(), sizeof(MSIZE_T)*size);
 	m_is_all_face_size_same = false;
 	return true;
 }
+
+
+
+bool Mesh::set_face_nums(const std::vector<MUCHAR>& sizes) {
+
+	std::vector<MSIZE_T> tmp(sizes.begin(), sizes.end());
+	return set_face_nums(sizes);
+}
+

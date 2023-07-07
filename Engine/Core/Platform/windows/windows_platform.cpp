@@ -29,8 +29,7 @@
 #include "common.h"
 #include "types.h"
 #include <stdexcept>
-#include <spdlog/spdlog.h>
-
+#include <Logger/Logger.h>
 
 namespace Machi {
     WindowsPlatform* g_platform = nullptr;
@@ -45,8 +44,9 @@ Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT w
     const struct OSContext* context = &WindowsPlatform::ctx_;
     //const struct OSContext* context = nullptr;
     const MWCHAR* app_name =  name;
-    spdlog::info(L"app name : {}", app_name);
-
+    //spdlog::info(L"app name : {}", app_name);
+    //info(L"test{}", app_name);
+    //Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"app name : {}", app_name);
 
 
 
@@ -87,7 +87,7 @@ Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT w
 
     }
 
-    spdlog::info("window handle is successfully initialized.");
+    //Machi::Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "window handle is successfully initialized.");
     WindowsPlatform::set_HWND(_handle);
     ShowWindow(_handle, context->nCmdShow);
 
@@ -108,17 +108,71 @@ Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT w
 }
 
 
+#define TEST(x)         return x;
+const char* test(UINT message) {
+    switch (message)
+    {
+    case WM_CREATE:
+    {
+        TEST("CREATE")
+    }
+
+    case WM_KEYDOWN:
+        TEST("WM_KEYDOWN")
+
+
+    case WM_KEYUP:
+
+        TEST("WM_KEYUP")
+
+    case WM_PAINT:
+        TEST("WM_PAINT")
+
+
+    case WM_DESTROY:
+        TEST("WM_DESTROY")
+
+
+    case WM_QUERYENDSESSION:
+    {
+            TEST("WM_QUERYENDSESSION")
+
+    }
+    case WM_ENDSESSION:
+    {        TEST("WM_ENDSESSION")
+
+        // Check `lParam` for which system shutdown function and handle events.
+        // See https://learn.microsoft.com/windows/win32/shutdown/wm-endsession
+    }
+    default:
+        std::wstring t = std::to_string(message);
+        std::string test = std::string(t.begin(), t.end());
+        const char* at = new char[256];
+        memcpy(const_cast<char*>(at),test.c_str(), test.size());
+        return at;
+
+    }
+}
+
 LRESULT 
 Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     //Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
+    //test(message);
+ /*   Logger::MLogger& logger = Logger::MLogger::get_instance();
+    logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, message);*/
 
-    UINT uMsg  = message;
-    switch (uMsg)
+    switch (message)
     {
-    case WM_DESTROY:
-        PostQuitMessage(0);
+    case WM_CREATE:
+    {
+        // Save the DXSample* passed in to CreateWindow.
+        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
+        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
+    }
+    return 0;
+    case WM_QUIT:
+        //logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, "destroyed");
         return 0;
-
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -130,21 +184,6 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 
         EndPaint(hWnd, &ps);
     }
-    return 0;
-
-    
-    }
-
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        // Save the DXSample* passed in to CreateWindow.
-        LPCREATESTRUCT pCreateStruct = reinterpret_cast<LPCREATESTRUCT>(lParam);
-        SetWindowLongPtr(hWnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pCreateStruct->lpCreateParams));
-    }
-    return 0;
-
     case WM_KEYDOWN:
         //if (app)
         //{
@@ -158,22 +197,17 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         //    //pSample->OnKeyUp(static_cast<UINT8>(wParam));
         //}
         return 0;
-
-    case WM_PAINT:
-        //if (app)
-        //{/*
-        //    pSample->OnUpdate();
-        //    pSample->OnRender();*/
-        //}
-        return 0;
-
     case WM_DESTROY:
         PostQuitMessage(0);
+        //logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, "destroyed");
+
         return 0;
+
+  
+    default:
+        return DefWindowProc(hWnd, message, wParam, lParam);
     }
 
-    // Handle any messages the switch statement didn't.
-    return DefWindowProc(hWnd, message, wParam, lParam);
 }
 
 bool 
@@ -189,6 +223,7 @@ Machi::WindowsPlatform::_run_logic() {
         this->update_function();
         //GraphicManager::get_instance()->render();
     }
+
     return true;
 }
 
@@ -198,8 +233,8 @@ Machi::WindowsPlatform::_run_logic() {
 bool 
 Machi::WindowsPlatform::_finalize() {
 
-    spdlog::info("finalized...");
-
+    //spdlog::info("finalized...");
+    //Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "finalized...");
 
 
     return true;

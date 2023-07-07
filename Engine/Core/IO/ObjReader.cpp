@@ -4,8 +4,8 @@
 #include <iostream>
 #include <map>
 #include <algorithm>
+#include <Logger/Logger.h>
 #include <set>
-#include <spdlog/spdlog.h>
 using namespace Machi::IO;
 
 void extract_data_from_tinyobjloader();
@@ -18,9 +18,6 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 	std::vector<tinyobj::material_t> materials;
 	std::string err;
 	std::string warn;
-#ifdef _DEBUG
-	spdlog::set_level(spdlog::level::debug);
-#endif
 
 
 	std::string one_b_string(name.begin(), name.end());
@@ -39,10 +36,11 @@ bool OBJReader::read_mesh(const MSTRING& name, Machi::Geometry::Mesh** meshes1, 
 	// init and alloc meshes memories.
 	meshes = new Machi::Geometry::Mesh[shapes.size()];
 	std::set<int> test;
-
-	spdlog::debug("load meshes...");
-	spdlog::debug("mesh size : {}", shapes.size());
-
+	//auto& logger = Machi::Logger::MLogger::get_instance();
+	/*spdlog::debug("load meshes...");
+	spdlog::debug("mesh size : {}", shapes.size());*/
+	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"load meshes...");
+	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"mesh size : {}", shapes.size());
 	for (int i = 0; i < shapes.size(); i++) {
 		std::set<int> v_size_checker;
 		std::for_each(shapes[i].mesh.indices.begin(), shapes[i].mesh.indices.end(),

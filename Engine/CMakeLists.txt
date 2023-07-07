@@ -1,6 +1,6 @@
 
 if(WIN32)
-add_definitions("-DSPDLOG_WCHAR_TO_UTF8_SUPPORT")
+add_definitions("-DSPDLOG_WCHAR_TO_UTF8_SUPPORT -DSPDLOG_WCHAR_FILENAMES")
 endif()
 message("Hello and welcome Engine configuration.")
 add_subdirectory(ThirdParty)

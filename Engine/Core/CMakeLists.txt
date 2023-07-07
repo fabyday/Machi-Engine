@@ -4,7 +4,6 @@ add_definitions("-DMACHI_BUILD_DLL")
 message("init Engine-Core")
 
 
-link_libraries(spdlog::spdlog)
 include_directories(${CMAKE_CURRENT_SOURCE_DIR})
 set(ENGINE_CORE_PATH ${CMAKE_CURRENT_SOURCE_DIR} CACHE INTERNAL "")
 if(APPLE)
@@ -14,6 +13,7 @@ elseif(WIN32)
     message("Windows Platform is detected, now DX12-RHI is ON")
     add_subdirectory(DX12-RHI)
 endif()
+add_subdirectory(Logger)
 add_subdirectory(Platform)
 add_subdirectory(OS)
 add_subdirectory(DataStruct)
@@ -25,5 +25,5 @@ add_subdirectory(PlugIns)
 
 
 
-set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform CACHE INTERNAL "" FORCE)
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger CACHE INTERNAL "" FORCE)
 

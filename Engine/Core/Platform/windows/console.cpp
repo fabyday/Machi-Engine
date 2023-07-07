@@ -27,7 +27,47 @@
 
 
 
+static std::vector<std::function<void(ConsoleStatus)>> g_console_status_callback;
 
+BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
+    switch (fdwCtrlType)
+    {
+        // Handle the CTRL-C signal.
+    case CTRL_C_EVENT:
+        //printf("Ctrl-C event\n\n");
+        //Beep(750, 300);
+        return TRUE;
+
+        // CTRL-CLOSE: confirm that the user wants to exit.
+    case CTRL_CLOSE_EVENT:
+        //Beep(600, 200);
+        //printf("Ctrl-Close event\n\n"); // I think pritnf is not allowed..  !!!ejikhfnjxdofgbnm stdout stdin handling checking
+         
+        for (auto& func : g_console_status_callback) {
+            func(ConsoleStatus::SHUTDOWN);
+        }
+        return TRUE;
+
+        // Pass other signals to the next handler.
+    case CTRL_BREAK_EVENT:
+        //Beep(900, 200);
+        //printf("Ctrl-Break event\n\n");
+        return TRUE;
+
+    case CTRL_LOGOFF_EVENT:
+        //Beep(1000, 200);
+        //printf("Ctrl-Logoff event\n\n");
+        return TRUE;
+
+    case CTRL_SHUTDOWN_EVENT:
+        //Beep(750, 500);
+        //printf("Ctrl-Shutdown event\n\n");
+        return TRUE;
+
+    default:
+        return FALSE;
+    }
+}
 
 void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
 	const HANDLE h_existing = GetStdHandle(p_std_handle);
@@ -43,12 +83,21 @@ void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_str
 
 void RedirectIOToConsole() {
 		AllocConsole();
-
+        SetConsoleCtrlHandler(CtrlHandler, TRUE);
 		RedirectStream("CONIN$", "r", stdin, STD_INPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stdout, STD_OUTPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stderr, STD_ERROR_HANDLE);
-		std::cout << std::endl; // Make sure our output is starting from the new line.
 
 }
 
+void  ColseConsole()
+{
+	FreeConsole();
+}
+
+
+void  addConsoleEventHandler(std::function<void(ConsoleStatus)> function)
+{
+    g_console_status_callback.push_back(function);
+}
 
