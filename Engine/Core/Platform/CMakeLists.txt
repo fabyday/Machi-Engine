@@ -1,7 +1,7 @@
 
 
 if(WIN32)
-    set(platform_src   "windows/windows_platform.cpp"  "windows/console.cpp" )
+    set(platform_src   "windows/windows_platform.cpp"  "windows/console.cpp" "inputs.cpp" )
 
 elseif(APPLE)
 #    set(platform_src  "Apple/entry.h" "Apple/metal-core.h" "Apple/application.cpp" "Apple/machi_graphics.cpp" "Apple/metal.cpp" )

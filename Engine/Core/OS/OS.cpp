@@ -52,10 +52,10 @@ Machi::OS::open_console() {
 
 	RedirectIOToConsole();
 	//close_console();
-	/*auto& logger = Machi::Logger::MLogger::get_instance();
+	auto& logger = Machi::Logger::MLogger::get_instance();
 	logger.init_console_logging();
 	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "Init OS class");
-	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"current working directory : {}", get_current_directory().c_str());*/
+	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"current working directory : {}", get_current_directory().c_str());
 	m_is_console_opened = true;
 	return true;
 }
@@ -72,7 +72,7 @@ Machi::OS::make_process() {
 }
 bool Machi::OS::close_console()
 {
-	m_is_console_opened = false;
 	ColseConsole();
+	m_is_console_opened = false;
 	return true;
 }

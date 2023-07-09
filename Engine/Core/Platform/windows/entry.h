@@ -40,44 +40,28 @@ Machi::Application* machi_main(int argc, char** argv); // User impl.
 int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine, int nCmdShow){
 	using namespace Machi;
 
-//	//init logger.
-//	Logger::MLogger& logger = Logger::MLogger::get_instance();
-//	//logger.init_console_logging();
-//	logger.init_file_logging(MSTRING(OS::get_instance()->get_current_directory() + MTEXT("/engine_log.txt")));
+	//init logger.
+	Logger::MLogger& logger = Logger::MLogger::get_instance();
+	//logger.init_console_logging();
+	logger.init_file_logging(MSTRING(OS::get_instance()->get_current_directory() + MTEXT("/engine_log.txt")));
+
 //
-//
-//#ifdef _DEBUG //logging level setup
-//	logger.set_level(MACHI_DEFAULT_FILE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
-//#else
-//	logger.set_level(Logger::MLogger::level::INFO);
-//#endif
+#ifdef _DEBUG //logging level setup
+	logger.set_level(MACHI_DEFAULT_FILE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
+#else
+	logger.set_level(Logger::MLogger::level::INFO);
+#endif
 
 	//init first, platform dependent parts.
-	Machi::g_platform = new Machi::WindowsPlatform(&hInstance, &hPrevInstance, pCmdLine, nCmdShow);
-	Machi::OS::get_instance()->set_context(Machi::g_platform->get_context());
-
-//
-//#ifdef _DEBUG //logging level setup
-//	logger.set_level(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
-//#else
-//	logger.set_level(Logger::MLogger::level::INFO);
-//#endif
+	Machi::Platform::g_platform = new Machi::Platform::WindowsPlatform(&hInstance, &hPrevInstance, pCmdLine, nCmdShow);
+	Machi::OS::get_instance()->set_context(Machi::Platform::g_platform->get_context());
 
 
-
-
-
-	//logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "OS dependent Platform Start...");
-	//switch (logger.get_level(MACHI_DEFAULT_CONSOLE_LOGGER_NAME)) {
-	//case Logger::MLogger::level::DEBUG:
-	//	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME,"test {}", "deb");
-	//	break;
-	//case Logger::MLogger::level::INFO:
-	//	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test {}", "if");
-
-	//}
-	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test");
-	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "test {}", "test");
+#ifdef _DEBUG //logging level setup
+	logger.set_level(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, Logger::MLogger::level::DEBUG);
+#else
+	logger.set_level(Logger::MLogger::level::INFO);
+#endif
 
 #ifdef MACHI_EDITOR_MODE
 
@@ -85,13 +69,13 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	Application* app = machi_main(__argc, __argv);
 	
-	Machi::g_platform->update_function = std::bind(&Application::update, app);
-	Machi::g_platform->fixed_update_function = std::bind(&Application::fixed_update, app);
-	Machi::g_platform->render_function = std::bind(&Application::render, app);
+	Machi::Platform::g_platform->update_function = std::bind(&Application::update, app);
+	Machi::Platform::g_platform->fixed_update_function = std::bind(&Application::fixed_update, app);
+	Machi::Platform::g_platform->render_function = std::bind(&Application::render, app);
 	
-	Machi::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
+	Machi::Platform::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
 	
-	int ret = Machi::g_platform->run(__argc, __argv);
+	int ret = Machi::Platform::g_platform->run(__argc, __argv);
 	//spdlog::shutdown();
 	delete app;
 	return 0;

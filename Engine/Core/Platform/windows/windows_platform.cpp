@@ -31,15 +31,19 @@
 #include <stdexcept>
 #include <Logger/Logger.h>
 
+
 namespace Machi {
+    namespace Platform {
     WindowsPlatform* g_platform = nullptr;
     struct OSContext WindowsPlatform::ctx_ = { 0 };
      HWND WindowsPlatform::hwnd_ = nullptr;
-};
 
+    }
+};
+using namespace Machi::Platform;
 
 bool 
-Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
+WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
     // window initialize.
     const struct OSContext* context = &WindowsPlatform::ctx_;
     //const struct OSContext* context = nullptr;
@@ -53,7 +57,7 @@ Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT w
     WNDCLASSEX windowClass = { 0 };
     windowClass.cbSize = sizeof(WNDCLASSEX);
     windowClass.style = CS_HREDRAW | CS_VREDRAW;
-    windowClass.lpfnWndProc = Machi::WindowsPlatform::WindowProc;
+    windowClass.lpfnWndProc = WindowsPlatform::WindowProc;
     windowClass.hInstance = *(context->hInstance);
     windowClass.hCursor = LoadCursor(NULL, IDC_ARROW);
     windowClass.lpszClassName = app_name;
@@ -108,58 +112,10 @@ Machi::WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT w
 }
 
 
-#define TEST(x)         return x;
-const char* test(UINT message) {
-    switch (message)
-    {
-    case WM_CREATE:
-    {
-        TEST("CREATE")
-    }
-
-    case WM_KEYDOWN:
-        TEST("WM_KEYDOWN")
-
-
-    case WM_KEYUP:
-
-        TEST("WM_KEYUP")
-
-    case WM_PAINT:
-        TEST("WM_PAINT")
-
-
-    case WM_DESTROY:
-        TEST("WM_DESTROY")
-
-
-    case WM_QUERYENDSESSION:
-    {
-            TEST("WM_QUERYENDSESSION")
-
-    }
-    case WM_ENDSESSION:
-    {        TEST("WM_ENDSESSION")
-
-        // Check `lParam` for which system shutdown function and handle events.
-        // See https://learn.microsoft.com/windows/win32/shutdown/wm-endsession
-    }
-    default:
-        std::wstring t = std::to_string(message);
-        std::string test = std::string(t.begin(), t.end());
-        const char* at = new char[256];
-        memcpy(const_cast<char*>(at),test.c_str(), test.size());
-        return at;
-
-    }
-}
-
 LRESULT 
-Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
+WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam) {
     //Application* app = reinterpret_cast<Application*>(GetWindowLongPtr(hWnd, GWLP_USERDATA));
-    //test(message);
- /*   Logger::MLogger& logger = Logger::MLogger::get_instance();
-    logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, message);*/
+    Logger::MLogger& logger = Logger::MLogger::get_instance();
 
     switch (message)
     {
@@ -171,8 +127,16 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
     }
     return 0;
     case WM_QUIT:
-        //logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, "destroyed");
+    {
+        logger.debug(MACHI_DEFAULT_FILE_LOGGER_NAME, "received quit message.");
+    }
         return 0;
+    case WM_DESTROY: 
+    {
+        PostQuitMessage(0);
+        logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, "received destroyed message.");
+        return 0;
+    }
     case WM_PAINT:
     {
         PAINTSTRUCT ps;
@@ -185,24 +149,10 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
         EndPaint(hWnd, &ps);
     }
     case WM_KEYDOWN:
-        //if (app)
-        //{
-        //    //app->OnKeyDown(static_cast<UINT8>(wParam));
-        //}
-        return 0;
-
     case WM_KEYUP:
-        //if (app)
-        //{
-        //    //pSample->OnKeyUp(static_cast<UINT8>(wParam));
-        //}
+        // input manager will handle this.
         return 0;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        //logger.info(MACHI_DEFAULT_FILE_LOGGER_NAME, "destroyed");
-
-        return 0;
-
+   
   
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
@@ -211,7 +161,7 @@ Machi::WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARA
 }
 
 bool 
-Machi::WindowsPlatform::_run_logic() {
+WindowsPlatform::_run_logic() {
     // Main sample loop.
     MSG msg = {};
     while (msg.message != WM_QUIT){
@@ -231,7 +181,7 @@ Machi::WindowsPlatform::_run_logic() {
 
 // de-allocate resources.
 bool 
-Machi::WindowsPlatform::_finalize() {
+WindowsPlatform::_finalize() {
 
     //spdlog::info("finalized...");
     //Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "finalized...");
@@ -243,14 +193,14 @@ Machi::WindowsPlatform::_finalize() {
 
 
 bool 
-Machi::WindowsPlatform::run(int agrc, char** argv) {
+WindowsPlatform::run(int agrc, char** argv) {
     if (!_run_logic())
         return false;
     return true;
 
 }
 
-Machi::OSContext* Machi::WindowsPlatform::get_context()
+OSContext* WindowsPlatform::get_context()
 {
     return &WindowsPlatform::ctx_;
 }

@@ -30,12 +30,23 @@
 #include <Platform/types.h>
 //#include <Platform/windows/windows_platform.h>
 namespace Machi {
+
+	namespace Platform {
+		//forward declartion
+
+		typedef struct OSContext OSConfig;
+	}
+
+}
+
+
+namespace Machi {
 	//forward declartion
-	typedef struct OSContext OSConfig;
+	//typedef struct OSContext OSConfig;
 
 	class MACHI_OS_API OS {
 	private:
-		OSContext* m_ctx;
+		Machi::Platform::OSContext* m_ctx;
 		static OS* instance_;
 
 		int argc;
@@ -44,12 +55,12 @@ namespace Machi {
 		OS();
 	public:
 
-		OS& set_context(OSContext* ctx) {
+		OS& set_context(Machi::Platform::OSContext* ctx) {
 			m_ctx = ctx;
 			return *this;
 		}
 
-		OSContext* get_context() {
+		Machi::Platform::OSContext* get_context() {
 			return m_ctx;
 		}
 		~OS(){

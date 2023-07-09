@@ -25,27 +25,29 @@
 
 #include "console.h"
 
-
+#include <signal.h>
 
 static std::vector<std::function<void(ConsoleStatus)>> g_console_status_callback;
-
+void disable_exit_console();
 BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
     switch (fdwCtrlType)
     {
         // Handle the CTRL-C signal.
     case CTRL_C_EVENT:
         //printf("Ctrl-C event\n\n");
+        // When a CTRL+C signal is received, the control handler returns TRUE, 
+        // indicating that it has handled the signal. Doing this prevents other control handlers from being called.
         //Beep(750, 300);
         return TRUE;
 
         // CTRL-CLOSE: confirm that the user wants to exit.
     case CTRL_CLOSE_EVENT:
-        //Beep(600, 200);
+        //Beep(600, 20000);
         //printf("Ctrl-Close event\n\n"); // I think pritnf is not allowed..  !!!ejikhfnjxdofgbnm stdout stdin handling checking
-         
+         /*
         for (auto& func : g_console_status_callback) {
             func(ConsoleStatus::SHUTDOWN);
-        }
+        }*/
         return TRUE;
 
         // Pass other signals to the next handler.
@@ -68,7 +70,15 @@ BOOL WINAPI CtrlHandler(DWORD fdwCtrlType) {
         return FALSE;
     }
 }
+void disable_exit_console() {
+    HWND hwnd = ::GetConsoleWindow();
 
+    if (hwnd != NULL)
+    {
+        HMENU hMenu = ::GetSystemMenu(hwnd, FALSE);
+        if (hMenu != NULL) DeleteMenu(hMenu, SC_CLOSE, MF_BYCOMMAND);
+    }
+}
 void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_stream, const DWORD p_std_handle) {
 	const HANDLE h_existing = GetStdHandle(p_std_handle);
 	if (h_existing != INVALID_HANDLE_VALUE) { // Redirect only if attached console have a valid handle.
@@ -83,6 +93,8 @@ void RedirectStream(const char* p_file_name, const char* p_mode, FILE* p_cpp_str
 
 void RedirectIOToConsole() {
 		AllocConsole();
+        disable_exit_console();
+        //signal(SIGINT, ignore_control_c);
         SetConsoleCtrlHandler(CtrlHandler, TRUE);
 		RedirectStream("CONIN$", "r", stdin, STD_INPUT_HANDLE);
 		RedirectStream("CONOUT$", "w", stdout, STD_OUTPUT_HANDLE);

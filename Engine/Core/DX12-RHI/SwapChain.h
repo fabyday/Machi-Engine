@@ -61,7 +61,7 @@ namespace Machi {
 			inline SwapChain& set_hwnd(HWND hwnd = NULL) {
 				ready_flag.hwnd = true;
 				if (hwnd == NULL)
-					m_target_hwnd = WindowsPlatform::get_HWND();
+					m_target_hwnd = Machi::Platform::WindowsPlatform::get_HWND();
 				else
 					m_target_hwnd = hwnd;
 

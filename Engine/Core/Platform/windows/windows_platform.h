@@ -29,57 +29,60 @@
 
 
 namespace Machi {
+	namespace Platform {
 
-	class WindowsPlatform;
-	extern MACHI_PLATFORM_API WindowsPlatform* g_platform;
+		class WindowsPlatform;
+		extern MACHI_PLATFORM_API WindowsPlatform* g_platform;
 
-	typedef  struct MACHI_PLATFORM_API OSContext {
-		HINSTANCE* hInstance;
-		HINSTANCE* hPrevInstance;
-		MUINT nCmdShow;
-		MPWSTR pCmdLine;
-	}OSConfig;
-
-
-
-	// OS specific function and configure collection.
-	 class MACHI_PLATFORM_API WindowsPlatform {
-	public:
-		bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
-		static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
-		static HWND get_HWND() { return hwnd_; }
-		
-		WindowsPlatform(HINSTANCE* hInstance, HINSTANCE* hPrevInstance, MPWSTR nCmdShow, MUINT  pCmdLine) {
-			WindowsPlatform::ctx_ = { hInstance, hPrevInstance, pCmdLine, nCmdShow };
-		}
-		//Application* m_app;
-		//friend class Application;
-		~WindowsPlatform() {
-			_finalize();
-		}
-
-		bool _finalize();
-
-		bool _run_logic();
-		bool run(int agrc, char** argv);
-
-
-		struct OSContext* get_context();
-	public:
-		std::function<bool(void)> update_function;
-		std::function<bool(void)> fixed_update_function;
-		std::function<bool(void)> render_function;
-
-	private:
+		typedef  struct MACHI_PLATFORM_API OSContext {
+			HINSTANCE* hInstance;
+			HINSTANCE* hPrevInstance;
+			MUINT nCmdShow;
+			MPWSTR pCmdLine;
+		}OSConfig;
 
 
 
+		// OS specific function and configure collection.
+		class MACHI_PLATFORM_API WindowsPlatform {
+		public:
+			bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
+			static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
+			static HWND get_HWND() { return hwnd_; }
 
-		static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
-		static HWND hwnd_;
-		static struct OSContext ctx_;
-	};
+			WindowsPlatform(HINSTANCE* hInstance, HINSTANCE* hPrevInstance, MPWSTR nCmdShow, MUINT  pCmdLine) {
+				WindowsPlatform::ctx_ = { hInstance, hPrevInstance, pCmdLine, nCmdShow };
+			}
+			//Application* m_app;
+			//friend class Application;
+			~WindowsPlatform() {
+				_finalize();
+			}
+
+			bool _finalize();
+
+			bool _run_logic();
+			bool run(int agrc, char** argv);
 
 
-	typedef WindowsPlatform Platform;
+			struct OSContext* get_context();
+		public:
+			std::function<bool(void)> update_function;
+			std::function<bool(void)> fixed_update_function;
+			std::function<bool(void)> render_function;
+
+		private:
+
+
+
+
+			static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
+			static HWND hwnd_;
+			static struct OSContext ctx_;
+		};
+
+
+		typedef WindowsPlatform Platform;
+	}
+
 }
