@@ -152,8 +152,14 @@ WindowsPlatform::WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lPara
     case WM_KEYUP:
         // input manager will handle this.
         return 0;
-   
-  
+    case WM_MOUSEHWHEEL:
+    case WM_MOUSEHOVER:
+    case WM_MOUSEACTIVATE:
+    case WM_MOUSEFIRST:
+    case WM_MOUSELEAVE:
+    case WM_MOUSEWHEEL:
+        //input manager will handle this;
+        return 0;
     default:
         return DefWindowProc(hWnd, message, wParam, lParam);
     }
