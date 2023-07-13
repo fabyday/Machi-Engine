@@ -34,6 +34,7 @@ Machi::Application::render() {
 
 	using namespace Machi::Graphics;
 	auto gmng = GraphicManager::get_instance();
+	gmng->render();
 	return true;
 }
 

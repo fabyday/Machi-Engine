@@ -39,7 +39,7 @@ typedef struct _stat64i32 _sel_stat;
 #else 
 #define MSTRING std::string 
 typedef struct stat _sel_stat;
-#define MSTAT _sel_stat;
+#define MSTAT _sel_stat; 
 #define MSTAT_FUNC(x, y) stat((x),(y))
 #define MTEXT(x) ##x
 #endif

@@ -72,7 +72,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	Machi::Platform::g_platform->update_function = std::bind(&Application::update, app);
 	Machi::Platform::g_platform->fixed_update_function = std::bind(&Application::fixed_update, app);
 	Machi::Platform::g_platform->render_function = std::bind(&Application::render, app);
-	
 	Machi::Platform::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
 	
 	int ret = Machi::Platform::g_platform->run(__argc, __argv);

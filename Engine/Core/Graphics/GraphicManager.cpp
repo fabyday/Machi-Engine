@@ -25,6 +25,7 @@
 
 
 #include "GraphicManager.h"
+#include <Logger/Logger.h>
 
 using namespace Machi::Graphics;
 using namespace Machi;
@@ -59,7 +60,15 @@ GraphicManager::initialize() {
 
 void
 GraphicManager::render() {
+	auto& logger = Logger::MLogger::get_instance();
+	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render start"));
 
+
+
+	//NativeGraphics::NativeGraphicsManager::get_instance()->render()
+
+
+	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render end"));
 }
 
 void

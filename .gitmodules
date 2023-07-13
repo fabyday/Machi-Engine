@@ -11,3 +11,6 @@
 [submodule "Engine/ThirdParty/tinyply"]
 	path = Engine/ThirdParty/tinyply
 	url = https://github.com/ddiakopoulos/tinyply.git
+[submodule "Engine/ThirdParty/entt"]
+	path = Engine/ThirdParty/entt
+	url = https://github.com/skypjack/entt.git

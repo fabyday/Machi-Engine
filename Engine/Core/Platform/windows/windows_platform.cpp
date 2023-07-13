@@ -177,6 +177,7 @@ WindowsPlatform::_run_logic() {
             DispatchMessage(&msg);
         }
         this->update_function();
+        this->render_function();
         //GraphicManager::get_instance()->render();
     }
 
