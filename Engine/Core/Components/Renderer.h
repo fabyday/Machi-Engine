@@ -1,5 +1,5 @@
-#include "Mobject.h"
 #include "components_config.h"
+#include "IComponent.h"
 namespace Machi {
 
 
@@ -8,12 +8,14 @@ namespace Machi {
 
 
 
-		class MACHI_COMPONENTS_API Renderer : public MObject {
+		class MACHI_COMPONENTS_API RendererComponent : public IComponent {
 
-
-
-
+			bool m_is_visible;
 			void render();
+
+		public:
+
+
 		};
 
 

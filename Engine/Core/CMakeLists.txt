@@ -14,6 +14,7 @@ elseif(WIN32)
     add_subdirectory(DX12-RHI)
 endif()
 add_subdirectory(Logger)
+add_subdirectory(World)
 add_subdirectory(Components)
 add_subdirectory(Platform)
 add_subdirectory(OS)
@@ -26,5 +27,5 @@ add_subdirectory(PlugIns)
 
 
 
-set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger Machi::Components CACHE INTERNAL "" FORCE)
+set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger Machi::Components Machi::World CACHE INTERNAL "" FORCE)
 

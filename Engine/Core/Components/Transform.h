@@ -1,5 +1,6 @@
-#include "Mobject.h"
 #include "components_config.h"
+#include "IComponent.h"
+#include <Platform/types.h>
 namespace Machi {
 
 
@@ -8,12 +9,15 @@ namespace Machi {
 
 
 
-		class MACHI_COMPONENTS_API Transform : public MObject {
+		class MACHI_COMPONENTS_API Transform : public IComponent {
 			
 			
-			MDOUBLE xyz[3];
+			MDOUBLE m_loc_xyz[3]; // location
+			MDOUBLE m_rot_xyz[3];// euler angle
 
 
+
+			
 
 
 
