@@ -1,3 +1,4 @@
+#pragma once
 #include "geometry_config.h"
 #include <Platform/types.h>
 namespace Machi {
@@ -23,7 +24,7 @@ namespace Machi {
 
 
 
-		}
+		};
 
 	}
 }

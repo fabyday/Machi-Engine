@@ -1,4 +1,4 @@
-set(world_src "Scene.cpp")
+set(world_src "Scene.cpp" "SceneManager.cpp")
 
 
 add_library(World SHARED ${world_src})

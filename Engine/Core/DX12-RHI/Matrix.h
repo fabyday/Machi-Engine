@@ -101,7 +101,7 @@ namespace Machi {
 
 
 		//};
-		typedef PlatformNativeMatrix<> Matrix4X4;
+		//typedef PlatformNativeMatrix<> Matrix4X4;
 
 
 

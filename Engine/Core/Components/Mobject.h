@@ -9,6 +9,7 @@
 
 #include "ComponentManager.h"
 #include <memory>
+#include <stdexcept>
 #include <Platform/types.h>
 namespace Machi{
     namespace Components {
@@ -20,8 +21,8 @@ namespace Machi{
             MSTRING m_name;
             Entity m_entity;
 
+
         public:
-            
             
             MObject(std::shared_ptr<ComponentManager> manager) {
                 m_component_manger_ptr = manager;
@@ -32,18 +33,26 @@ namespace Machi{
                 }
             }
 
+            ~MObject() {
+                get_component_manager_ptr()->remove_all_components_from_entity(m_entity);
+                get_component_manager_ptr()->destroy_entity(m_entity);
+            }
+
             inline std::shared_ptr<ComponentManager> get_component_manager_ptr() {
                 std::shared_ptr<ComponentManager> p_manager = m_component_manger_ptr.lock();
                 if (!p_manager)
                     throw std::runtime_error("ptr is nullptr");
                 return p_manager;
             }
+
+
             virtual void initialize() {};
             
             virtual void update() {};
             
             virtual void fixed_update() {};// fixed time update. 
 
+            virtual void finalize() {};
             
             template<typename T>
             T& add_component() {

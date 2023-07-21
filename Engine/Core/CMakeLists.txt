@@ -13,6 +13,9 @@ elseif(WIN32)
     message("Windows Platform is detected, now DX12-RHI is ON")
     add_subdirectory(DX12-RHI)
 endif()
+
+link_libraries(EnTT::EnTT)
+
 add_subdirectory(Logger)
 add_subdirectory(World)
 add_subdirectory(Components)

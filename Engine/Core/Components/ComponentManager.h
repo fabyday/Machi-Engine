@@ -5,8 +5,8 @@
 namespace Machi {
 	namespace Components {
 
-		
-		typedef entt::entity Entity; // 
+
+		using Entity =  entt::entity ; // 
 
 		class MACHI_COMPONENTS_API ComponentManager {
 			entt::registry m_registry;
@@ -56,10 +56,15 @@ namespace Machi {
 
 
 			inline void remove_all_components() { m_registry.clear(); };
-			
+			inline void remove_all_components_from_entity(Entity entity) { m_registry.clear(); };
+
 			template<typename T>
 			inline void remove_component(Entity entity) {
 				m_registry.remove()
+			}
+
+			void destroy_entity(Entity entity) {
+				m_registry.destroy(entity);
 			}
 		};
 	}

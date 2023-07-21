@@ -24,7 +24,7 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #include <Platform/entry.h>
 #include <IO/ObjReader.h>
-
+#include <Components/Renderer.h>
 class NewApp : public Machi::Application {
 public:
 
@@ -53,6 +53,13 @@ Machi::Application* machi_main(int argc, char** argv) {
 	Machi::Geometry::Mesh* mesh;
 	int tt = -1;
 	reader.read_mesh(test, &mesh, tt);
+
+	Machi::Components::MeshRendererComponent renderer;
+
+	renderer.add_meshes(mesh);
+	renderer.render();
+	
+
 	
 
 	return ret;

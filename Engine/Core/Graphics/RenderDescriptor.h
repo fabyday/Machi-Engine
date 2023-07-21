@@ -11,7 +11,6 @@ namespace Machi {
 
 			Machi::NativeGraphics::PipeLineState* t;
 
-			struct test;
 
 
 		};

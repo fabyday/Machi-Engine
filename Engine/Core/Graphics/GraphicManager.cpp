@@ -26,6 +26,7 @@
 
 #include "GraphicManager.h"
 #include <Logger/Logger.h>
+#include <Components/ComponentManager.h>
 
 using namespace Machi::Graphics;
 using namespace Machi;
@@ -64,7 +65,7 @@ GraphicManager::render() {
 	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render start"));
 
 
-
+	
 	//NativeGraphics::NativeGraphicsManager::get_instance()->render()
 
 

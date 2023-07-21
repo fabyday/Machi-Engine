@@ -1,3 +1,4 @@
+#pragma once
 #include "geometry_config.h"
 #include <DataStruct/UnsafeVector.h>
 #include <Platform/types.h>

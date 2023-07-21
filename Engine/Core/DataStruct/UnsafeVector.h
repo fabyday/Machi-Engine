@@ -1,3 +1,4 @@
+#pragma once
 #include <Platform/types.h>
 #include <memory>
 #include <cassert>

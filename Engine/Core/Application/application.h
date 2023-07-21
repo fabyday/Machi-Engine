@@ -29,6 +29,7 @@
 #include "application_config.h"
 #include <Platform/types.h>
 #include <Platform/inputs.h>
+//#include <World/SceneManager.h>
 namespace Machi {
 
 	class MACHI_APPLICATION_API Application {
