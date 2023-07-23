@@ -25,6 +25,7 @@
 #include "application.h"
 #include <iostream>
 #include <Graphics/GraphicManager.h>
+#include <Logger/Logger.h>
 Machi::Application* Machi::Application::app_ = nullptr;
 
 
@@ -37,8 +38,6 @@ Machi::Application::render() {
 	gmng->render();
 	return true;
 }
-
-
 
 bool
 Machi::Application::update() {
@@ -80,22 +79,67 @@ Machi::Application::set_name(MSTRING name) {
 
 
 
-bool Machi::Application::_initialize(){
+void Machi::Application::calc_delta()
+{
+	const MTIME tmp_cur_time = Machi::Platform::g_platform->get_cur_time();
+	m_delta_time = Machi::Platform::g_platform->get_cur_time() - m_prev_time;
+	m_prev_time = tmp_cur_time;
+}
+
+bool Machi::Application::_initialize() {
 	using namespace Machi;
+	auto& logger = Machi::Logger::MLogger::get_instance();
+	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "Application::_initialize : init device.");
+
+
+
 	Graphics::GraphicManager::get_instance()->initialize();
 	
-    return true;
-}
-bool Machi::Application::_run_logic(){
+	
+	
+	
+	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "Application::initialize : init main game.");
+	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, "Application::initialize : init game clock.");
 
-    return true;
+	m_total_game_time = 0;
+	m_game_world_time = 0;
+	m_fixed_update_time_checker = 0;
+	m_prev_time = Machi::Platform::g_platform->get_cur_time();
+	this->initialize();
+	return true;
+}
+bool Machi::Application::_run_logic() {
+
+	auto& logger = Machi::Logger::MLogger::get_instance();
+	calc_delta();
+	const MTIME delta_time = get_delta_time();
+	m_total_game_time += delta_time;
+	m_fixed_update_time_checker += delta_time;
+
+	if(!m_is_paused)
+		m_game_world_time += delta_time;
+	
+	//logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME,"delta time : {} m_fixed_time {}", delta_time, m_fixed_update_time_checker);
+	if (m_fixed_update_time_checker >= get_fixed_upate_time()) {
+		fixed_update();
+		m_fixed_update_time_checker = 0;
+	}
+
+	update();
+
+	Graphics::GraphicManager::get_instance()->render();
+
+	return true;
 }
 
-bool Machi::Application::_finalize(){
-    return true;
+bool Machi::Application::_finalize() {
+	this->finalize();
+	return true;
 }
-bool Machi::Application::run(int argc, char** argv){
-    return true;
-}
+//bool Machi::Application::run(int argc, char** argv){
+//	this->initialize();
+//
+//    return true;
+//}
 
 

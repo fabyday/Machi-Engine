@@ -71,3 +71,6 @@ typedef struct stat _sel_stat;
 
 
 #define MDOUBLE double 
+
+
+#define MTIME DWORD

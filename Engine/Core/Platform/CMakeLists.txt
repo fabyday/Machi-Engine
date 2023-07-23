@@ -9,8 +9,8 @@ elseif(APPLE)
             ../Graphics/machi_graphics.cpp)
 
 elseif(UNIX AND NOT APPLE) # linux;
-
 endif()
+set(target_libs)
 
 #add_library(Platform SHARED ${src})
 add_library(Platform SHARED ${platform_src})
@@ -21,7 +21,8 @@ if(WIN32)
     # set(MODULE_NAME "PLATFORM")
     # configure_file(windows/config.h.in config.h @ONLY)
     # target_include_directories(Platform PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-   
+    set( target_libs "winmm.lib")
+
     TARGET_CONFIGURE_SETUP(Platform "PLATFORM")
     message("mod ${MODULE_NAME}")
 
@@ -29,8 +30,7 @@ if(WIN32)
 elseif(APPLE)
     target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
 elseif(UNIX AND NOT APPLE) # linux;
-    
 endif()
-target_link_libraries(Platform PUBLIC Machi::Logger)
+target_link_libraries(Platform PUBLIC Machi::Logger ${target_libs})
 add_library(Machi::Platform ALIAS Platform)
 

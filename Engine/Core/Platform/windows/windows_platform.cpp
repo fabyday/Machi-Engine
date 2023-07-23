@@ -31,7 +31,6 @@
 #include <stdexcept>
 #include <Logger/Logger.h>
 
-
 namespace Machi {
     namespace Platform {
     WindowsPlatform* g_platform = nullptr;
@@ -43,11 +42,14 @@ namespace Machi {
 using namespace Machi::Platform;
 
 bool 
+//WindowsPlatform::initialize(Machi::Application* app) {
+    //if(app != nullptr)
+        //m_app = app;
 WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
     // window initialize.
     const struct OSContext* context = &WindowsPlatform::ctx_;
     //const struct OSContext* context = nullptr;
-    const MWCHAR* app_name =  name;
+    const MWCHAR* app_name = name;
     //spdlog::info(L"app name : {}", app_name);
     //info(L"test{}", app_name);
     //Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"app name : {}", app_name);
@@ -63,8 +65,8 @@ WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, M
     windowClass.lpszClassName = app_name;
 
     RegisterClassEx(&windowClass);
-
-    RECT windowRect = { x, y, static_cast<MLONG>(width), static_cast<MLONG>(height) };
+    
+    RECT windowRect = { x, y, static_cast<MLONG>(width), static_cast<MLONG>(height)};
 
 
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
@@ -107,7 +109,7 @@ WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, M
     //    std::cerr << e.what() << std::endl;
     //    return false;
     //}
-
+    this->initialize_function();
     return true;
 }
 
@@ -176,12 +178,13 @@ WindowsPlatform::_run_logic() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        this->update_function();
-        this->render_function();
-        //GraphicManager::get_instance()->render();
+        this->run_logic();
     }
 
     return true;
+}
+MTIME WindowsPlatform::get_cur_time() {
+    return timeGetTime();
 }
 
 

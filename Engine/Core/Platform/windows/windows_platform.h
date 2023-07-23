@@ -19,11 +19,11 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <Windows.h>
-//#include <Application/application.h>
+#include <Application/application.h>
 #include "../platform_config.h"
 #include "types.h"
 #include <functional>
-
+#include <timeapi.h>
 
 
 
@@ -46,7 +46,11 @@ namespace Machi {
 		// OS specific function and configure collection.
 		class MACHI_PLATFORM_API WindowsPlatform {
 		public:
+
+			//Machi::Application* m_app;
+
 			bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
+			//bool initialize(Machi::Application* app);
 			static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 			static HWND get_HWND() { return hwnd_; }
 
@@ -64,12 +68,16 @@ namespace Machi {
 			bool _run_logic();
 			bool run(int agrc, char** argv);
 
+			MTIME get_cur_time();
+
 
 			struct OSContext* get_context();
 		public:
-			std::function<bool(void)> update_function;
-			std::function<bool(void)> fixed_update_function;
-			std::function<bool(void)> render_function;
+			std::function<bool(void)> initialize_function;
+			std::function<bool(void)> run_logic;
+			std::function<bool(void)> finalize_function;
+			//std::function<bool(void)> fixed_update_function;
+			//std::function<bool(void)> render_function;
 
 		private:
 

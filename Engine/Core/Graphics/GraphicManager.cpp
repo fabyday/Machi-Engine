@@ -55,6 +55,8 @@ bool GraphicManager::regist_renderer()
 
 void
 GraphicManager::initialize() {
+	auto& logger = Machi::Logger::MLogger::get_instance();
+	logger.info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("Graphics::initialize : init graphcis Manager"));
 	NativeGraphics::NativeGraphicsManager::get_instance()->initialize();
 }
 

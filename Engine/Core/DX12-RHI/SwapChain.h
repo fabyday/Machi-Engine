@@ -35,7 +35,7 @@ namespace Machi {
 				bool fullscreen = false;
 			} ready_flag;
 
-			bool init();
+			bool init(std::shared_ptr<CommandQueue> cmd_queue);
 
 			inline SwapChain& set_command_queue(std::shared_ptr<CommandQueue> queue = NULL) {
 				ready_flag.command_queue = true;

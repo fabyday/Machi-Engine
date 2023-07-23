@@ -13,6 +13,8 @@
 #include "DescriptorHeap.h"
 
 #include <memory>
+
+
 namespace Machi{
 	namespace NativeGraphics {
 		class NativeGraphicsManager final {
@@ -21,8 +23,8 @@ namespace Machi{
 
 			bool m_is_init;
 			friend class GraphicManager;
-			Device m_device;
-			SwapChain m_swapchain;
+			std::shared_ptr<Device> m_device;
+			std::shared_ptr<SwapChain> m_swapchain;
 
 
 
@@ -34,9 +36,9 @@ namespace Machi{
 
 
 
-			CommandQueue m_command_queue;
-			CommandAllocator m_command_allocator;
-			GraphicsSyncManager m_sync_manager;
+			std::shared_ptr<CommandQueue> m_command_queue;
+			std::shared_ptr<CommandAllocator> m_command_allocator;
+			std::shared_ptr<GraphicsSyncManager> m_sync_manager;
 			class InputLayoutSpecifier;
 			class RenderObject;
 		public:

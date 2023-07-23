@@ -57,7 +57,6 @@ Machi::Application* machi_main(int argc, char** argv) {
 	Machi::Components::MeshRendererComponent renderer;
 
 	renderer.add_meshes(mesh);
-	renderer.render();
 	
 
 	

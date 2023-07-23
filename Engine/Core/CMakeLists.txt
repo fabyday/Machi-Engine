@@ -29,6 +29,5 @@ add_subdirectory(Graphics)
 add_subdirectory(PlugIns)
 
 
-
 set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger Machi::Components Machi::World CACHE INTERNAL "" FORCE)
 
