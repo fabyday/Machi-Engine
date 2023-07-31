@@ -9,15 +9,15 @@ bool NativeGraphicsManager::initialize()
 {
 	
 
-	if (!m_device.init_device()) {
+	if (!m_device->init_device()) {
 		return false;
 	}
 
-	if (!m_command_queue.init(m_device)) {
+	if (!m_command_queue->init(m_device)) {
 		return false;
 	}
 
-	if (!m_swapchain.init()) {
+	if (!m_swapchain->init(m_command_queue)) {
 		return false;
 	}
 

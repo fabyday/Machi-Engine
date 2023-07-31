@@ -9,7 +9,7 @@ namespace Machi {
 			friend class NativeGraphicsManager;
 			friend class SwapChain;
 			friend class GraphicsSyncManager;
-			bool init(Device& device);
+			bool init(std::shared_ptr<Device> device);
 
 
 

@@ -2,7 +2,7 @@
 #include <iostream>
 using namespace Machi::NativeGraphics;
 #include "dxhelper.h"
-bool SwapChain::init()
+bool SwapChain::init(std::shared_ptr<CommandQueue> cmd_queue)
 {
 
 	// Describe and create the swap chain.

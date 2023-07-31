@@ -6,7 +6,7 @@
 #include "dxhelper.h"
 using namespace Machi::NativeGraphics;
 
-bool CommandQueue::init(Device& device)
+bool CommandQueue::init(std::shared_ptr<Device> device)
 {
     // Describe and create the command queue.
     D3D12_COMMAND_QUEUE_DESC queueDesc = {};
