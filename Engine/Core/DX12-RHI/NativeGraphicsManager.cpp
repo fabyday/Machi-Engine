@@ -21,7 +21,7 @@ bool NativeGraphicsManager::initialize()
 		return false;
 	}
 
-	if (!m_sync_manager.create(m_device, m_swapchain.get_frame_num())) {
+	if (!m_sync_manager->create(m_device, m_swapchain->get_frame_num())) {
 		return false;
 	}
 	return true;
