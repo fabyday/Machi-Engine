@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include <iostream>
 #include <Graphics/graphics_defined.h>
 #include "Device.h"

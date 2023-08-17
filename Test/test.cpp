@@ -54,10 +54,10 @@ Machi::Application* machi_main(int argc, char** argv) {
 	int tt = -1;
 	reader.read_mesh(test, &mesh, tt);
 
-	Machi::Components::MeshRendererComponent renderer;
+	Machi::Components::MeshRendererComponent* renderer = new Machi::Components::MeshRendererComponent;
 
-	renderer.add_meshes(mesh);
-	
+	renderer->add_meshes(mesh);
+	ret->set_renderer(renderer);
 
 	
 

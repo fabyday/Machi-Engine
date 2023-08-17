@@ -4,6 +4,20 @@
 namespace Machi {
 	namespace NativeGraphics {
 		using namespace Machi::Graphics;
+		inline D3D12_FENCE_FLAGS fence_flag_convert(FenceFlags t) {
+			switch (t)
+			{
+			case Machi::Graphics::FenceFlags::MACHI_FENCE_FLAG_NONE:
+				return D3D12_FENCE_FLAG_NONE;
+			case Machi::Graphics::FenceFlags::MACHI_FENCE_FLAG_SHARED:
+				return D3D12_FENCE_FLAG_SHARED;
+			case Machi::Graphics::FenceFlags::MACHI_FENCE_FLAG_SHARED_CROSS_ADAPTER:
+				return D3D12_FENCE_FLAG_SHARED_CROSS_ADAPTER;
+			case Machi::Graphics::FenceFlags::MACHI_FENCE_FLAG_NON_MONITORED:
+				return D3D12_FENCE_FLAG_NON_MONITORED;
+			}
+
+		}
 		inline DXGI_FORMAT resource_format_convert(ResourceFormat t) {
 			switch (t) {
 			case MACHI_FORMAT_UNKNOWN:

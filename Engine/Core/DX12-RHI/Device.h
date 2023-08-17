@@ -1,6 +1,6 @@
 #pragma once
 #include "Commons.h"
-
+#include <Graphics/graphics_defined.h>
 namespace Machi {
 
 
@@ -22,15 +22,16 @@ namespace Machi {
 			friend class DescriptorHeap;
 			bool m_is_valid_device = false;
 
-
 			bool init_device(bool debug_mode = false);
 
 			inline bool is_valid() { return m_is_valid_device; }
 
-			~Device() { m_device.Reset(); };
+
 			inline ID3D12Device* operator->() { return m_device.Get(); };
-
-
+			HRESULT create_fence(MUINT init_value, Machi::Graphics::FenceFlags flag, ComPtr<ID3D12Fence> fence_com_ptr);
+			HRESULT create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12CommandQueue> command_queue);
+		public:
+			~Device() { m_device.Reset(); };
 		};
 	};
 }

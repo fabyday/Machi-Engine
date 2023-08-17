@@ -16,10 +16,10 @@ endif()
 
 link_libraries(EnTT::EnTT)
 
+add_subdirectory(Platform)
 add_subdirectory(Logger)
 add_subdirectory(World)
 add_subdirectory(Components)
-add_subdirectory(Platform)
 add_subdirectory(OS)
 add_subdirectory(DataStruct)
 add_subdirectory(Geometry)

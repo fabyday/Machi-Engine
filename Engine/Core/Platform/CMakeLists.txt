@@ -13,6 +13,11 @@ endif()
 set(target_libs)
 
 #add_library(Platform SHARED ${src})
+add_library(Platform_init SHARED ${platform_src})
+set_target_properties(Platform_init PROPERTIES LINK_FLAGS "/FORCE:UNRESOLVED")
+set_target_properties(Platform_init PROPERTIES OUTPUT_NAME "b")
+
+
 add_library(Platform SHARED ${platform_src})
 
 if(WIN32)

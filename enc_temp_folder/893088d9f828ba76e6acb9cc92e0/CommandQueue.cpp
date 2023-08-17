@@ -13,7 +13,7 @@ bool CommandQueue::init(std::shared_ptr<Device> device)
     queueDesc.Flags = D3D12_COMMAND_QUEUE_FLAG_NONE;
     queueDesc.Type = D3D12_COMMAND_LIST_TYPE_DIRECT;
     try {
-        ThrowIfFailed(device->create_command_queue(&queueDesc, m_command_queue));
+    ThrowIfFailed(device->create_command_queue(&queueDesc, m_command_queue));
 
     }
     catch (HrException& e) {

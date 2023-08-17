@@ -30,6 +30,7 @@
 #include <Platform/platform.h>
 #include <Platform/types.h>
 #include <Platform/inputs.h>
+#include <Components/Renderer.h>
 //#include <Platform/windows/windows_platform.h>
 //#include <World/SceneManager.h>
 
@@ -120,7 +121,11 @@ namespace Machi {
 		virtual bool fixed_update();
 		virtual bool render();
 
-
+		// for testing 
+		Machi::Components::MeshRendererComponent* m_renderer;
+		void set_renderer(Machi::Components::MeshRendererComponent* renderer) {
+			m_renderer = renderer;
+		}
 
 		/*virtual bool on_key_pressed();
 		virtual bool on_key_clicked();

@@ -1,16 +1,17 @@
 #include "Synchronizer.h"
 #include "dxhelper.h"
 #include <iostream>
+#include <Graphics/graphics_defined.h>
 using namespace Machi::NativeGraphics;
 
 
 bool GraphicsSyncManager::create(std::shared_ptr<Device> device, MUINT64 fence_size) {
-    ThrowIfFailed(device->CreateFence(0, D3D12_FENCE_FLAG_NONE, IID_PPV_ARGS(&m_fence)));
+    ThrowIfFailed(device->create_fence(0, FenceFlags::MACHI_FENCE_FLAG_NONE, m_fence));
     std::make_unique<UINT64[]>(m_fence_size);
     for (int i = 0; i < m_fence_size; i++)
         m_fence_value[i] = 1;
     m_fence_size = fence_size;
-
+    0, FenceFlags::MACHI_FENCE_FLAG_NONE, 
     // Create an event handle to use for frame synchronization.
     m_fence_event = CreateEvent(nullptr, FALSE, FALSE, nullptr);
     if (m_fence_event == nullptr)

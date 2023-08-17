@@ -2,6 +2,7 @@
 #include <iostream>
 #include "dxhelper.h"
 
+#include "native_format_converter.h"
 using namespace Machi::NativeGraphics;
 bool Device::init_device(bool debug_mode)
 {
@@ -63,4 +64,14 @@ bool Device::init_device(bool debug_mode)
 
 
 	return true;
+}
+
+HRESULT 
+Device::create_fence(MUINT init_value, Machi::Graphics::FenceFlags flag, ComPtr<ID3D12Fence> fence_com_ptr) {
+	
+	return m_device->CreateFence(init_value, fence_flag_convert(flag), IID_PPV_ARGS(&fence_com_ptr));
+}
+HRESULT 
+Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12CommandQueue> command_queue) {
+	return m_device->CreateCommandQueue(desc, IID_PPV_ARGS(&command_queue));
 }
