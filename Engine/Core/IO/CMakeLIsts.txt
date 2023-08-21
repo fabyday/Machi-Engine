@@ -1,8 +1,10 @@
 
 set(io_src  "read_file.cpp" "ObjReader.cpp")
-add_library(IO SHARED ${io_src})
-TARGET_CONFIGURE_SETUP(IO "IO")
 
-# target_link_libraries(Graphics PUBLIC metal_wrapper)
-target_link_libraries(IO PRIVATE tinyobjloader Machi::Geometry Machi::Logger)
-add_library(Machi::IO ALIAS IO)
+find_package(tinyobjloader)
+set(symbol_libs)
+
+link_libraries(tinyobjloader)
+set(target_libs  Geometry Logger)
+ADD_MACHI_LIBRARY(IO "${io_src}" "${target_libs}" "${symbol_libs}")
+TARGET_CONFIGURE_SETUP(IO "IO")

@@ -1,6 +1,6 @@
 set(src "Mobject.cpp" "ComponentManager.cpp"  "Renderer.cpp")
+set(symbol_libs EnTT::EnTT )
 
-add_library(Components SHARED ${src} )
+set(library_deps Graphics  Logger Graphics)
+ADD_MACHI_LIBRARY(Components "${src}" "${library_deps}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(Components "COMPONENTS")
-target_link_libraries(Components PUBLIC Machi::Logger EnTT::EnTT Machi::Graphics)
-add_library(Machi::Components ALIAS Components)

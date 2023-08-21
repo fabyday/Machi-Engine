@@ -1,3 +1,4 @@
+#pragma once
 #include "components_config.h"
 #include "IComponent.h"
 #include "IRenderer.h"

@@ -14,7 +14,7 @@ elseif(WIN32)
     add_subdirectory(DX12-RHI)
 endif()
 
-link_libraries(EnTT::EnTT)
+link_libraries(EnTT::EnTT spdlog::spdlog )
 
 add_subdirectory(Platform)
 add_subdirectory(Logger)
@@ -26,8 +26,11 @@ add_subdirectory(Geometry)
 add_subdirectory(IO)
 add_subdirectory(Application)
 add_subdirectory(Graphics)
-add_subdirectory(PlugIns)
+#add_subdirectory(PlugIns)
 
-
-set(Machi_lib_list Machi::Application Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger Machi::Components Machi::World CACHE INTERNAL "" FORCE)
+set(tgt_name Application Platform Logger World Components OS DataStruct Geometry IO Application Graphics)
+add_library(Machi::DX12_RHI ALIAS DX12_RHI)
+ADD_NAMESPACE("${tgt_name}")
+set(Machi_lib_list Machi::Application Machi::DX12_RHI Machi::Graphics Machi::Geometry Machi::IO Machi::OS Machi::Platform Machi::Logger Machi::Components Machi::World CACHE INTERNAL "" FORCE)
+#set(Machi_lib_list Machi::Application  CACHE INTERNAL "" FORCE)
 

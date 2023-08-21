@@ -1,9 +1,7 @@
 set(world_src "Scene.cpp" "SceneManager.cpp")
 
+set(symbol_libs)
 
-add_library(World SHARED ${world_src})
+set(target_libs  Logger Components)
+ADD_MACHI_LIBRARY(World "${world_src}" "${target_libs}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(World "WORLD")
-
-# target_link_libraries(Graphics PUBLIC metal_wrapper)
-target_link_libraries(World PRIVATE Machi::Logger Machi::Components)
-add_library(Machi::World ALIAS World)

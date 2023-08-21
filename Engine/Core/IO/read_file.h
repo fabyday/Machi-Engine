@@ -1,4 +1,5 @@
-﻿#include <fstream>
+﻿#pragma once
+#include <fstream>
 #include <string>
 #include <Platform/types.h>
 #include "io_config.h"

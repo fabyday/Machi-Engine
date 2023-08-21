@@ -3,6 +3,6 @@ set(graphcis_header "Commons.h" "native_format_converter.h" "Matrix.h")
 set(graphics_src "RootSignature.cpp" "RootSignature.h" "NativeGraphicsManager.cpp" 
 "Device.cpp" "CommandQueue.cpp" "SwapChain.cpp" "CommandAllocator.cpp" 
 "Synchronizer.cpp" "PipelineStateObject.cpp" "Shader.h" "Shader.cpp" "DescriptorHeap.cpp" "add_dx12.cpp"  "Matrix.cpp")
-add_library(DX12-RHI STATIC ${graphics_src} ${graphcis_header})
-target_link_libraries(DX12-RHI PUBLIC Machi::Platform)
-add_library(Machi::DX12-RHI ALIAS DX12-RHI)
+set(symbol_libs)
+add_library(DX12_RHI STATIC ${graphics_src})
+target_link_libraries(DX12_RHI PUBLIC Platform_static)

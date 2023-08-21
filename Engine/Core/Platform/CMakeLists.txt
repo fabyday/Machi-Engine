@@ -1,4 +1,7 @@
 
+set(platform_src )
+set(target_libs)
+set(symbol_libs)
 
 if(WIN32)
     set(platform_src   "windows/windows_platform.cpp"  "windows/console.cpp" "inputs.cpp" )
@@ -10,32 +13,21 @@ elseif(APPLE)
 
 elseif(UNIX AND NOT APPLE) # linux;
 endif()
-set(target_libs)
-
-#add_library(Platform SHARED ${src})
-add_library(Platform_init SHARED ${platform_src})
-set_target_properties(Platform_init PROPERTIES LINK_FLAGS "/FORCE:UNRESOLVED")
-set_target_properties(Platform_init PROPERTIES OUTPUT_NAME "b")
-
-
-add_library(Platform SHARED ${platform_src})
 
 if(WIN32)
-    set(platform_dependent_directory  ${platform_dependent_directory} "${CMAKE_CURRENT_SOURCE_DIR}/windows" PARENT_SCOPE) # can't use relative paths
-    target_include_directories(Platform PUBLIC ${p_dir} "windows") # Windows or Apple, and Core Module Path("../..")
     # set(MODULE_NAME "PLATFORM")
     # configure_file(windows/config.h.in config.h @ONLY)
     # target_include_directories(Platform PRIVATE "${CMAKE_CURRENT_BINARY_DIR}")
-    set( target_libs "winmm.lib")
-
-    TARGET_CONFIGURE_SETUP(Platform "PLATFORM")
-    message("mod ${MODULE_NAME}")
-
-
+    set( symbol_libs "winmm.lib")
 elseif(APPLE)
-    target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
+    #target_include_directories(Platform PUBLIC ${CMAKE_CURRENT_SOURCE_DIR} Apple)
 elseif(UNIX AND NOT APPLE) # linux;
 endif()
-target_link_libraries(Platform PUBLIC Machi::Logger ${target_libs})
-add_library(Machi::Platform ALIAS Platform)
+
+list(APPEND target_libs Logger Graphics IO Geometry)
+ADD_MACHI_LIBRARY(Platform "${platform_src}" "${target_libs}" "${symbol_libs}")
+TARGET_CONFIGURE_SETUP(Platform "PLATFORM")
+target_include_directories(Platform_object PUBLIC  "windows") # Windows or Apple, and Core Module Path("../..")
+
+
 

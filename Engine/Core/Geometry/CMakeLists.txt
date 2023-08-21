@@ -1,6 +1,6 @@
 set(src "Mesh.cpp" )
 
-add_library(Geometry SHARED ${src} )
+set(target_lib Logger)
+set(symbol_libs )
+ADD_MACHI_LIBRARY(Geometry "${src}" "${target_libs}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(Geometry "GEOMETRY")
-target_link_libraries(Geometry PUBLIC Machi::Logger)
-add_library(Machi::Geometry ALIAS Geometry)

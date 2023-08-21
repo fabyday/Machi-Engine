@@ -1,5 +1,6 @@
 set(src "Matrix.cpp")
 
-add_library(DataStruct SHARED ${src} )
+set(library_deps)
+set(symbol_libs)
+ADD_MACHI_LIBRARY(DataStruct "${src}" "${library_deps}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(DataStruct "DATASTRUCTURE")
-add_library(Machi::DataStruct ALIAS DataStruct)

@@ -1,6 +1,8 @@
 set(src "Logger.cpp" "Logger.h")
 
-add_library(Logger SHARED ${src} )
+
+
+set(symbol_libs spdlog::spdlog)
+set(target_libs )
+ADD_MACHI_LIBRARY(Logger "${src}" "${target_libs}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(Logger "LOGGER")
-target_link_libraries(Logger PUBLIC spdlog::spdlog)
-add_library(Machi::Logger ALIAS Logger)

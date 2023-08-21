@@ -1,3 +1,4 @@
+#pragma once
 #include "io_config.h"
 #include <Platform/types.h>
 #include <Geometry/Mesh.h>
