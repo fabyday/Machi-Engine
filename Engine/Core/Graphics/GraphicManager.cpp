@@ -42,16 +42,21 @@ GraphicManager::get_instance() {
 
 std::shared_ptr<Renderer> GraphicManager::make_renderer()
 {
-	return std::shared_ptr<Renderer>();
+	std::shared_ptr<Renderer> p = std::shared_ptr<Renderer>();
+	regist_renderer(p);
+	return p;
 }
 
 
-
-
-bool GraphicManager::regist_renderer()
+bool GraphicManager::regist_renderer(std::shared_ptr<Renderer> regist_renderer)
 {
-	return false;
+	if (regist_renderer.get() == nullptr)
+		return false;
+	m_registed_renderer.push_back(regist_renderer);
+
+	return true;
 }
+
 
 void
 GraphicManager::initialize() {
@@ -64,14 +69,16 @@ GraphicManager::initialize() {
 void
 GraphicManager::render() {
 	auto& logger = Logger::MLogger::get_instance();
-	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render start"));
+	// for testing.
+	for (auto iter = m_registed_renderer.begin(); iter != m_registed_renderer.end(); iter++) {
 
+		NativeGraphics::NativeGraphicsManager::get_instance()->render();
+	}
 
 	
-	//NativeGraphics::NativeGraphicsManager::get_instance()->render()
 
 
-	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render end"));
+	logger.debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, MTEXT("render ed"));
 }
 
 void
