@@ -1,6 +1,7 @@
 #pragma once
 #include "Commons.h"
 #include <Graphics/graphics_defined.h>
+#include <Logger/Logger.h>
 namespace Machi {
 
 
@@ -29,7 +30,7 @@ namespace Machi {
 
 			inline ID3D12Device* operator->() { return m_device.Get(); };
 			HRESULT create_fence(MUINT init_value, Machi::Graphics::FenceFlags flag, ComPtr<ID3D12Fence> fence_com_ptr);
-			HRESULT create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12CommandQueue> command_queue);
+			HRESULT create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc,  ComPtr<ID3D12CommandQueue>& command_queue);
 		public:
 			~Device() { m_device.Reset(); };
 		};

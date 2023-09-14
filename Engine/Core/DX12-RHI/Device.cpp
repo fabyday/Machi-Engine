@@ -48,7 +48,8 @@ bool Device::init_device(bool debug_mode)
 	try {
 
 	ComPtr<IDXGIAdapter1> hardwareAdapter;
-	GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+	//GetHardwareAdapter(factory.Get(), &hardwareAdapter, true);
+	GetHardwareAdapter(factory.Get(), &hardwareAdapter, false);
 
 	ThrowIfFailed(D3D12CreateDevice(
 		hardwareAdapter.Get(),
@@ -68,10 +69,15 @@ bool Device::init_device(bool debug_mode)
 
 HRESULT 
 Device::create_fence(MUINT init_value, Machi::Graphics::FenceFlags flag, ComPtr<ID3D12Fence> fence_com_ptr) {
-	
+	//Machi::Logger::MLogger::get_instance().debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, &fence_com_ptr);
+	//Machi::Logger::MLogger::get_instance().debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, fence_com_ptr);
+	//Machi::Logger::MLogger::get_instance().debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, fence_com_ptr.Get());
+	//Machi::Logger::MLogger::get_instance().debug(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, fence_com_ptr.GetAddressOf());
+
 	return m_device->CreateFence(init_value, fence_flag_convert(flag), IID_PPV_ARGS(&fence_com_ptr));
 }
 HRESULT 
-Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12CommandQueue> command_queue) {
+Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12CommandQueue>& command_queue) {
 	return m_device->CreateCommandQueue(desc, IID_PPV_ARGS(&command_queue));
 }
+

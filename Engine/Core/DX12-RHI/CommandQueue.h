@@ -1,5 +1,6 @@
 #pragma once
 #include "Device.h"
+#include <iostream>
 namespace Machi {
 
 	namespace NativeGraphics {
@@ -14,7 +15,11 @@ namespace Machi {
 
 
 			inline ID3D12CommandQueue* operator->() { return m_command_queue.Get(); };
-			inline ID3D12CommandQueue* Get() { return m_command_queue.Get(); };
+			inline ID3D12CommandQueue* Get() { 
+				std::cout << m_command_queue.Get() << std::endl;
+				return m_command_queue.Get(); 
+			
+			};
 			bool execute_command();
 		};
 	}

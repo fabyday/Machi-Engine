@@ -35,7 +35,7 @@ namespace Machi {
 				bool fullscreen = false;
 			} ready_flag;
 
-			bool init(std::shared_ptr<CommandQueue> cmd_queue);
+			bool init(std::shared_ptr<CommandQueue>& cmd_queue);
 
 			inline SwapChain& set_command_queue(std::shared_ptr<CommandQueue> queue = NULL) {
 				ready_flag.command_queue = true;
@@ -73,7 +73,8 @@ namespace Machi {
 				ready_flag.Format = true;
 				switch (format) {
 				case ResourceFormat::MACHI_FORMAT_R32G32B32_FLOAT:
-					m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+					//m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+					m_swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 					break;
 				default:
 					m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;

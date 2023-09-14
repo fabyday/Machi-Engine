@@ -2,9 +2,9 @@
 #include <iostream>
 using namespace Machi::NativeGraphics;
 #include "dxhelper.h"
-bool SwapChain::init(std::shared_ptr<CommandQueue> cmd_queue)
+bool SwapChain::init(std::shared_ptr<CommandQueue>& cmd_queue)
 {
-
+	m_command_queue = cmd_queue;
 	// Describe and create the swap chain.
 	if (!(ready_flag.Width && ready_flag.Height))
 		set_viewport(1920, 1080);
@@ -32,12 +32,13 @@ bool SwapChain::init(std::shared_ptr<CommandQueue> cmd_queue)
 		return false;
 	}
 
-
+	std::cout << m_command_queue->Get() << std::endl;
 	ComPtr<IDXGISwapChain1> swapchain;
 	try {
 
 		ThrowIfFailed(factory->CreateSwapChainForHwnd(
-			m_command_queue->Get(),        // Swap chain needs the queue so that it can force a flush on it.
+			//m_command_queue-> Get(),        // Swap chain needs the queue so that it can force a flush on it.
+			m_command_queue->m_command_queue.Get(),
 			m_target_hwnd,
 			&m_swapchain_desc,
 			nullptr,

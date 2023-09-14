@@ -6,6 +6,8 @@ using namespace Machi::NativeGraphics;
 
 
 bool GraphicsSyncManager::create(std::shared_ptr<Device> device, MUINT64 fence_size) {
+    m_fence_size = fence_size;
+
     ThrowIfFailed(device->create_fence(0, FenceFlags::MACHI_FENCE_FLAG_NONE, m_fence));
     std::make_unique<UINT64[]>(m_fence_size);
     for (int i = 0; i < m_fence_size; i++)
