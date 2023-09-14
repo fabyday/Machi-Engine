@@ -3,13 +3,15 @@
 #include <iostream>
 #include <Graphics/graphics_defined.h>
 using namespace Machi::NativeGraphics;
+#include <iostream>
 
 
 bool GraphicsSyncManager::create(std::shared_ptr<Device> device, MUINT64 fence_size) {
     m_fence_size = fence_size;
+    m_fence_value.resize(m_fence_size);
+    
 
     ThrowIfFailed(device->create_fence(0, FenceFlags::MACHI_FENCE_FLAG_NONE, m_fence));
-    std::make_unique<UINT64[]>(m_fence_size);
     for (int i = 0; i < m_fence_size; i++)
         m_fence_value[i] = 1;
     m_fence_size = fence_size;

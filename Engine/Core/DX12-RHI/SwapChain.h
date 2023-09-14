@@ -69,17 +69,22 @@ namespace Machi {
 				return *this;
 			}
 
-			inline SwapChain& set_foramt(ResourceFormat format = MACHI_FORMAT_R32G32B32_FLOAT) {
-				ready_flag.Format = true;
+			inline SwapChain& set_foramt(ResourceFormat format = MACHI_FORMAT_R8G8B8A8_UNORM) {
+				// https://learn.microsoft.com/ko-kr/windows/win32/api/dxgi1_2/ns-dxgi1_2-dxgi_swap_chain_desc1
+				ready_flag.Format = true; 
 				switch (format) {
-				case ResourceFormat::MACHI_FORMAT_R32G32B32_FLOAT:
-					//m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+				case ResourceFormat::MACHI_FORMAT_R8G8B8A8_UNORM:
 					m_swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 					break;
-				default:
-					m_swapchain_desc.Format = DXGI_FORMAT_R32G32B32_FLOAT;
+				case ResourceFormat::MACHI_FORMAT_B8G8R8A8_UNORM:
+					m_swapchain_desc.Format = DXGI_FORMAT_B8G8R8A8_UNORM;
 					break;
-
+				case ResourceFormat::MACHI_FORMAT_R16G16B16A16_FLOAT:
+					m_swapchain_desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+					break;
+				default:
+					m_swapchain_desc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+					break;
 				}
 				return *this;
 
