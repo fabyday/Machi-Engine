@@ -19,7 +19,6 @@
 //OTHER DEALINGS IN THE SOFTWARE.
 #pragma once
 #include <Windows.h>
-#include <Application/application.h>
 #include "../platform_config.h"
 #include "types.h"
 #include <functional>
@@ -28,7 +27,10 @@
 
 
 
+
+
 namespace Machi {
+	class Application; // fowoard decl
 	namespace Platform {
 
 		class WindowsPlatform;
@@ -49,7 +51,7 @@ namespace Machi {
 
 			//Machi::Application* m_app;
 
-			bool initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height);
+			bool initialize(Application* app);
 			//bool initialize(Machi::Application* app);
 			static LRESULT CALLBACK WindowProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 			static HWND get_HWND() { return hwnd_; }
@@ -83,7 +85,7 @@ namespace Machi {
 
 
 
-
+			Application* m_app;
 			static void set_HWND(HWND hwnd) { hwnd_ = hwnd; }
 			static HWND hwnd_;
 			static struct OSContext ctx_;

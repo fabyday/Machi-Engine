@@ -45,6 +45,11 @@ namespace Machi {
 			static GraphicManager* manager_;
 
 
+			MUINT64 m_rendered_per_sec;
+			MUINT64 m_rendered_avg;
+			MUINT64 m_total_rendered_screen;
+
+
 			GraphicsContext* graphics_context_;
 			static const MUINT frame_count_ = 2;
 
@@ -61,10 +66,11 @@ namespace Machi {
 			virtual void destroy();
 
 
+			std::vector<std::shared_ptr<Renderer>> m_registed_renderer;
 
 			GraphicManager() :n_frame_(0) {};
 
-			bool regist_renderer();
+			bool regist_renderer(std::shared_ptr<Renderer> regist_renderer);
 			Buffer* make_buffer();
 
 		public:

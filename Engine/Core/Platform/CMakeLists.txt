@@ -24,7 +24,7 @@ elseif(APPLE)
 elseif(UNIX AND NOT APPLE) # linux;
 endif()
 
-list(APPEND target_libs Logger Graphics IO Geometry)
+list(APPEND target_libs Logger Graphics IO Geometry Application)
 ADD_MACHI_LIBRARY(Platform "${platform_src}" "${target_libs}" "${symbol_libs}")
 TARGET_CONFIGURE_SETUP(Platform "PLATFORM")
 target_include_directories(Platform_object PUBLIC  "windows") # Windows or Apple, and Core Module Path("../..")

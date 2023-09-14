@@ -69,10 +69,7 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 
 	Application* app = machi_main(__argc, __argv);
 	
-	Machi::Platform::g_platform->initialize_function = std::bind(&Application::_initialize, app);
-	Machi::Platform::g_platform->run_logic= std::bind(&Application::_run_logic, app);
-	Machi::Platform::g_platform->finalize_function = std::bind(&Application::_finalize, app);
-	Machi::Platform::g_platform->initialize(app->get_appname().c_str(), app->get_x_pos(), app->get_y_pos(), app->get_width(), app->get_height());
+	Machi::Platform::g_platform->initialize(app);
 
 	int ret = Machi::Platform::g_platform->run(__argc, __argv);
 	

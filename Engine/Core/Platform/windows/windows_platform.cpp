@@ -30,7 +30,7 @@
 #include "types.h"
 #include <stdexcept>
 #include <Logger/Logger.h>
-
+#include <Application/application.h>
 namespace Machi {
     namespace Platform {
     WindowsPlatform* g_platform = nullptr;
@@ -45,16 +45,18 @@ bool
 //WindowsPlatform::initialize(Machi::Application* app) {
     //if(app != nullptr)
         //m_app = app;
-WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, MUINT height) {
+WindowsPlatform::initialize(Machi::Application* app) {
     // window initialize.
+    
+    if(app != nullptr)
+        m_app = app;
+    
+    //, , ,
     const struct OSContext* context = &WindowsPlatform::ctx_;
     //const struct OSContext* context = nullptr;
-    const MWCHAR* app_name = name;
-    //spdlog::info(L"app name : {}", app_name);
-    //info(L"test{}", app_name);
-    //Logger::MLogger::get_instance().info(MACHI_DEFAULT_CONSOLE_LOGGER_NAME, L"app name : {}", app_name);
 
 
+    const MWCHAR* app_name = app->get_appname().c_str();
 
     WNDCLASSEX windowClass = { 0 };
     windowClass.cbSize = sizeof(WNDCLASSEX);
@@ -66,7 +68,7 @@ WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, M
 
     RegisterClassEx(&windowClass);
     
-    RECT windowRect = { x, y, static_cast<MLONG>(width), static_cast<MLONG>(height)};
+    RECT windowRect = { app->get_x_pos(), app->get_y_pos(), static_cast<MLONG>(app->get_width()), static_cast<MLONG>(app->get_height())};
 
 
     AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
@@ -98,18 +100,7 @@ WindowsPlatform::initialize(const MWCHAR* name, MUINT x, MUINT y, MUINT width, M
     ShowWindow(_handle, context->nCmdShow);
 
 
-
-
-    //// directX Graphics components initialize.
-    //try {
-
-    //    GraphicManager::get_instance()->initialize(m_app);
-    //}
-    //catch (std::runtime_error e) {
-    //    std::cerr << e.what() << std::endl;
-    //    return false;
-    //}
-    this->initialize_function();
+    app->initialize();
     return true;
 }
 
@@ -178,7 +169,7 @@ WindowsPlatform::_run_logic() {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
         }
-        this->run_logic();
+        m_app->_run_logic();
     }
 
     return true;
