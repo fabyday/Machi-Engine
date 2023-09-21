@@ -3,7 +3,7 @@
 
 
 
-set(graphics_src  "GraphicManager.cpp"  "machi_graphics.cpp" )
+set(graphics_src  "GraphicManager.cpp"  "machi_graphics.cpp" "Renderer.cpp")
 set(target_libs)
 set(symbol_libs)
 

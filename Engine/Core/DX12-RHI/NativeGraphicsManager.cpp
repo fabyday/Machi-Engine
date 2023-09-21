@@ -27,3 +27,36 @@ bool NativeGraphicsManager::initialize()
 	}
 	return true;
 }
+
+bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
+{
+
+	PipeLineState* ptr = new PipeLineState;
+	m_pipelines.push_back(ptr);
+
+	return false;
+}
+
+bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_root_signature()
+{
+	RootSignature* ptr = new RootSignature;
+	m_rootsignatures.push_back(ptr);
+	return true;
+}
+
+bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi::Graphics::Renderer> object)
+{
+
+
+
+	if (object == nullptr)
+		return false;
+	object->get_mesh();;\
+	
+	
+
+	
+
+
+	return true;
+}

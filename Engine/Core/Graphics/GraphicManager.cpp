@@ -72,7 +72,7 @@ GraphicManager::render() {
 	// for testing.
 	for (auto iter = m_registed_renderer.begin(); iter != m_registed_renderer.end(); iter++) {
 
-		NativeGraphics::NativeGraphicsManager::get_instance()->render();
+		NativeGraphics::NativeGraphicsManager::get_instance()->render(*iter);
 	}
 
 	
@@ -89,8 +89,3 @@ GraphicManager::destroy() {
 
 
 
-
-Buffer*
-GraphicManager::make_buffer() {
-    return nullptr;
-}

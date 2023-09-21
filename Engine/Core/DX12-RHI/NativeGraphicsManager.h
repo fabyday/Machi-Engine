@@ -12,6 +12,8 @@
 #include "Synchronizer.h"
 #include "DescriptorHeap.h"
 
+
+#include <Graphics/Renderer.h>
 #include <memory>
 
 
@@ -28,11 +30,11 @@ namespace Machi{
 
 
 
-			std::vector<RootSignature> m_rootsignatures;
-			std::vector<DescriptorHeap> m_descriptor_heaps;
+			std::vector<RootSignature*> m_rootsignatures;
+			std::vector<DescriptorHeap*> m_descriptor_heaps;
 			DescriptorHeap m_rtv; //redner descriptor heap
 			DescriptorHeap m_dsv; //depth stencil descriptor heap
-			std::vector<PipeLineState> m_pipelines;
+			std::vector<PipeLineState*> m_pipelines;
 
 
 
@@ -44,25 +46,32 @@ namespace Machi{
 		public:
 
 			bool initialize();
+			bool initialize_default_PSO();
+			bool initialize_default_root_signature();
+
+
 			static NativeGraphicsManager* get_instance() {
 				if (!instance_) {
 					instance_ = new NativeGraphicsManager();
 				}
 				return instance_;
 			}
-			Texture* alloc_texture2d(MUINT width, MUINT height);
-			Texture* alloc_texture3d(MUINT width, MUINT height, MUINT depth);
-			Texture* alloc_texture1d(MUINT size);
+			Texture* alloc_textureR(MUINT R);
+			Texture* alloc_textureRG(MUINT R, MUINT B);
+			Texture* alloc_textureRGB(MUINT R, MUINT G, MUINT B);
+			Texture* alloc_textureRGBA(MUINT R, MUINT G, MUINT B, MUINT A);
 
 			Buffer* alloc_buffer(MUINT byte_size);
 			PipeLineState* alloc_pso();
+
+
 
 			// handle root params
 			InputLayoutSpecifier* create_input_layout();
 			RenderObject* create_render_object(InputLayoutSpecifier* specifier);
 
 
-			bool render(RenderObject* object);
+			bool render(std::shared_ptr<Machi::Graphics::Renderer> object); //render it directly on gameview and editor view.
 
 
 		};

@@ -66,18 +66,17 @@ namespace Machi {
 			virtual void destroy();
 
 
+
 			std::vector<std::shared_ptr<Renderer>> m_registed_renderer;
 
 			GraphicManager() :n_frame_(0) {};
 
 			bool regist_renderer(std::shared_ptr<Renderer> regist_renderer);
-			Buffer* make_buffer();
 
 		public:
 			static GraphicManager* get_instance();
 
-
-
+			std::shared_ptr<Buffer> make_buffer();
 			std::shared_ptr<Renderer> make_renderer();
 
 
