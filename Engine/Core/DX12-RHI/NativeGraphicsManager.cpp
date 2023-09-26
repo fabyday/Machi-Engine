@@ -28,19 +28,38 @@ bool NativeGraphicsManager::initialize()
 	return true;
 }
 
+
+
+
 bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 {
+	auto p_pso = std::make_shared<PipeLineState>();
+	p_pso->set_rootsignature(this->m_rootsignatures[0]);
+	std::shared_ptr<Shader> pixel_shader = std::make_shared<Shader>();
+	std::shared_ptr<Shader> vertex_shader = std::make_shared<Shader>();
+	
+	p_pso->add_shader(vertex_shader);
+	p_pso->add_shader(pixel_shader);
+	p_pso->set_primitive_topology_type(Machi::Graphics::MACHI_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
+	p_pso->set_render_target_format(Machi::Graphics::MACHI_FORMAT_R32G32B32A32_FLOAT); //TODO
+	p_pso->set_depth_stencil_state(true, true);
+	p_pso->set_num_render_target(m_swapchain->get_frame_num());
+	p_pso->add_input_schema();
+	m_pipelines.emplace_back(p_pso);
 
-	PipeLineState* ptr = new PipeLineState;
-	m_pipelines.push_back(ptr);
-
-	return false;
+	return true;
 }
 
 bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_root_signature()
 {
-	RootSignature* ptr = new RootSignature;
-	m_rootsignatures.push_back(ptr);
+	auto p_signature = std::make_shared < RootSignature>();
+	RootParameter root_param;
+	root_param.add_inline_cbv(16, 0); // world mat
+	root_param.add_inline_cbv(16, 1); // camera mat
+	root_param.add_inline_cbv(16, 2); // proj mat
+	p_signature->init(this->m_device, root_param);
+	
+	m_rootsignatures.emplace_back(p_signature);
 	return true;
 }
 
@@ -51,12 +70,9 @@ bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi:
 
 	if (object == nullptr)
 		return false;
-	object->get_mesh();;\
+	std::shared_ptr<Machi::Geometry::Mesh> mesh =  object->get_mesh();
 	
 	
-
-	
-
 
 	return true;
 }

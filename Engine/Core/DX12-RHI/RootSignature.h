@@ -18,7 +18,7 @@ namespace Machi {
 
 
 
-			void init(Device& device, RootParameter& params);
+			void init(std::shared_ptr<Device> device, RootParameter& params);
 
 			inline ID3D12RootSignature* Get() { return m_rootsignature.Get(); };
 

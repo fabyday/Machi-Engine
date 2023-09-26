@@ -17,16 +17,16 @@ namespace Machi {
 			std::map<MSTRING, Shader> m_shader;
 			std::vector<D3D12_INPUT_ELEMENT_DESC> m_input_desc;
 			MUINT m_input_offset;
-
+		public:
 			//PipeLineState& add_vertex_shader(const MSTRING& filename);
 			//PipeLineState& add_vertex_shader(Shader& shder);
 			//PipeLineState& add_pixel_shader(const MSTRING& filename);
 			//PipeLineState& add_pixel_shader(Shader& shader);
-			PipeLineState& add_shader(Shader& shader);
+			PipeLineState& add_shader(std::shared_ptr<Shader> shader);
 			//PipeLineState& add_shader(MSTRING& filename);
 
 
-			PipeLineState& set_rootsignature(RootSignature& rootsignature);
+			PipeLineState& set_rootsignature(std::shared_ptr<RootSignature> rootsignature);
 			PipeLineState& set_depth_stencil_state(bool depth, bool stencil);
 			PipeLineState& set_samplemask(MUINT sample_mask = UINT_MAX);
 			PipeLineState& set_primitive_topology_type(PrimitiveType type);

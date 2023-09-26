@@ -15,11 +15,11 @@
 
 #include <Graphics/Renderer.h>
 #include <memory>
-
+#include "dx12_rhi_config.h"
 
 namespace Machi{
 	namespace NativeGraphics {
-		class NativeGraphicsManager final {
+		class MACHI_DX12_RHI_API NativeGraphicsManager final {
 		private:
 			static NativeGraphicsManager* instance_;
 
@@ -30,11 +30,11 @@ namespace Machi{
 
 
 
-			std::vector<RootSignature*> m_rootsignatures;
+			std::vector<std::shared_ptr<RootSignature>> m_rootsignatures;
 			std::vector<DescriptorHeap*> m_descriptor_heaps;
 			DescriptorHeap m_rtv; //redner descriptor heap
 			DescriptorHeap m_dsv; //depth stencil descriptor heap
-			std::vector<PipeLineState*> m_pipelines;
+			std::vector<std::shared_ptr<PipeLineState>> m_pipelines;
 
 
 

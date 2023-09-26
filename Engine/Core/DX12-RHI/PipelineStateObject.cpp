@@ -3,7 +3,7 @@
 using namespace Machi::NativeGraphics;
 #include "dxhelper.h"
 
-PipeLineState& PipeLineState::add_shader(Shader& shader)
+PipeLineState& PipeLineState::add_shader(std::shared_ptr<Shader> shader)
 {
 
 	// TODO: insert return statement here

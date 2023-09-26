@@ -2,7 +2,7 @@
 
 #include "dxhelper.h"
 using namespace Machi::NativeGraphics;
-void RootSignature::init(Device& device, RootParameter& root_params) {
+void RootSignature::init(std::shared_ptr<Device> device, RootParameter& root_params) {
     
     D3D12_FEATURE_DATA_ROOT_SIGNATURE featureData = {};
 
