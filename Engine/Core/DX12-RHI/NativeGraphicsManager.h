@@ -56,13 +56,13 @@ namespace Machi{
 				}
 				return instance_;
 			}
-			Texture* alloc_textureR(MUINT R);
-			Texture* alloc_textureRG(MUINT R, MUINT B);
-			Texture* alloc_textureRGB(MUINT R, MUINT G, MUINT B);
-			Texture* alloc_textureRGBA(MUINT R, MUINT G, MUINT B, MUINT A);
+			std::shared_ptr<Texture> alloc_textureR(MUINT R);
+			std::shared_ptr<Texture> alloc_textureRG(MUINT R, MUINT G);
+			std::shared_ptr<Texture> alloc_textureRGB(MUINT R, MUINT G, MUINT B);
+			std::shared_ptr<Texture> alloc_textureRGBA(MUINT R, MUINT G, MUINT B, MUINT A);
 
-			Buffer* alloc_buffer(MUINT byte_size);
-			PipeLineState* alloc_pso();
+			std::shared_ptr<Buffer> alloc_buffer(MUINT byte_size);
+			std::shared_ptr<PipeLineState> alloc_pso();
 
 
 

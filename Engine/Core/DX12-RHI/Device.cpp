@@ -81,3 +81,22 @@ Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12Comman
 	return m_device->CreateCommandQueue(desc, IID_PPV_ARGS(&command_queue));
 }
 
+HRESULT Machi::NativeGraphics::Device::create_root_signature(MUINT node_mask, const void* buf_ptr, MUINT buf_size, ComPtr<ID3D12RootSignature> root_sig)
+{
+
+
+	return m_device->CreateRootSignature(node_mask, buf_ptr, buf_size, IID_PPV_ARGS(&root_sig));
+	
+}
+
+HRESULT Machi::NativeGraphics::Device::check_feature_support(D3D12_FEATURE Feature, void* pFeatureSupportData, UINT FeatureSupportDataSize) {
+
+	return m_device->CheckFeatureSupport(Feature, pFeatureSupportData, FeatureSupportDataSize);
+}
+
+HRESULT Machi::NativeGraphics::Device::create_graphics_pipelinestate(const D3D12_GRAPHICS_PIPELINE_STATE_DESC* p_desc, ComPtr<ID3D12PipelineState> m_pipeline_object) {
+
+
+	return m_device->CreateGraphicsPipelineState(p_desc, IID_PPV_ARGS(&m_pipeline_object));
+
+}

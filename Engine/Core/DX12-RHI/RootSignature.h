@@ -25,6 +25,7 @@ namespace Machi {
 
 			friend class NativeGraphicsManager;
 			friend class PipeLineState;
+			friend class Device;
 
 
 

@@ -9,7 +9,7 @@ void RootSignature::init(std::shared_ptr<Device> device, RootParameter& root_par
     // This is the highest version the sample supports. If CheckFeatureSupport succeeds, the HighestVersion returned will not be greater than this.
     featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_1;
 
-    if (FAILED(device->CheckFeatureSupport(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
+    if (FAILED(device->check_feature_support(D3D12_FEATURE_ROOT_SIGNATURE, &featureData, sizeof(featureData))))
     {
         featureData.HighestVersion = D3D_ROOT_SIGNATURE_VERSION_1_0;
     }
@@ -27,6 +27,8 @@ void RootSignature::init(std::shared_ptr<Device> device, RootParameter& root_par
     ComPtr<ID3DBlob> signature;
     ComPtr<ID3DBlob> error;
     ThrowIfFailed(D3D12SerializeRootSignature(&rootsignature_desc, featureData.HighestVersion, &signature, &error));
-    ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootsignature)));
+    //ThrowIfFailed(device->CreateRootSignature(0, signature->GetBufferPointer(), signature->GetBufferSize(), IID_PPV_ARGS(&m_rootsignature)));
+
+    ThrowIfFailed(device->create_root_signature(0, signature->GetBufferPointer(), signature->GetBufferSize(), m_rootsignature));
 
 }

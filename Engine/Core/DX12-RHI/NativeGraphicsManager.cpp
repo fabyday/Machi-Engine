@@ -25,6 +25,8 @@ bool NativeGraphicsManager::initialize()
 	if (!m_sync_manager->create(m_device, m_swapchain->get_frame_num())) {
 		return false;
 	}
+	initialize_default_root_signature();
+	initialize_default_PSO();
 	return true;
 }
 
@@ -37,14 +39,19 @@ bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 	p_pso->set_rootsignature(this->m_rootsignatures[0]);
 	std::shared_ptr<Shader> pixel_shader = std::make_shared<Shader>();
 	std::shared_ptr<Shader> vertex_shader = std::make_shared<Shader>();
-	
+
 	p_pso->add_shader(vertex_shader);
 	p_pso->add_shader(pixel_shader);
 	p_pso->set_primitive_topology_type(Machi::Graphics::MACHI_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
 	p_pso->set_render_target_format(Machi::Graphics::MACHI_FORMAT_R32G32B32A32_FLOAT); //TODO
 	p_pso->set_depth_stencil_state(true, true);
 	p_pso->set_num_render_target(m_swapchain->get_frame_num());
-	p_pso->add_input_schema();
+	
+
+	p_pso->add_input_schema(MTEXT("POSITION"), MACHI_FORMAT_R32G32B32_FLOAT, MACHI_PER_VERTEX, 0, 0, 0, 12);
+
+
+	p_pso->build(m_device);
 	m_pipelines.emplace_back(p_pso);
 
 	return true;
@@ -72,7 +79,7 @@ bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi:
 		return false;
 	std::shared_ptr<Machi::Geometry::Mesh> mesh =  object->get_mesh();
 	
-	
+	//m_command_allocator->
 
 	return true;
 }

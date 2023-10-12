@@ -31,6 +31,9 @@ namespace Machi {
 			inline ID3D12Device* operator->() { return m_device.Get(); };
 			HRESULT create_fence(MUINT init_value, Machi::Graphics::FenceFlags flag, ComPtr<ID3D12Fence>& fence_com_ptr);
 			HRESULT create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc,  ComPtr<ID3D12CommandQueue>& command_queue);
+			HRESULT check_feature_support(D3D12_FEATURE Feature, void* pFeatureSupportData,	UINT FeatureSupportDataSize);
+			HRESULT create_root_signature(MUINT node_mask, const void* buf_ptr, MUINT buf_size, ComPtr<ID3D12RootSignature> root_sig);
+			HRESULT create_graphics_pipelinestate(const D3D12_GRAPHICS_PIPELINE_STATE_DESC* p_desc, ComPtr<ID3D12PipelineState> m_pipeline_object);
 		public:
 			~Device() { m_device.Reset(); };
 		};

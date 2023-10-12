@@ -35,11 +35,11 @@ namespace Machi {
 			PipeLineState& set_sample_count(SampleType count);
 
 
-			PipeLineState& add_input_schema(MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type,
+			PipeLineState& add_input_schema(const MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type,
 				MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate);
 
 
-			bool build(Device& device);
+			bool build(std::shared_ptr<Device> device);
 		};
 	}
 }

@@ -7,21 +7,21 @@ PipeLineState& PipeLineState::add_shader(std::shared_ptr<Shader> shader)
 {
 
 	// TODO: insert return statement here
-	switch (shader.m_type) {
+	switch (shader->m_type) {
 	case MACHI_VERTEX_SHADER:
-		m_desc.VS = shader.Get();
+		m_desc.VS = shader->Get();
 		break;
 	case MACHI_PIXEL_SHADER:
-		m_desc.PS = shader.Get();
+		m_desc.PS = shader->Get();
 		break;
 
 	}
 	return *this;
 }
 
-PipeLineState& PipeLineState::set_rootsignature(RootSignature& rootsignature)
+PipeLineState& PipeLineState::set_rootsignature(std::shared_ptr<RootSignature> rootsignature)
 {
-	m_desc.pRootSignature = rootsignature.Get();
+	m_desc.pRootSignature = rootsignature->Get();
 	return *this;
 }
 
@@ -92,7 +92,7 @@ PipeLineState& PipeLineState::set_sample_count(SampleType type)
 }
 
 
-PipeLineState& PipeLineState::add_input_schema(MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate)
+PipeLineState& PipeLineState::add_input_schema(const MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate)
 {
 	std::string asci_name(name.begin(), name.end());
 	//asci_name.assign(name.begin(), name.end());
@@ -102,7 +102,7 @@ PipeLineState& PipeLineState::add_input_schema(MSTRING& name, ShaderInputFormat 
 	return *this;
 }
 
-bool PipeLineState::build(Device& device)
+bool PipeLineState::build(std::shared_ptr<Device> device)
 {
 
 
@@ -113,6 +113,6 @@ bool PipeLineState::build(Device& device)
 	m_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	m_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
 
-	ThrowIfFailed(device->CreateGraphicsPipelineState(&m_desc, IID_PPV_ARGS(&m_pipeline_object)));
+	ThrowIfFailed(device->create_graphics_pipelinestate(&m_desc, m_pipeline_object));
 	return true;
 }
