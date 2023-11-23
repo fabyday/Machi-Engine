@@ -39,7 +39,13 @@ bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 	p_pso->set_rootsignature(this->m_rootsignatures[0]);
 	std::shared_ptr<Shader> pixel_shader = std::make_shared<Shader>();
 	std::shared_ptr<Shader> vertex_shader = std::make_shared<Shader>();
-
+	
+	pixel_shader->set_shader_type(Machi::Graphics::ShaderType::MACHI_PIXEL_SHADER);
+	pixel_shader->set_function_from_file(MESH_RESOURCE_DIRECTORY"/test_pixel_shader.hlsl", MTEXT("PSMain"));
+	vertex_shader->set_shader_type(Machi::Graphics::ShaderType::MACHI_VERTEX_SHADER);
+	pixel_shader->set_function_from_file(MESH_RESOURCE_DIRECTORY"/test_vertex_shader.hlsl", MTEXT("VSMain"));
+	vertex_shader->create();
+	pixel_shader->create();
 	p_pso->add_shader(vertex_shader);
 	p_pso->add_shader(pixel_shader);
 	p_pso->set_primitive_topology_type(Machi::Graphics::MACHI_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);

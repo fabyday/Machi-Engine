@@ -31,6 +31,7 @@
 #include <stdexcept>
 #include <Logger/Logger.h>
 #include <Application/application.h>
+#include <Graphics/GraphicManager.h>
 namespace Machi {
     namespace Platform {
     WindowsPlatform* g_platform = nullptr;
@@ -101,6 +102,7 @@ WindowsPlatform::initialize(Machi::Application* app) {
 
 
     app->initialize();
+    
     return true;
 }
 

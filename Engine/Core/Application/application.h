@@ -31,6 +31,7 @@
 #include <Platform/types.h>
 #include <Platform/inputs.h>
 #include <Components/Renderer.h>
+#include <Graphics/GraphicManager.h>
 //#include <Platform/windows/windows_platform.h>
 //#include <World/SceneManager.h>
 
@@ -115,7 +116,11 @@ namespace Machi {
 
 	public:
 		// game app overload this method. it will be executed at first time.
-		virtual bool initialize() { return false; };
+		virtual bool initialize() { 
+			
+			Machi::Graphics::GraphicManager::get_instance()->initialize();
+
+			return true; };
 		virtual bool finalize() { return false; };
 		virtual bool update();
 		virtual bool fixed_update();

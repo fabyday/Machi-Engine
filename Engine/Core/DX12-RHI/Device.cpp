@@ -81,11 +81,11 @@ Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12Comman
 	return m_device->CreateCommandQueue(desc, IID_PPV_ARGS(&command_queue));
 }
 
-HRESULT Machi::NativeGraphics::Device::create_root_signature(MUINT node_mask, const void* buf_ptr, MUINT buf_size, ComPtr<ID3D12RootSignature> root_sig)
+HRESULT Machi::NativeGraphics::Device::create_root_signature(MUINT node_mask, const void* buf_ptr, MUINT buf_size, ComPtr<ID3D12RootSignature>& root_sig)
 {
 
-
-	return m_device->CreateRootSignature(node_mask, buf_ptr, buf_size, IID_PPV_ARGS(&root_sig));
+	HRESULT test = m_device->CreateRootSignature(node_mask, buf_ptr, buf_size, IID_PPV_ARGS(&root_sig));
+	return test;
 	
 }
 

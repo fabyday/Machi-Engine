@@ -70,7 +70,6 @@ int WINAPI wWinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, PWSTR pCmdLine
 	Application* app = machi_main(__argc, __argv);
 	
 	Machi::Platform::g_platform->initialize(app);
-
 	int ret = Machi::Platform::g_platform->run(__argc, __argv);
 	
 	//spdlog::shutdown();
