@@ -30,9 +30,6 @@ bool NativeGraphicsManager::initialize()
 	return true;
 }
 
-
-
-
 bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 {
 	auto p_pso = std::make_shared<PipeLineState>();
@@ -41,23 +38,31 @@ bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 	std::shared_ptr<Shader> vertex_shader = std::make_shared<Shader>();
 	
 	pixel_shader->set_shader_type(Machi::Graphics::ShaderType::MACHI_PIXEL_SHADER);
-	pixel_shader->set_function_from_file(MESH_RESOURCE_DIRECTORY"/test_pixel_shader.hlsl", MTEXT("PSMain"));
+	MSTRING pixel = SHADER_RESOURCE_DIRECTORY"/test_pixel_shader.hlsl";
+	pixel_shader->set_function_from_file(pixel, MTEXT("PSMain"));
 	vertex_shader->set_shader_type(Machi::Graphics::ShaderType::MACHI_VERTEX_SHADER);
-	pixel_shader->set_function_from_file(MESH_RESOURCE_DIRECTORY"/test_vertex_shader.hlsl", MTEXT("VSMain"));
+
+	MSTRING txt = SHADER_RESOURCE_DIRECTORY"/test_vertex_shader.hlsl";
+	vertex_shader->set_function_from_file(txt, MTEXT("VSMain"));
 	vertex_shader->create();
 	pixel_shader->create();
 	p_pso->add_shader(vertex_shader);
 	p_pso->add_shader(pixel_shader);
 	p_pso->set_primitive_topology_type(Machi::Graphics::MACHI_PRIMITIVE_TOPOLOGY_TYPE_TRIANGLE);
-	p_pso->set_render_target_format(Machi::Graphics::MACHI_FORMAT_R32G32B32A32_FLOAT); //TODO
+	p_pso->set_render_target_format(Machi::Graphics::MACHI_FORMAT_R8G8B8A8_UNORM); //TODO
 	p_pso->set_depth_stencil_state(true, true);
 	p_pso->set_num_render_target(m_swapchain->get_frame_num());
 	
+	p_pso->set_samplemask(UINT_MAX);
 
-	p_pso->add_input_schema(MTEXT("POSITION"), MACHI_FORMAT_R32G32B32_FLOAT, MACHI_PER_VERTEX, 0, 0, 0, 12);
-
-
+	p_pso->add_input_schema(MTEXT("POSITION"), MACHI_FORMAT_R32G32B32_FLOAT, MACHI_PER_VERTEX, 0, 0, 0, 0);
+	p_pso->add_input_schema(MTEXT("COLOR"), MACHI_FORMAT_R32G32B32A32_FLOAT, MACHI_PER_VERTEX, 0, 0, 12, 0);
+	// Define the vertex input layout.
 	p_pso->build(m_device);
+
+
+
+
 	m_pipelines.emplace_back(p_pso);
 
 	return true;
@@ -67,9 +72,9 @@ bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_root_signa
 {
 	auto p_signature = std::make_shared < RootSignature>();
 	RootParameter root_param;
-	root_param.add_inline_cbv(16, 0); // world mat
-	root_param.add_inline_cbv(16, 1); // camera mat
-	root_param.add_inline_cbv(16, 2); // proj mat
+	//root_param.add_inline_cbv(16, 0); // world mat
+	//root_param.add_inline_cbv(16, 1); // camera mat
+	//root_param.add_inline_cbv(16, 2); // proj mat
 	p_signature->init(this->m_device, root_param);
 	
 	m_rootsignatures.emplace_back(p_signature);

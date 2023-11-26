@@ -94,9 +94,9 @@ HRESULT Machi::NativeGraphics::Device::check_feature_support(D3D12_FEATURE Featu
 	return m_device->CheckFeatureSupport(Feature, pFeatureSupportData, FeatureSupportDataSize);
 }
 
-HRESULT Machi::NativeGraphics::Device::create_graphics_pipelinestate(const D3D12_GRAPHICS_PIPELINE_STATE_DESC* p_desc, ComPtr<ID3D12PipelineState> m_pipeline_object) {
+HRESULT Machi::NativeGraphics::Device::create_graphics_pipelinestate(const D3D12_GRAPHICS_PIPELINE_STATE_DESC* p_desc, ComPtr<ID3D12PipelineState>& m_pipeline_object) {
 
-
-	return m_device->CreateGraphicsPipelineState(p_desc, IID_PPV_ARGS(&m_pipeline_object));
+	HRESULT res = m_device->CreateGraphicsPipelineState(p_desc, IID_PPV_ARGS(&m_pipeline_object));
+	return res;
 
 }

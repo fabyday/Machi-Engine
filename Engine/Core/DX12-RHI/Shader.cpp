@@ -36,6 +36,9 @@ void Shader::create()
 				break;
 			}
 		}
+		if (m_shader.Get() != nullptr) {
+			m_is_compiled = true;
+		}
 
 		// Define the vertex input layout.
 	}

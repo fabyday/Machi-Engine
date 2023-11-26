@@ -9,10 +9,10 @@ PipeLineState& PipeLineState::add_shader(std::shared_ptr<Shader> shader)
 	// TODO: insert return statement here
 	switch (shader->m_type) {
 	case MACHI_VERTEX_SHADER:
-		m_desc.VS = shader->Get();
+		m_desc.VS = CD3DX12_SHADER_BYTECODE(shader->Get());
 		break;
 	case MACHI_PIXEL_SHADER:
-		m_desc.PS = shader->Get();
+		m_desc.PS = CD3DX12_SHADER_BYTECODE(shader->Get());
 		break;
 
 	}
@@ -28,7 +28,9 @@ PipeLineState& PipeLineState::set_rootsignature(std::shared_ptr<RootSignature> r
 PipeLineState& PipeLineState::set_depth_stencil_state(bool depth, bool stencil)
 {
 	m_desc.DepthStencilState.DepthEnable = depth;
+	m_desc.DepthStencilState.DepthEnable = false;
 	m_desc.DepthStencilState.StencilEnable = stencil;
+	m_desc.DepthStencilState.StencilEnable = false;
 
 	return *this;
 }
@@ -94,9 +96,10 @@ PipeLineState& PipeLineState::set_sample_count(SampleType type)
 
 PipeLineState& PipeLineState::add_input_schema(const MSTRING& name, ShaderInputFormat format_type, ShaderInputType input_classfication_type, MUINT semantic_index, MUINT inputslot, MUINT alignment_by_offset, MUINT instance_data_step_rate)
 {
-	std::string asci_name(name.begin(), name.end());
+
+	std::string* asci_name = new std::string(name.begin(), name.end());
 	//asci_name.assign(name.begin(), name.end());
-	D3D12_INPUT_ELEMENT_DESC t = { asci_name.c_str(), semantic_index, resource_format_convert(format_type), inputslot, alignment_by_offset, shader_input_type_convert(input_classfication_type), instance_data_step_rate };
+	D3D12_INPUT_ELEMENT_DESC t = { asci_name->c_str(), semantic_index, resource_format_convert(format_type), inputslot, alignment_by_offset, shader_input_type_convert(input_classfication_type), instance_data_step_rate };
 	m_input_desc.push_back(t);
 	//m_input_desc.emplace_back();
 	return *this;
@@ -108,11 +111,16 @@ bool PipeLineState::build(std::shared_ptr<Device> device)
 
 
 	// Describe and create the graphics pipeline state object (PSO).
-	D3D12_GRAPHICS_PIPELINE_STATE_DESC pso_desc = {};
-	m_desc.InputLayout = { m_input_desc.data(), static_cast<MUINT>(m_input_desc.size())};
+	//pso_desc.SampleMask = UINT_MAX;
+
+	m_desc.InputLayout.pInputElementDescs = m_input_desc.data();
+	m_desc.InputLayout.NumElements = static_cast<MUINT>(m_input_desc.size());
 	m_desc.RasterizerState = CD3DX12_RASTERIZER_DESC(D3D12_DEFAULT);
 	m_desc.BlendState = CD3DX12_BLEND_DESC(D3D12_DEFAULT);
+	m_desc.SampleDesc.Count = 1;
+	HRESULT hr = device->create_graphics_pipelinestate(&m_desc, m_pipeline_object);
+	std::string hrstr = HrToString(hr);
 
-	ThrowIfFailed(device->create_graphics_pipelinestate(&m_desc, m_pipeline_object));
+	ThrowIfFailed(hr);
 	return true;
 }
