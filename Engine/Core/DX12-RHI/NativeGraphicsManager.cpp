@@ -67,6 +67,18 @@ bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_PSO()
 
 	return true;
 }
+bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_command_list()
+{
+	for (int i = 0; i < m_swapchain->get_frame_num(); i++) {
+		m_command_list.emplace_back(std::make_shared< Machi::NativeGraphics::CommandList>());
+		m_command_list[i]->initialize(m_device, m_command_allocator, m_pipelines[0]);
+	}
+
+		
+
+
+	return true;
+}
 
 bool Machi::NativeGraphics::NativeGraphicsManager::initialize_default_root_signature()
 {
@@ -93,4 +105,17 @@ bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi:
 	//m_command_allocator->
 
 	return true;
+}
+
+
+
+std::shared_ptr<Machi::NativeGraphics::Buffer> NativeGraphicsManager::alloc_buffer(MUINT byte_size) {
+	
+	
+	
+	m_buffer_list.emplace_back(std::make_shared<Machi::NativeGraphics::Buffer>());
+	std::shared_ptr<Machi::NativeGraphics::Buffer> buffer = *m_buffer_list.rbegin();
+	buffer->set_size(byte_size);
+	buffer->init(m_device);
+	return buffer;
 }

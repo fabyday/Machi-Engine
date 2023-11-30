@@ -4,7 +4,10 @@ using namespace Machi::Graphics;
 std::shared_ptr<Machi::Geometry::Mesh> 
 Renderer::get_mesh()
 {
-	return this->m_mesh[0];
+	if (this->m_mesh.size())
+		return this->m_mesh[0];
+	else
+		return nullptr;
 }
 
 Renderer&

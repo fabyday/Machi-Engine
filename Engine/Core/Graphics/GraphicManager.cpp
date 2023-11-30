@@ -42,7 +42,7 @@ GraphicManager::get_instance() {
 
 std::shared_ptr<Renderer> GraphicManager::make_renderer()
 {
-	std::shared_ptr<Renderer> p = std::shared_ptr<Renderer>();
+	std::shared_ptr<Renderer> p = std::make_shared<Renderer>();
 	regist_renderer(p);
 	return p;
 }

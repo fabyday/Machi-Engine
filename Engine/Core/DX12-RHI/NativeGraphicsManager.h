@@ -7,6 +7,7 @@
 #include "CommandQueue.h"
 #include "SwapChain.h"
 #include "CommandAllocator.h"
+#include "CommandList.h"
 #include "PipelineStateObject.h"
 #include "GraphicsCommand.h"
 #include "Synchronizer.h"
@@ -38,9 +39,16 @@ namespace Machi{
 
 
 
+			std::vector<std::shared_ptr<Buffer>> m_buffer_list;
+
+
+
 			std::shared_ptr<CommandQueue> m_command_queue;
+			std::vector<std::shared_ptr<CommandList>> m_command_list;
 			std::shared_ptr<CommandAllocator> m_command_allocator;
 			std::shared_ptr<GraphicsSyncManager> m_sync_manager;
+
+
 			class InputLayoutSpecifier;
 			class RenderObject;
 		public:
@@ -48,6 +56,7 @@ namespace Machi{
 			bool initialize();
 			bool initialize_default_PSO();
 			bool initialize_default_root_signature();
+			bool initialize_default_command_list();
 
 
 			static NativeGraphicsManager* get_instance() {
@@ -62,7 +71,10 @@ namespace Machi{
 			std::shared_ptr<Texture> alloc_textureRGBA(MUINT R, MUINT G, MUINT B, MUINT A);
 
 			std::shared_ptr<Buffer> alloc_buffer(MUINT byte_size);
+
 			std::shared_ptr<PipeLineState> alloc_pso();
+			std::shared_ptr<PipeLineState> get_default_pso();
+
 
 
 

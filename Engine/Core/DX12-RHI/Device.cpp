@@ -100,3 +100,15 @@ HRESULT Machi::NativeGraphics::Device::create_graphics_pipelinestate(const D3D12
 	return res;
 
 }
+
+HRESULT Machi::NativeGraphics::Device::create_command_list(UINT nodeMask, D3D12_COMMAND_LIST_TYPE type, ID3D12CommandAllocator* pCommandAllocator, ID3D12PipelineState* pInitialState, ComPtr<ID3D12GraphicsCommandList>& command_list)
+{
+	HRESULT res = m_device->CreateCommandList(nodeMask, type, pCommandAllocator, pInitialState, IID_PPV_ARGS(&command_list));
+	return res;
+}
+
+
+HRESULT Machi::NativeGraphics::Device::create_constant_buffer_view(D3D12_CONSTANT_BUFFER_VIEW_DESC* csv_desc, D3D12_CPU_DESCRIPTOR_HANDLE heap_cpu_handle)
+{
+	; m_device->CreateConstantBufferView(csv_desc, heap_cpu_handle);
+}

@@ -40,6 +40,7 @@ namespace Machi {
 
 
 			bool build(std::shared_ptr<Device> device);
+			ID3D12PipelineState* Get() { return m_pipeline_object.Get(); };
 		};
 	}
 }

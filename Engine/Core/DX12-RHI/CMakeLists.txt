@@ -1,7 +1,7 @@
 add_definitions("-DDX12_INNER_ONLY_INCLUDE")
 set(graphcis_header "Commons.h" "native_format_converter.h" "Matrix.h")
 set(graphics_src "RootSignature.cpp" "RootSignature.h" "NativeGraphicsManager.cpp" 
-"Device.cpp" "CommandQueue.cpp" "SwapChain.cpp" "CommandAllocator.cpp" 
+"Device.cpp" "CommandQueue.cpp" "SwapChain.cpp" "CommandAllocator.cpp" "CommandList.cpp"   "Buffer.cpp"
 "Synchronizer.cpp" "PipelineStateObject.cpp" "Shader.h" "Shader.cpp" "DescriptorHeap.cpp" "add_dx12.cpp"  "Matrix.cpp")
 set(symbol_libs)
 set(target_libs )

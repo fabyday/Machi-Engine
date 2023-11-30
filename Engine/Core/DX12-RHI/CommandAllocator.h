@@ -8,6 +8,7 @@ namespace Machi {
 	namespace NativeGraphics {
 		class CommandAllocator final {
 			friend class NativeGraphicsManager;
+			friend class CommandList;
 			enum CommandListType {
 				MACHI_COMMAND_LIST_TYPE_DIRECT = 0,
 				MACHI_COMMAND_LIST_TYPE_BUNDLE = 1,
@@ -25,6 +26,7 @@ namespace Machi {
 
 			bool create(Device& device);
 			ID3D12CommandAllocator* operator->() { return m_command_allocator.Get(); }
+			ID3D12CommandAllocator* Get() { return m_command_allocator.Get(); }
 
 
 

@@ -119,7 +119,7 @@ namespace Machi {
 		virtual bool initialize() { 
 			
 			Machi::Graphics::GraphicManager::get_instance()->initialize();
-
+			m_renderer->initialize();
 			return true; };
 		virtual bool finalize() { return false; };
 		virtual bool update();
