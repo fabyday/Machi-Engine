@@ -14,4 +14,5 @@ void Machi::Components::MeshRendererComponent::add_material(Machi::Geometry::Mat
 }
 void Machi::Components::MeshRendererComponent::add_meshes(Machi::Geometry::Mesh* mesh)
 {
+	m_meshes.emplace_back(mesh);
 }

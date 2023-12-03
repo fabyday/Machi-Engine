@@ -31,9 +31,9 @@ namespace Machi {
 
 			DescriptorHeap& init(Device& device);
 			inline bool is_init() { return m_is_init; };
-			inline bool connect_view(Device& device, IResource& resource) {
+			inline bool connect_view(std::shared_ptr<Device> device, std::shared_ptr<IResource> resource) {
 				if (m_cur_index < size()) {
-					resource.connect_to_heap(device, get_cpu_handle(m_cur_index++));
+					resource->connect_to_heap(device, get_cpu_handle(m_cur_index++));
 					return true;
 				}
 				return false;

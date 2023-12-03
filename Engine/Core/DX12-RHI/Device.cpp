@@ -83,7 +83,6 @@ Device::create_command_queue(D3D12_COMMAND_QUEUE_DESC* desc, ComPtr<ID3D12Comman
 
 HRESULT Machi::NativeGraphics::Device::create_root_signature(MUINT node_mask, const void* buf_ptr, MUINT buf_size, ComPtr<ID3D12RootSignature>& root_sig)
 {
-
 	HRESULT test = m_device->CreateRootSignature(node_mask, buf_ptr, buf_size, IID_PPV_ARGS(&root_sig));
 	return test;
 	
@@ -108,7 +107,24 @@ HRESULT Machi::NativeGraphics::Device::create_command_list(UINT nodeMask, D3D12_
 }
 
 
-HRESULT Machi::NativeGraphics::Device::create_constant_buffer_view(D3D12_CONSTANT_BUFFER_VIEW_DESC* csv_desc, D3D12_CPU_DESCRIPTOR_HANDLE heap_cpu_handle)
+void Machi::NativeGraphics::Device::create_constant_buffer_view(D3D12_CONSTANT_BUFFER_VIEW_DESC* csv_desc, D3D12_CPU_DESCRIPTOR_HANDLE heap_cpu_handle)
 {
-	; m_device->CreateConstantBufferView(csv_desc, heap_cpu_handle);
+	m_device->CreateConstantBufferView(csv_desc, heap_cpu_handle);
+
+}
+
+
+
+HRESULT 
+Machi::NativeGraphics::Device::create_commit_resource(
+	Machi::Graphics::HeapType heapprop, D3D12_HEAP_FLAGS HeapFlags, MUINT buffer_size, D3D12_RESOURCE_STATES InitialResourceState,
+	const D3D12_CLEAR_VALUE* pOptimizedClearValue, ComPtr<ID3D12Resource>& buffer)
+{
+
+	
+	return m_device->CreateCommittedResource(&CD3DX12_HEAP_PROPERTIES(heap_type_convert(heapprop)),
+		HeapFlags,
+		&CD3DX12_RESOURCE_DESC::Buffer(buffer_size),
+		InitialResourceState, pOptimizedClearValue,
+		IID_PPV_ARGS(&buffer));
 }

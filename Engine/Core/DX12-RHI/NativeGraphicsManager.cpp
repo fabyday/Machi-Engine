@@ -112,10 +112,11 @@ bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi:
 std::shared_ptr<Machi::NativeGraphics::Buffer> NativeGraphicsManager::alloc_buffer(MUINT byte_size) {
 	
 	
-	
-	m_buffer_list.emplace_back(std::make_shared<Machi::NativeGraphics::Buffer>());
-	std::shared_ptr<Machi::NativeGraphics::Buffer> buffer = *m_buffer_list.rbegin();
+	Machi::NativeGraphics::Buffer* buffer = new Machi::NativeGraphics::Buffer();
+	//m_buffer_list.emplace_back(std::make_shared<>());
+	//std::shared_ptr<Machi::NativeGraphics::Buffer> buffer = *m_buffer_list.rbegin();
 	buffer->set_size(byte_size);
 	buffer->init(m_device);
-	return buffer;
+	//return buffer;
+	return std::make_shared<Buffer>();
 }

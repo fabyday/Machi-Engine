@@ -1,43 +1,45 @@
 #include "Commons.h"
 #include "IResouce.h"
 #include <vector>
+#include "Device.h"
+#include "native_format_converter.h"
 #include <utility>
+#include "dxhelper.h"
+
+
+
 namespace Machi {
 	namespace NativeGraphics {
-		class Buffer : public IResource {
+		class Buffer : public Machi::NativeGraphics::IResource {
 			friend class DescriptorHeap;
 			friend class NativeGraphicsManager;
 
 			D3D12_RESOURCE_DESC m_desc;
 			ComPtr<ID3D12Resource> m_buffer;
 			
-
 			// real data
 			void* m_data = nullptr;
 			bool m_is_init = false;
 			//size is byte size
 			MUINT m_buffer_size; // buf unit size is byte.
 			Machi::Graphics::HeapType m_heap_type;
-			struct {
+			
+		public:
+			Buffer() {};
+			 ~Buffer() {};
 
-
-				
-
-			} ;
-
-
-
-			Buffer& set_size(MUINT size) { m_buffer_size = size; };
+			 Buffer& set_size(MUINT size) { m_buffer_size = size; return *this; };
 			Buffer& set_heap_type(Machi::Graphics::HeapType t) {
 				m_heap_type = t;
 			};
+		protected:
 
 			virtual bool init(std::shared_ptr<Device> device) {
 				
 				HRESULT hr = device->create_commit_resource(
-					&CD3DX12_HEAP_PROPERTIES(heap_type_convert(m_heap_type)),
+					m_heap_type,
 					D3D12_HEAP_FLAG_NONE,
-					&CD3DX12_RESOURCE_DESC::Buffer(m_buffer_size),
+					m_buffer_size,
 					D3D12_RESOURCE_STATE_COPY_DEST, nullptr,
 					m_buffer);
 				
@@ -54,7 +56,6 @@ namespace Machi {
 
 
 			};
-		protected:
 
 			virtual bool connect_to_heap(std::shared_ptr<Device> device, D3D12_CPU_DESCRIPTOR_HANDLE heap_cpu_handle) {
 
@@ -68,10 +69,11 @@ namespace Machi {
 
 				return true;
 			};
-
-
+			virtual bool copy(void* data, MUINT size);
 		public:
-			virtual bool copy(void* data, MUINT size, bool unmap_flag = true);
+			ID3D12Resource* Get() {
+				return m_buffer.Get();
+			}
 
 
 		};
