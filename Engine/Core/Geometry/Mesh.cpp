@@ -114,3 +114,64 @@ bool Mesh::set_face_nums(const std::vector<MUCHAR>& sizes) {
 	return set_face_nums(sizes);
 }
 
+MUINT Machi::Geometry::Mesh::get_elem_size(element_type type)
+{
+
+
+
+	switch (type)
+	{
+	case Machi::Geometry::Mesh::element_type::VERTEX:
+	{
+		return attr.m_vertice_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::FACE:
+	{
+		return attr.m_face_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::NORMAL:
+	{
+		return attr.m_normal_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::TEX_COORDINATE:
+	{
+		return attr.m_texcoord_size;
+	}
+	break;
+	}
+	return 0;
+}
+
+MUINT Machi::Geometry::Mesh::get_elem_type_size(element_type type)
+{
+
+
+
+	switch (type)
+	{
+	case Machi::Geometry::Mesh::element_type::VERTEX:
+	{
+		return attr.m_vertice_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::FACE:
+	{
+		return attr.m_face_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::NORMAL:
+	{
+		return attr.m_normal_size;
+	}
+	break;
+	case Machi::Geometry::Mesh::element_type::TEX_COORDINATE:
+	{
+		return attr.m_texcoord_size;
+	}
+	break;
+	}
+	return 0;
+}

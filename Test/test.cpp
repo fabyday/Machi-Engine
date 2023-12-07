@@ -58,6 +58,7 @@ Machi::Application* machi_main(int argc, char** argv) {
 
 	renderer->add_meshes(mesh);
 	ret->set_renderer(renderer);
+	renderer->initialize();
 
 	
 

@@ -1,4 +1,5 @@
 #include "Renderer.h"
+#include <DX12-RHI/NativeGraphicsManager.h>
 using namespace Machi::Graphics;
 
 std::shared_ptr<Machi::Geometry::Mesh> 
@@ -14,6 +15,6 @@ Renderer&
 Renderer::set_static_mesh(std::shared_ptr<Machi::Geometry::Mesh> m_mesh){
 
 	this->m_mesh.push_back(m_mesh);
-
+	Machi::NativeGraphics::NativeGraphicsManager::get_instance()->alloc_buffer();
 	return *this;
 }

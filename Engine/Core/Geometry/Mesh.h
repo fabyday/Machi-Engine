@@ -107,6 +107,9 @@ namespace Machi {
 			bool set_face_nums(const std::vector<MSIZE_T>& sizes);
 			bool set_face_nums(const std::vector<MUCHAR>& sizes);
 
+			MUINT get_elem_type_size(element_type type);
+			MUINT get_elem_size(element_type type);
+
 			MDOUBLE& get_as_array(element_type type, MUINT index);
 			bool copy(element_type type, void* src, MUINT size);
 		};
