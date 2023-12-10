@@ -109,6 +109,7 @@ namespace Machi {
 
 			MUINT get_elem_type_size(element_type type);
 			MUINT get_elem_size(element_type type);
+			MUINT get_bytes();
 
 			MDOUBLE& get_as_array(element_type type, MUINT index);
 			bool copy(element_type type, void* src, MUINT size);

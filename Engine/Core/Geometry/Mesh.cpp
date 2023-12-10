@@ -25,7 +25,16 @@ bool simple_alloc_function(void** ptr, MSIZE_T* cur_size, MSIZE_T desired_size) 
 	return true;
 }
 
+MUINT Machi::Geometry::Mesh::get_bytes() {
 
+	return this->get_elem_size(element_type::VERTEX) * this->get_elem_type_size(element_type::VERTEX)
+		+ this->get_elem_size(element_type::TEX_COORDINATE) * this->get_elem_type_size(element_type::TEX_COORDINATE)
+		+ this->get_elem_size(element_type::NORMAL) * this->get_elem_type_size(element_type::NORMAL)
+		+ this->get_elem_size(element_type::FACE) * this->get_elem_type_size(element_type::FACE);
+
+
+
+}
 void Machi::Geometry::Mesh::allocate(element_type type, MSIZE_T size)
 {
 
