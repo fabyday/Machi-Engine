@@ -128,3 +128,4 @@ Machi::NativeGraphics::Device::create_commit_resource(
 		InitialResourceState, pOptimizedClearValue,
 		IID_PPV_ARGS(&buffer));
 }
+ b
