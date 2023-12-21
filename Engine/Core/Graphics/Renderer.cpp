@@ -15,6 +15,6 @@ Renderer&
 Renderer::set_static_mesh(std::shared_ptr<Machi::Geometry::Mesh> m_mesh){
 
 	this->m_mesh.push_back(m_mesh);
-	Machi::NativeGraphics::NativeGraphicsManager::get_instance()->alloc_buffer();
+	Machi::NativeGraphics::NativeGraphicsManager::get_instance()->alloc_buffer(m_mesh->get_bytes());
 	return *this;
 }
