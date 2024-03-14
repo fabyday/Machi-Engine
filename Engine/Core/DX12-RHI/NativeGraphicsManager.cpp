@@ -102,8 +102,8 @@ bool Machi::NativeGraphics::NativeGraphicsManager::render(std::shared_ptr<Machi:
 		return false;
 	std::shared_ptr<Machi::Geometry::Mesh> mesh =  object->get_mesh();
 	
-	//m_command_allocator->
-
+	
+	
 	return true;
 }
 
